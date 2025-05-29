@@ -13,9 +13,18 @@ function Home() {
         0% { opacity: 0; transform: translateY(30px) scale(0.92); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
+      .fade-animated {
+        animation: fadeSlide 1s ease-out forwards;
+      }
     `;
     document.head.appendChild(style);
   }, []);
+
+  const navigationItems = [
+    { label: "Découvrir mes projets", path: "/projects" },
+    { label: "Parcourir mon expérience", path: "/experience" },
+    { label: "Me contacter", path: "/contact" },
+  ];
 
   return (
     <Container
@@ -54,18 +63,20 @@ function Home() {
             width: "100%",
           }}
         >
-          {[
-            { label: "Découvrir mes projets", path: "/projects" },
-            { label: "Parcourir mon expérience", path: "/experience" },
-            { label: "Me contacter", path: "/contact" },
-          ].map((item, index) => (
+          {navigationItems.map((item, index) => (
             <Paper
               key={index}
               withBorder
               radius="lg"
               p="md"
               onClick={() => navigate(item.path)}
+              className="fade-animated"
               style={{
+                animationDelay: `${
+                  index === 0 ? 0.2 : 0.6 + (index - 1) * 0.5
+                }s`,
+                animationDuration: "1s",
+                opacity: 0,
                 width: "100%",
                 textAlign: "center",
                 cursor: "pointer",

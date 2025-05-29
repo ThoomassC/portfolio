@@ -4,95 +4,107 @@ import {
   Title,
   Stack,
   Group,
-  Text,
-  ActionIcon,
   Paper,
+  Avatar,
+  Button,
+  Anchor,
 } from "@mantine/core";
 import {
-  IconBrandLinkedin,
-  IconBrandGithub,
   IconMapPin,
   IconMail,
   IconPhone,
+  IconArrowLeft,
 } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
+  const navigate = useNavigate();
+
   return (
-    <Container size="xs" py="xl">
+    <Container
+      size="xs"
+      py="xl"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Paper
         withBorder
         p="xl"
         radius="lg"
         style={{
-          backdropFilter: "blur(8px)",
-          background: "rgba(255, 255, 255, 0.6)",
-          border: "1px solid rgba(0,0,0,0.05)",
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.05)",
+          backdropFilter: "blur(10px)",
+          background: "rgba(255, 255, 255, 0.4)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+          width: "100%",
+          maxWidth: 400,
+          textAlign: "center",
         }}
       >
         <Stack align="center" gap="lg">
-          <Title order={2} style={{ color: "#1e3a8a" }}>
+          <Avatar
+            src="/assets/thomasca.jpg"
+            size={100}
+            radius="xl"
+            alt="Thomas Caron"
+            style={{ border: "2px solid #1e3a8a" }}
+          />
+
+          <Title order={2} style={{ color: "#1e3a8a", fontWeight: 600 }}>
             Me contacter
           </Title>
 
-          <Group>
+          <Group gap="xs">
             <IconMail size={20} />
-            <Text size="sm">caronthomas27@gmail.com</Text>
+            <Anchor
+              href="mailto:caronthomas27@gmail.com"
+              size="sm"
+              underline="hover"
+              c="indigo"
+            >
+              caronthomas27@gmail.com
+            </Anchor>
           </Group>
 
-          <Group>
+          <Group gap="xs">
             <IconPhone size={20} />
-            <Text size="sm">07 83 52 37 85</Text>
+            <Anchor
+              href="tel:+33783523785"
+              size="sm"
+              underline="hover"
+              c="indigo"
+            >
+              07 83 52 37 85
+            </Anchor>
           </Group>
 
-          <Group>
+          <Group gap="xs" mb="sm">
             <IconMapPin size={20} />
-            <Text size="sm">Mont-Saint-Aignan</Text>
+            <Anchor
+              href="https://www.google.com/maps?q=Mont-Saint-Aignan"
+              target="_blank"
+              rel="noopener noreferrer"
+              size="sm"
+              underline="hover"
+              c="indigo"
+            >
+              Mont-Saint-Aignan, 76130, France
+            </Anchor>
           </Group>
 
-          <Group gap="xl" mt="md">
-            <ActionIcon
-              component="a"
-              href="https://www.linkedin.com/in/thomas-caron27/"
-              target="_blank"
-              size="lg"
-              variant="transparent"
-              style={{
-                color: "#0a66c2",
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.2)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-              aria-label="LinkedIn"
-            >
-              <IconBrandLinkedin size={28} stroke={1.5} />
-            </ActionIcon>
-
-            <ActionIcon
-              component="a"
-              href="https://github.com/ThoomassC"
-              target="_blank"
-              size="lg"
-              variant="transparent"
-              style={{
-                color: "#171515",
-                transition: "transform 0.2s ease",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.2)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-              aria-label="GitHub"
-            >
-              <IconBrandGithub size={28} stroke={1.5} />
-            </ActionIcon>
-          </Group>
+          <Button
+            mt="md"
+            variant="light"
+            color="indigo"
+            leftSection={<IconArrowLeft size={18} />}
+            onClick={() => navigate("/")}
+          >
+            Retour à l’accueil
+          </Button>
         </Stack>
       </Paper>
     </Container>

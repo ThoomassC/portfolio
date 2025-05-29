@@ -35,7 +35,7 @@ function App() {
           </Routes>
         </AppShell.Main>
 
-        <AppShell.Footer style={{ position: "sticky", bottom: 0, zIndex: 10 }}>
+        <AppShell.Footer>
           <Footer />
         </AppShell.Footer>
       </AppShell>

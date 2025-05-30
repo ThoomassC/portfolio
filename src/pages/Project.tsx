@@ -2,11 +2,19 @@
 import {
   Container,
   Title,
-  SimpleGrid,
   Paper,
-  Text,
   Stack,
+  Text,
+  Group,
+  Button,
 } from "@mantine/core";
+import {
+  IconArrowLeft,
+  IconDeviceGamepad2,
+  IconCode,
+} from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const projects = [
   {
@@ -30,13 +38,35 @@ const projects = [
 ];
 
 const Project = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes fadeSlideProject {
+        0% { opacity: 0; transform: translateY(30px) scale(0.92); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .fade-animated-proj { animation: fadeSlideProject 1s ease-out forwards; opacity: 0; }
+      .fade-proj-1 { animation-delay: 0.2s; }
+      .fade-proj-2 { animation-delay: 0.4s; }
+      .fade-proj-3 { animation-delay: 0.6s; }
+      .fade-proj-4 { animation-delay: 0.8s; }
+    `;
+    document.head.appendChild(style);
+  }, []);
+
   return (
-    <Container size="md" py="xl">
+    <Container
+      size="md"
+      py="xl"
+      style={{ marginTop: "3.5rem", marginBottom: "3.5rem" }}
+    >
       <Title
         order={2}
         ta="center"
         mb="xl"
-        className="fade-animated-skill fade-delay-1"
+        className="fade-animated-proj fade-proj-1"
         style={{
           background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
           WebkitBackgroundClip: "text",
@@ -48,13 +78,14 @@ const Project = () => {
         Mes Projets
       </Title>
 
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+      <Stack gap="md">
         {projects.map((project, index) => (
           <Paper
             key={index}
             withBorder
             radius="md"
             p="md"
+            className={`fade-animated-proj fade-proj-${index + 2}`}
             style={{
               background: "rgba(255, 255, 255, 0.6)",
               backdropFilter: "blur(8px)",
@@ -71,18 +102,36 @@ const Project = () => {
               e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.05)";
             }}
           >
-            <Stack gap="xs">
-              <Title order={4} style={{ color: "#1e3a8a" }}>
-                {project.title}
-              </Title>
-              <Text size="xs" c="dimmed">
-                {project.date}
-              </Text>
-              <Text size="sm">{project.description}</Text>
-            </Stack>
+            <Group align="center" gap={8} mb="xs">
+              {(project.title.includes("Game") && (
+                <IconDeviceGamepad2 size={20} />
+              )) || <IconCode size={20} />}
+              <Text fw={500}>{project.title}</Text>
+            </Group>
+            <Text size="xs" c="dimmed" mb={4}>
+              {project.date}
+            </Text>
+            <Text size="sm">{project.description}</Text>
           </Paper>
         ))}
-      </SimpleGrid>
+      </Stack>
+
+      <Stack align="center" mt="xl">
+        <Button
+          variant="light"
+          color="indigo"
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={() => navigate("/")}
+          className="fade-animated-proj fade-proj-4"
+          style={{
+            borderRadius: 24,
+            border: "2px solid #1e3a8a",
+            paddingInline: 24,
+          }}
+        >
+          Retour à l’accueil
+        </Button>
+      </Stack>
     </Container>
   );
 };

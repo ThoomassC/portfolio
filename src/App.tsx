@@ -22,6 +22,11 @@ function App() {
               "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)",
             backdropFilter: "blur(12px)",
             minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+          },
+          footer: {
+            marginTop: "auto",
           },
         }}
       >
@@ -29,7 +34,14 @@ function App() {
           <Header />
         </AppShell.Header>
 
-        <AppShell.Main>
+        <AppShell.Main
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            paddingTop: 70,
+          }}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project" element={<Project />} />

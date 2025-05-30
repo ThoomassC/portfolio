@@ -47,13 +47,24 @@ const Experience = () => {
       title: "Alternant Développeur Informatique — Linkt",
       date: "Septembre 2022 — Septembre 2025",
       description:
-        "Participation au développement d’un outil de production et gestion de deux projets annexes en tant que Chef de Projet.",
+        "Participation au développement d’un outil de production. Maintenabilité de l'application, évolution, mise en production, résolution de bugs et développement de nouvelles fonctionnalités.",
     },
     {
-      title: "Projets personnels",
-      date: "Depuis 2022",
-      description:
-        "Création de sites web, APIs (architecture hexagonale), application de gestion d’argent, participation à la GameJam Rouen Métropole 2024.",
+      title: "Chef de projet annexe — Linkt",
+      date: "Septembre 2022 — Septembre 2024",
+      description: (
+        <ul style={{ margin: 0, paddingLeft: "1.2em", textAlign: "left" }}>
+          <li>
+            Gestion de deux projets annexes en tant que Chef de Projet.
+            Organisation des tâches, suivi de l'avancement, gestion des
+            ressources et communication avec les parties prenantes.
+          </li>
+          <li>
+            Gestion d'une équipe de 5 alternants avec 2 référents de projets non
+            alternants.
+          </li>
+        </ul>
+      ),
     },
   ];
 
@@ -66,6 +77,13 @@ const Experience = () => {
     },
     {
       label: "BAC +3 Concepteur Développeur d'Applications",
+      badge: "Obtenu",
+      badgeColor: "teal",
+      description: "École CESI",
+    },
+    {
+      label:
+        "BAC +5 Manager en Architectures et Applications Logicielles des Systèmes d'Information",
       badge: "En cours d'obtention",
       badgeColor: "orange",
       description: "École CESI",
@@ -166,20 +184,18 @@ const Experience = () => {
                   boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
                 }}
               >
-                <Group
-                  justify="space-between"
-                  align="center"
-                  mb="md"
-                  wrap="wrap"
-                >
-                  <Group align="center" gap={8} wrap="nowrap">
-                    <IconSchool size={20} />
-                    <Text fw={500}>{formation.label}</Text>
-                  </Group>
-                  <Badge color={formation.badgeColor} variant="light" size="md">
-                    {formation.badge}
-                  </Badge>
+                <Group align="center" gap={8} wrap="nowrap">
+                  <IconSchool size={20} />
+                  <Text fw={500}>{formation.label}</Text>
                 </Group>
+                <Badge
+                  color={formation.badgeColor}
+                  variant="light"
+                  size="md"
+                  style={{ marginTop: "3%", marginBottom: "3%" }}
+                >
+                  {formation.badge}
+                </Badge>
                 <Text size="sm" c="dimmed">
                   {formation.description}
                 </Text>

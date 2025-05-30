@@ -15,7 +15,6 @@ import {
   IconBrandJavascript,
   IconBrandTypescript,
   IconBrandReact,
-  IconDatabase,
   IconBrandNodejs,
   IconCode,
   IconHeartHandshake,
@@ -23,7 +22,22 @@ import {
   IconBrandPhp,
   IconBrandCSharp,
   IconArrowLeft,
+  IconBrandGit,
+  IconBrandDocker,
+  IconBrandVscode,
+  IconBrandVisualStudio,
+  IconApi,
+  IconBrandOpenSource,
+  IconBrandDiscord,
+  IconBrandGithub,
+  IconBrandGitlab,
+  IconDatabase,
+  IconBrandMongodb,
+  IconGitBranch,
+  IconBrandFigma,
 } from "@tabler/icons-react";
+import { FaMicrosoft } from "react-icons/fa";
+import { SiRabbitmq } from "react-icons/si";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -108,11 +122,83 @@ const Skill = () => {
       title: "Librairies / UI",
       icon: <IconCode size={iconSize} />,
       items: [
-        { label: "Sails", icon: <IconCode size={iconSize - 2} /> },
         { label: "Material UI", icon: <IconCode size={iconSize - 2} /> },
         { label: "Mantine", icon: <IconCode size={iconSize - 2} /> },
         { label: "Tailwind CSS", icon: <IconCode size={iconSize - 2} /> },
         { label: "Bootstrap", icon: <IconCode size={iconSize - 2} /> },
+      ],
+    },
+    {
+      title: "Librairies / back-end",
+      icon: <IconCode size={iconSize} />,
+      items: [
+        { label: "Task", icon: <IconBrandDocker size={iconSize - 2} /> },
+        { label: "Jest", icon: <IconCode size={iconSize - 2} /> },
+        { label: "Sails", icon: <IconCode size={iconSize - 2} /> },
+        { label: "Axios", icon: <IconCode size={iconSize - 2} /> },
+        { label: "Moment.js", icon: <IconCode size={iconSize - 2} /> },
+        { label: "Bcrypt.js", icon: <IconCode size={iconSize - 2} /> },
+      ],
+    },
+    {
+      title: "ORMs / Bases de données",
+      icon: <IconCode size={iconSize} />,
+      items: [
+        { label: "Prisma", icon: <IconCode size={iconSize - 2} /> },
+        { label: "PostgreSQL", icon: <IconDatabase size={iconSize - 2} /> },
+        { label: "TypeORM (bases)", icon: <IconCode size={iconSize - 2} /> },
+        { label: "MySQL", icon: <IconDatabase size={iconSize - 2} /> },
+        { label: "SQLite", icon: <IconDatabase size={iconSize - 2} /> },
+        {
+          label: "MongoDB (bases)",
+          icon: <IconBrandMongodb size={iconSize - 2} />,
+        },
+        { label: "Redis", icon: <IconCode size={iconSize - 2} /> },
+        {
+          label: "Waterline (sails)",
+          icon: <IconDatabase size={iconSize - 2} />,
+        },
+      ],
+    },
+    {
+      title: "Outils",
+      icon: <IconCode size={iconSize} />,
+      items: [
+        { label: "Git", icon: <IconBrandGit size={iconSize - 2} /> },
+        { label: "GitKraken", icon: <IconGitBranch size={iconSize - 2} /> },
+        { label: "Docker", icon: <IconBrandDocker size={iconSize - 2} /> },
+        { label: "VS Code", icon: <IconBrandVscode size={iconSize - 2} /> },
+        {
+          label: "Visual Studio",
+          icon: <IconBrandVisualStudio size={iconSize - 2} />,
+        },
+        { label: "Suite Jetbrains", icon: <IconCode size={iconSize - 2} /> },
+        {
+          label: "Suite Jetbrains",
+          icon: <IconBrandOpenSource size={iconSize - 2} />,
+        },
+        { label: "Figma", icon: <IconBrandFigma size={iconSize - 2} /> },
+        { label: "Swagger", icon: <IconApi size={iconSize - 2} /> },
+        {
+          label: "Insomnia",
+          icon: <IconBrandOpenSource size={iconSize - 2} />,
+        },
+        {
+          label: "OpenProject",
+          icon: <IconBrandOpenSource size={iconSize - 2} />,
+        },
+        { label: "Suite Microsoft", icon: <FaMicrosoft size={iconSize - 2} /> },
+        { label: "Discord", icon: <IconBrandDiscord size={iconSize - 2} /> },
+        { label: "GitHub", icon: <IconBrandGithub size={iconSize - 2} /> },
+        { label: "GitLab", icon: <IconBrandGitlab size={iconSize - 2} /> },
+        { label: "Canva", icon: <IconCode size={iconSize - 2} /> },
+        { label: "DbGate", icon: <IconDatabase size={iconSize - 2} /> },
+        { label: "Rabbit MQ", icon: <SiRabbitmq size={iconSize - 2} /> },
+        { label: "Redis", icon: <IconCode size={iconSize - 2} /> },
+        {
+          label: "MongoDB (bases)",
+          icon: <IconBrandMongodb size={iconSize - 2} />,
+        },
       ],
     },
     {

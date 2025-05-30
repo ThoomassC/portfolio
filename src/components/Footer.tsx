@@ -15,11 +15,6 @@ const Footer = () => {
         backgroundColor: "#0f172a",
         paddingTop: "0.75rem",
         paddingBottom: "0.75rem",
-        position: "fixed",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 100,
       }}
     >
       <Group gap="md" mb={2}>

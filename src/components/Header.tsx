@@ -7,7 +7,6 @@ const Header = () => {
   const prevScrollY = useRef(0);
   const navigate = useNavigate();
 
-  // Import de la police Raleway
   useEffect(() => {
     const link = document.createElement("link");
     link.href =
@@ -16,21 +15,20 @@ const Header = () => {
     document.head.appendChild(link);
   }, []);
 
-  // Logique de détection du scroll direction
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
       if (currentY > prevScrollY.current && currentY > 60) {
-        setVisible(false); // Scroll vers le bas → cache
+        setVisible(false);
       } else {
-        setVisible(true); // Scroll vers le haut → affiche
+        setVisible(true);
       }
       prevScrollY.current = currentY;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []); // <--- dépendance vide
+  }, []);
 
   return (
     <header
@@ -48,41 +46,42 @@ const Header = () => {
         borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         display: "flex",
+        justifyContent: "center", // centre le bloc contenant avatar + titre
         alignItems: "center",
-        justifyContent: "center",
+        padding: "0 1rem",
       }}
     >
       <Box
         style={{
-          position: "absolute",
-          left: 24,
-          top: 0,
-          bottom: 0,
           display: "flex",
           alignItems: "center",
+          gap: 12,
+          maxWidth: "100%",
         }}
       >
         <Avatar
           src="/assets/thomasca.jpg"
           alt="Thomas Caron"
-          size={44}
+          size={60}
           radius="xl"
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/")}
         />
+        <Title
+          order={2}
+          style={{
+            fontFamily: "'Raleway', sans-serif",
+            fontWeight: 600,
+            color: "#1e3a8a",
+            fontSize: "1.2rem",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          Thomas Caron — Portfolio
+        </Title>
       </Box>
-      <Title
-        order={2}
-        style={{
-          fontFamily: "'Raleway', sans-serif",
-          fontWeight: 600,
-          color: "#1e3a8a",
-          fontSize: "1.4rem",
-          textAlign: "center",
-        }}
-      >
-        Thomas Caron — Portfolio
-      </Title>
     </header>
   );
 };

@@ -22,7 +22,7 @@ function Home() {
 
   const navigationItems = [
     { label: "Découvrir mes projets", path: "/projects" },
-    { label: "Parcourir mon expérience", path: "/experience" },
+    { label: "Parcourir mes expériences", path: "/experience" },
     { label: "Me contacter", path: "/contact" },
   ];
 

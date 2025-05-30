@@ -128,6 +128,10 @@ const Contact = () => {
             leftSection={<IconArrowLeft size={18} />}
             onClick={() => navigate("/")}
             className="fade-animated fade-7"
+            style={{
+              borderRadius: 24,
+              border: "2px solid indigo",
+            }}
           >
             Retour à l’accueil
           </Button>

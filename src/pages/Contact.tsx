@@ -45,11 +45,29 @@ const Contact = () => {
       py="xl"
       style={{
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
         minHeight: "100vh",
+        justifyContent: "flex-start",
+        paddingTop: "6rem", // espace pour le header
       }}
     >
+      <Title
+        order={2}
+        style={{
+          background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontWeight: 700,
+          fontSize: "2rem",
+          textAlign: "center",
+          marginBottom: "2rem",
+          marginTop: "2rem",
+        }}
+        className="fade-animated fade-3"
+      >
+        Me Contacter
+      </Title>
       <Paper
         withBorder
         p="xl"
@@ -63,6 +81,7 @@ const Contact = () => {
           width: "100%",
           maxWidth: 400,
           textAlign: "center",
+          margin: "0 auto",
         }}
       >
         <Stack align="center" gap="lg">
@@ -76,14 +95,14 @@ const Contact = () => {
           />
 
           <Title
-            order={2}
+            order={3}
             style={{ color: "#1e3a8a", fontWeight: 600 }}
-            className="fade-animated fade-3"
+            className="fade-animated fade-4"
           >
-            Me contacter
+            Thomas Caron
           </Title>
 
-          <Group gap="xs" className="fade-animated fade-4">
+          <Group gap="xs" className="fade-animated fade-5">
             <IconMail size={20} />
             <Anchor
               href="mailto:caronthomas27@gmail.com"
@@ -95,7 +114,7 @@ const Contact = () => {
             </Anchor>
           </Group>
 
-          <Group gap="xs" className="fade-animated fade-5">
+          <Group gap="xs" className="fade-animated fade-6">
             <IconPhone size={20} />
             <Anchor
               href="tel:+33783523785"
@@ -107,7 +126,7 @@ const Contact = () => {
             </Anchor>
           </Group>
 
-          <Group gap="xs" mb="sm" className="fade-animated fade-6">
+          <Group gap="xs" mb="sm" className="fade-animated fade-7">
             <IconMapPin size={20} />
             <Anchor
               href="https://www.google.com/maps?q=Mont-Saint-Aignan"
@@ -127,7 +146,6 @@ const Contact = () => {
             color="indigo"
             leftSection={<IconArrowLeft size={18} />}
             onClick={() => navigate("/")}
-            className="fade-animated fade-7"
             style={{
               borderRadius: 24,
               border: "2px solid indigo",

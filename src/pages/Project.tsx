@@ -29,11 +29,23 @@ const projects = [
   },
 ];
 
-const Projects = () => {
+const Project = () => {
   return (
     <Container size="md" py="xl">
-      <Title order={2} ta="center" mb="xl" style={{ color: "#1e3a8a" }}>
-        Mes projets
+      <Title
+        order={2}
+        ta="center"
+        mb="xl"
+        className="fade-animated-skill fade-delay-1"
+        style={{
+          background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontWeight: 700,
+          fontSize: "2rem",
+        }}
+      >
+        Mes Projets
       </Title>
 
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
@@ -75,4 +87,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default Project;

@@ -88,7 +88,14 @@ const Experience = () => {
       <Title
         order={2}
         mb="xl"
-        style={{ color: "#1e3a8a", textAlign: "center" }}
+        ta="center"
+        style={{
+          background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontWeight: 700,
+          fontSize: "2rem",
+        }}
         className="fade-animated-exp fade-exp-1"
       >
         Mon parcours

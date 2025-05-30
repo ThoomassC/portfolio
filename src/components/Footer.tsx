@@ -1,5 +1,9 @@
 import { Center, Group, ActionIcon, Text } from "@mantine/core";
-import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+} from "@tabler/icons-react";
 
 const accentColor = "#38bdf8"; // bleu clair
 
@@ -19,6 +23,28 @@ const Footer = () => {
       }}
     >
       <Group gap="md" mb={2}>
+        <ActionIcon
+          component="a"
+          href="mailto:caronthomas27@gmail.com"
+          target="_blank"
+          size={36}
+          style={{
+            color: "#ffffff",
+            backgroundColor: "transparent",
+            transition: "transform 0.2s ease, color 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.2)";
+            e.currentTarget.style.color = accentColor;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.color = "#ffffff";
+          }}
+          aria-label="Mail"
+        >
+          <IconMail size={35} stroke={1.5} />
+        </ActionIcon>
         <ActionIcon
           component="a"
           href="https://www.linkedin.com/in/thomas-caron27/"

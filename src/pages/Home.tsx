@@ -21,8 +21,9 @@ function Home() {
   }, []);
 
   const navigationItems = [
-    { label: "Découvrir mes projets", path: "/projects" },
+    { label: "Découvrir mes projets", path: "/project" },
     { label: "Parcourir mes expériences", path: "/experience" },
+    { label: "Explorer mes compétences", path: "/skill" },
     { label: "Me contacter", path: "/contact" },
   ];
 

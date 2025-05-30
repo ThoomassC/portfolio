@@ -1,16 +1,19 @@
-// src/App.tsx
 import { AppShell } from "@mantine/core";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import Projects from "./pages/Projects";
+import Project from "./pages/Project";
 import Experience from "./pages/Experience";
 import Contact from "./pages/Contact";
+import Skill from "./pages/Skill";
+import RouteMiddleware from "./components/RouteMiddleware";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" />
       <AppShell
         padding="md"
         styles={{
@@ -29,9 +32,11 @@ function App() {
         <AppShell.Main>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<Projects />} />
+            <Route path="/project" element={<Project />} />
             <Route path="/experience" element={<Experience />} />
+            <Route path="/skill" element={<Skill />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<RouteMiddleware />} />
           </Routes>
         </AppShell.Main>
 

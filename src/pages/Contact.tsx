@@ -49,7 +49,7 @@ const Contact = () => {
         alignItems: "center",
         minHeight: "100vh",
         justifyContent: "flex-start",
-        paddingTop: "6rem", // espace pour le header
+        paddingTop: "6rem",
       }}
     >
       <Title

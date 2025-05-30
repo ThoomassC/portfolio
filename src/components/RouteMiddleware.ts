@@ -69,7 +69,6 @@ const RouteMiddleware = () => {
       toast.error("Page non trouvée, retour à l'accueil.");
       navigate("/", { replace: true });
     }
-    // Sinon, ne rien faire (évite le double toast)
   }, [location, navigate]);
 
   return null;

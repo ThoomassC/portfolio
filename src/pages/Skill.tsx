@@ -1,4 +1,3 @@
-// src/pages/Skill.tsx
 import {
   Container,
   Title,
@@ -198,8 +197,6 @@ const Skill = () => {
             </Group>
           </Paper>
         ))}
-
-        {/* Retour à l’accueil */}
         <Box ta="center" mt="xl">
           <Button
             variant="light"

@@ -46,7 +46,7 @@ const Header = () => {
         borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         display: "flex",
-        justifyContent: "center", // centre le bloc contenant avatar + titre
+        justifyContent: "center",
         alignItems: "center",
         padding: "0 1rem",
       }}

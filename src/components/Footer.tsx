@@ -5,7 +5,7 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 
-const accentColor = "#38bdf8"; // bleu clair
+const accentColor = "#38bdf8";
 
 const Footer = () => {
   return (

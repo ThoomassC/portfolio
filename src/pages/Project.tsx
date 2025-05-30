@@ -1,4 +1,3 @@
-// src/pages/Projects.tsx
 import {
   Container,
   Title,

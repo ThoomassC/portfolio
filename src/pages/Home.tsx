@@ -39,7 +39,6 @@ function Home() {
       }}
     >
       <Stack gap="xl" style={{ width: "100%" }}>
-        {/* Animated Title */}
         <Title
           order={1}
           style={{
@@ -53,8 +52,6 @@ function Home() {
         >
           Laissez-vous guider par mes expériences
         </Title>
-
-        {/* Navigation Blocks */}
         <Stack
           gap="md"
           align="center"

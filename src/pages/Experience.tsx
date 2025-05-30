@@ -18,7 +18,6 @@ const Experience = () => {
   const navigate = useNavigate();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // CSS animations Apple-style
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
@@ -108,7 +107,6 @@ const Experience = () => {
           mt="xl"
           style={{ alignItems: "stretch" }}
         >
-          {/* Expériences */}
           <Stack style={{ flex: 1.6 }} className="fade-animated-exp fade-exp-2">
             <Title order={3} style={{ color: "#1e3a8a", textAlign: "center" }}>
               Expériences
@@ -139,7 +137,6 @@ const Experience = () => {
             ))}
           </Stack>
 
-          {/* Divider vertical */}
           <Divider
             orientation="vertical"
             style={{
@@ -151,7 +148,6 @@ const Experience = () => {
             }}
           />
 
-          {/* Formations */}
           <Stack style={{ flex: 1.6 }} className="fade-animated-exp fade-exp-2">
             <Title order={3} style={{ color: "#1e3a8a", textAlign: "center" }}>
               Formations
@@ -278,7 +274,6 @@ const Experience = () => {
         </>
       )}
 
-      {/* Bouton retour */}
       <Stack align="center" mt="xl">
         <Button
           variant="light"

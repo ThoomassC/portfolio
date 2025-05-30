@@ -70,7 +70,7 @@ const Header = () => {
         <Title
           order={2}
           style={{
-            fontFamily: "'Raleway', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             fontWeight: 600,
             color: "#1e3a8a",
             fontSize: "1.2rem",

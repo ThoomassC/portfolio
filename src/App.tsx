@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Project from "./pages/Project";
 import Experience from "./pages/Experience";
 import Contact from "./pages/Contact";
+import Cv from "./pages/Cv";
 import Skill from "./pages/Skill";
 import RouteMiddleware from "./components/RouteMiddleware";
 import { Toaster } from "react-hot-toast";
@@ -48,6 +49,7 @@ function App() {
             <Route path="/experience" element={<Experience />} />
             <Route path="/skill" element={<Skill />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/cv" element={<Cv />} />
             <Route path="*" element={<RouteMiddleware />} />
           </Routes>
         </AppShell.Main>

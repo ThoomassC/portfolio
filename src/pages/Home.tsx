@@ -14,7 +14,7 @@ function Home() {
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
       .fade-animated {
-        animation: fadeSlide 1s ease-out forwards;
+        animation: fadeSlide 0.7s ease-out forwards;
       }
     `;
     document.head.appendChild(style);
@@ -25,6 +25,7 @@ function Home() {
     { label: "Parcourir mes expériences", path: "/experience" },
     { label: "Explorer mes compétences", path: "/skill" },
     { label: "Me contacter", path: "/contact" },
+    { label: "Mon CV", path: "/cv" },
   ];
 
   return (
@@ -47,7 +48,7 @@ function Home() {
             background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
-            animation: "fadeSlide 2.5s ease-out",
+            animation: "fadeSlide 1.5s ease-out",
           }}
         >
           Laissez-vous guider par mes expériences
@@ -71,9 +72,9 @@ function Home() {
               className="fade-animated"
               style={{
                 animationDelay: `${
-                  index === 0 ? 0.2 : 0.6 + (index - 1) * 0.5
+                  index === 0 ? 0.1 : 0.3 + (index - 1) * 0.2
                 }s`,
-                animationDuration: "1s",
+                animationDuration: "0.7s",
                 opacity: 0,
                 width: "100%",
                 textAlign: "center",

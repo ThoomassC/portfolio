@@ -32,7 +32,13 @@ const projects = [
     title: "GameJam Rouen Métropole",
     description:
       "Participation à la GameJam 2024 avec création d’un mini-jeu vidéo en équipe, sur un thème imposé en 48h.",
-    date: "Mars 2024",
+    date: "Janvier 2024",
+  },
+  {
+    title: "Portfolio Personnel",
+    description:
+      "Création d'un portfolio personnel pour présenter mes projets et compétences.",
+    date: "2025",
   },
 ];
 
@@ -47,10 +53,12 @@ const Project = () => {
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
       .fade-animated-proj { animation: fadeSlideProject 1s ease-out forwards; opacity: 0; }
-      .fade-proj-1 { animation-delay: 0.2s; }
-      .fade-proj-2 { animation-delay: 0.4s; }
-      .fade-proj-3 { animation-delay: 0.6s; }
-      .fade-proj-4 { animation-delay: 0.8s; }
+      .fade-proj-1 { animation-delay: 0.1s; }
+      .fade-proj-2 { animation-delay: 0.2s; }
+      .fade-proj-3 { animation-delay: 0.3s; }
+      .fade-proj-4 { animation-delay: 0.4s; }
+      .fade-proj-5 { animation-delay: 0.5s; }
+      .fade-proj-6 { animation-delay: 0.6s; }
     `;
     document.head.appendChild(style);
   }, []);
@@ -121,7 +129,7 @@ const Project = () => {
           color="indigo"
           leftSection={<IconArrowLeft size={18} />}
           onClick={() => navigate("/")}
-          className="fade-animated-proj fade-proj-4"
+          className={`fade-animated-proj fade-proj-${projects.length + 2}`}
           style={{
             borderRadius: 24,
             border: "2px solid #1e3a8a",

@@ -27,17 +27,19 @@ const Experience = () => {
       }
 
       .fade-animated-exp {
-        animation: fadeSlideExp 1s ease-out forwards;
+        animation: fadeSlideExp 0.7s ease-out forwards;
         opacity: 0;
       }
 
-      .fade-exp-1 { animation-delay: 0.2s; }
-      .fade-exp-2 { animation-delay: 0.4s; }
-      .fade-exp-3 { animation-delay: 0.6s; }
-      .fade-exp-4 { animation-delay: 0.8s; }
-      .fade-exp-5 { animation-delay: 1s; }
-      .fade-exp-6 { animation-delay: 1.2s; }
-      .fade-exp-7 { animation-delay: 1.4s; }
+      .fade-exp-1 { animation-delay: 0.1s; }
+      .fade-exp-2 { animation-delay: 0.2s; }
+      .fade-exp-3 { animation-delay: 0.3s; }
+      .fade-exp-4 { animation-delay: 0.4s; }
+      .fade-exp-5 { animation-delay: 0.5s; }
+      .fade-exp-6 { animation-delay: 0.6s; }
+      .fade-exp-7 { animation-delay: 0.7s; }
+      .fade-exp-8 { animation-delay: 0.8s; }
+      .fade-exp-9 { animation-delay: 0.9s; }
     `;
     document.head.appendChild(style);
   }, []);
@@ -296,7 +298,7 @@ const Experience = () => {
           color="indigo"
           leftSection={<IconArrowLeft size={18} />}
           onClick={() => navigate("/")}
-          className="fade-animated-exp fade-exp-7"
+          className="fade-animated-exp fade-exp-9"
           style={{
             borderRadius: 24,
             border: "2px solid #1e3a8a",

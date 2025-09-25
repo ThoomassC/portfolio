@@ -10,6 +10,8 @@ import {
   Box,
   Tooltip,
   Button,
+  Tabs,
+  Transition,
 } from "@mantine/core";
 import {
   IconBrandJavascript,
@@ -35,35 +37,42 @@ import {
   IconBrandMongodb,
   IconGitBranch,
   IconBrandFigma,
+  IconChevronRight,
 } from "@tabler/icons-react";
 import { FaMicrosoft } from "react-icons/fa";
 import { SiRabbitmq } from "react-icons/si";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "@mantine/hooks";
 
 const Skill = () => {
   const navigate = useNavigate();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [activeTab, setActiveTab] = useState<string | null>("Langages");
 
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      html { scroll-behavior: smooth; }
+       html { scroll-behavior: smooth; }
 
-      @keyframes fadeInUp {
+      @keyframes fadeSlideSkill {
         0% { opacity: 0; transform: translateY(20px); }
         100% { opacity: 1; transform: translateY(0); }
       }
       .fade-animated-skill {
-        animation: fadeInUp 0.9s ease-out forwards;
+        animation: fadeSlideSkill 0.7s ease-out forwards;
         opacity: 0;
       }
-      .fade-delay-1 { animation-delay: 0.2s; }
-      .fade-delay-2 { animation-delay: 0.4s; }
-      .fade-delay-3 { animation-delay: 0.6s; }
-      .fade-delay-4 { animation-delay: 0.8s; }
-      .fade-delay-5 { animation-delay: 1s; }
-      .fade-delay-6 { animation-delay: 1.2s; }
-      .fade-delay-7 { animation-delay: 1.4s; }
+      .fade-delay-1 { animation-delay: 0.1s; }
+      .fade-delay-2 { animation-delay: 0.2s; }
+      .fade-delay-3 { animation-delay: 0.3s; }
+      .fade-delay-4 { animation-delay: 0.4s; }
+      .fade-delay-5 { animation-delay: 0.5s; }
+      .fade-delay-6 { animation-delay: 0.6s; }
+      .fade-delay-7 { animation-delay: 0.7s; }
+      .fade-delay-8 { animation-delay: 0.8s; }
+      .fade-delay-9 { animation-delay: 0.9s; }
+      .fade-delay-10 { animation-delay: 1.0s; }
     `;
     document.head.appendChild(style);
   }, []);
@@ -81,7 +90,7 @@ const Skill = () => {
     items: SkillItem[];
   };
 
-  const skills: SkillSection[] = [
+  const technicalSkills: SkillSection[] = [
     {
       title: "Langages",
       icon: <IconCode size={iconSize} />,
@@ -201,6 +210,9 @@ const Skill = () => {
         },
       ],
     },
+  ];
+
+  const otherSkills: SkillSection[] = [
     {
       title: "Soft-skills",
       icon: <IconHeartHandshake size={iconSize} />,
@@ -220,6 +232,57 @@ const Skill = () => {
       items: [{ label: "Anglais (notions)" }, { label: "Espagnol (notions)" }],
     },
   ];
+
+  const allSkills = [...technicalSkills, ...otherSkills];
+
+  const renderSkillSection = (section: SkillSection, index: number) => (
+    <Paper
+      key={section.title}
+      withBorder
+      radius="lg"
+      p="md"
+      className={`fade-animated-skill fade-delay-${index + 2}`}
+      style={{
+        background: "rgba(255, 255, 255, 0.25)",
+        backdropFilter: "blur(8px)",
+        border: "1px solid rgba(255, 255, 255, 0.2)",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      }}
+    >
+      <Group mb="sm">
+        <ThemeIcon size={32} variant="light" color="indigo" radius="xl">
+          {section.icon}
+        </ThemeIcon>
+        <Text fw={600} size="lg" color="indigo">
+          {section.title}
+        </Text>
+      </Group>
+      <Divider mb="sm" />
+      <Group gap="md" wrap="wrap">
+        {section.items.map((item) => (
+          <Tooltip label={item.label} key={item.label} withArrow position="top">
+            <Box
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "4px 10px",
+                borderRadius: 12,
+                background: "rgba(255,255,255,0.35)",
+                backdropFilter: "blur(6px)",
+                border: "1px solid rgba(0,0,0,0.05)",
+                fontSize: "0.875rem",
+                color: "#1e3a8a",
+              }}
+            >
+              {item.icon && <span>{item.icon}</span>}
+              <span>{item.label}</span>
+            </Box>
+          </Tooltip>
+        ))}
+      </Group>
+    </Paper>
+  );
 
   return (
     <Container
@@ -245,79 +308,99 @@ const Skill = () => {
         Mes Compétences
       </Title>
 
-      <Stack gap="lg">
-        {skills.map((section, i) => (
-          <Paper
-            key={section.title}
-            withBorder
-            radius="lg"
-            p="md"
-            className={`fade-animated-skill fade-delay-${i + 2}`}
-            style={{
-              background: "rgba(255, 255, 255, 0.25)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
-            }}
-          >
-            <Group mb="sm">
-              <ThemeIcon size={32} variant="light" color="indigo" radius="xl">
-                {section.icon}
-              </ThemeIcon>
-              <Text fw={600} size="lg" color="indigo">
-                {section.title}
-              </Text>
-            </Group>
-
-            <Divider mb="sm" />
-
-            <Group gap="md" wrap="wrap">
-              {section.items.map((item) => (
-                <Tooltip
-                  label={item.label}
-                  key={item.label}
-                  withArrow
-                  position="top"
-                >
-                  <Box
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      padding: "4px 10px",
-                      borderRadius: 12,
-                      background: "rgba(255,255,255,0.35)",
-                      backdropFilter: "blur(6px)",
-                      border: "1px solid rgba(0,0,0,0.05)",
-                      fontSize: "0.875rem",
-                      color: "#1e3a8a",
-                    }}
+      {isDesktop ? (
+        <Group align="flex-start" gap="xl" mt="xl" wrap="nowrap">
+          <Stack style={{ flex: 1.6 }}>
+            <Title
+              order={3}
+              style={{ color: "#1e3a8a", textAlign: "center" }}
+              mb="md"
+              className="fade-animated-skill fade-delay-2"
+            >
+              Compétences Techniques
+            </Title>
+            <Tabs
+              value={activeTab}
+              onChange={setActiveTab}
+              orientation="vertical"
+              variant="pills"
+              radius="md"
+              className="fade-animated-skill fade-delay-3"
+            >
+              <Tabs.List>
+                {technicalSkills.map((section) => (
+                  <Tabs.Tab
+                    key={section.title}
+                    value={section.title}
+                    leftSection={<IconChevronRight size={16} />}
                   >
-                    {item.icon && <span>{item.icon}</span>}
-                    <span>{item.label}</span>
-                  </Box>
-                </Tooltip>
+                    {section.title}
+                  </Tabs.Tab>
+                ))}
+              </Tabs.List>
+
+              {technicalSkills.map((section, index) => (
+                <Tabs.Panel key={section.title} value={section.title} pl="lg">
+                  <Transition
+                    mounted={activeTab === section.title}
+                    transition="fade"
+                    duration={100}
+                    timingFunction="ease"
+                  >
+                    {(styles) => (
+                      <div style={styles}>
+                        {renderSkillSection(section, index + 0.7)}
+                      </div>
+                    )}
+                  </Transition>
+                </Tabs.Panel>
               ))}
-            </Group>
-          </Paper>
-        ))}
-        <Box ta="center" mt="xl">
-          <Button
-            variant="light"
-            color="indigo"
-            radius="xl"
-            leftSection={<IconArrowLeft size={18} />}
-            onClick={() => navigate("/")}
-            className="fade-animated-skill fade-delay-7"
-            style={{
-              paddingInline: 24,
-              border: "2px solid #1e3a8a",
-            }}
-          >
-            Retour à l’accueil
-          </Button>
-        </Box>
-      </Stack>
+            </Tabs>
+          </Stack>
+
+          <Divider
+            orientation="vertical"
+            style={{ height: "auto", alignSelf: "stretch" }}
+          />
+
+          <Stack style={{ flex: 1 }}>
+            <Title
+              order={3}
+              style={{ color: "#1e3a8a", textAlign: "center" }}
+              mb="md"
+              className="fade-animated-skill fade-delay-4"
+            >
+              Compétences Relationnelles & Autres
+            </Title>
+            <Stack gap="lg">
+              {otherSkills.map((section, i) =>
+                renderSkillSection(section, technicalSkills.length + i)
+              )}
+            </Stack>
+          </Stack>
+        </Group>
+      ) : (
+        <Stack gap="lg">
+          {allSkills.map((section, i) => renderSkillSection(section, i))}
+        </Stack>
+      )}
+
+      <Box ta="center" mt="xl">
+        <Button
+          variant="light"
+          color="indigo"
+          radius="xl"
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={() => navigate("/")}
+          className={`fade-animated-skill fade-delay-${allSkills.length + 2}`}
+          style={{
+            paddingInline: 24,
+            border: "2px solid #1e3a8a",
+          }}
+        >
+          Retour à l’accueil
+        </Button>
+      </Box>
     </Container>
   );
 };

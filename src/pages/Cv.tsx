@@ -1,12 +1,4 @@
-import {
-  Container,
-  Title,
-  Paper,
-  Button,
-  Box,
-  Group,
-  Center,
-} from "@mantine/core";
+import { Container, Title, Button, Box, Group, Center } from "@mantine/core";
 import { IconDownload, IconArrowLeft } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -68,12 +60,11 @@ const Cv = () => {
         className="fade-animated-cv fade-cv-3"
         style={{
           position: "relative",
-          width: "100%",
-          paddingTop: "141.42%", // Ratio A4 (sqrt(2))
-          border: "1px solid rgba(0,0,0,0.1)",
+          width: "90%",
+          margin: "0 auto",
+          paddingTop: "122%",
           borderRadius: "8px",
           overflow: "hidden",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12)", // Ombre pour la profondeur
         }}
       >
         <iframe

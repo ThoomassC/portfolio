@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Center, Group, ActionIcon, Text } from "@mantine/core";
 import {
   IconBrandGithub,
@@ -9,22 +8,6 @@ import {
 const accentColor = "#38bdf8";
 
 const Footer = () => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const atBottom =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
-      setVisible(atBottom);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  if (!visible) return null;
-
   return (
     <Center
       style={{
@@ -32,8 +15,6 @@ const Footer = () => {
         backgroundColor: "#0f172a",
         paddingTop: "0.75rem",
         paddingBottom: "0.75rem",
-        transition:
-          "opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
       }}
     >
       <Group gap="md" mb={2}>
@@ -70,7 +51,7 @@ const Footer = () => {
             transition: "transform 0.2s ease, color 0.2s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.transform = "scale(1.2)";
             e.currentTarget.style.color = accentColor;
           }}
           onMouseLeave={(e) => {

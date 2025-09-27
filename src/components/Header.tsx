@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Title, Avatar, Box } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [visible, setVisible] = useState(true);
-  const prevScrollY = useRef(0);
+  const [isAtTop, setIsAtTop] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,16 +16,10 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY > prevScrollY.current && currentY > 60) {
-        setVisible(false);
-      } else {
-        setVisible(true);
-      }
-      prevScrollY.current = currentY;
+      setIsAtTop(window.scrollY < 50);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -39,8 +32,8 @@ const Header = () => {
         right: 0,
         height: 70,
         zIndex: 100,
-        transform: visible ? "translateY(0)" : "translateY(-100%)",
-        transition: "transform 0.4s ease, opacity 0.4s ease",
+        transform: isAtTop ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 0.4s ease-in-out",
         background: "rgba(255, 255, 255, 0.3)",
         backdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(255, 255, 255, 0.2)",

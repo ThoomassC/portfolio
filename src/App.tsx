@@ -10,39 +10,41 @@ import Cv from "./pages/Cv";
 import Skill from "./pages/Skill";
 import RouteMiddleware from "./components/RouteMiddleware";
 import { Toaster } from "react-hot-toast";
+import { useScrollToBottom } from "./hooks/useScrollToBottom";
+import { useEffect } from "react";
 
 function App() {
+  const isAtBottom = useScrollToBottom(100);
+
+  useEffect(() => {
+    // Appliquer la couleur du footer à l'élément racine pour un overscroll cohérent en bas
+    document.documentElement.style.backgroundColor = "#0f172a";
+
+    // Appliquer le dégradé au corps de la page
+    document.body.style.background =
+      "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
+
+    // Fonction de nettoyage pour réinitialiser les styles
+    return () => {
+      document.documentElement.style.backgroundColor = "";
+      document.body.style.background = "";
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <Toaster position="top-right" />
+      <Header />
       <AppShell
         padding="md"
         styles={{
           main: {
-            background:
-              "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)",
-            backdropFilter: "blur(12px)",
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-          },
-          footer: {
-            marginTop: "auto",
+            background: "transparent",
+            paddingTop: "70px",
           },
         }}
       >
-        <AppShell.Header>
-          <Header />
-        </AppShell.Header>
-
-        <AppShell.Main
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            paddingTop: 70,
-          }}
-        >
+        <AppShell.Main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project" element={<Project />} />
@@ -54,7 +56,15 @@ function App() {
           </Routes>
         </AppShell.Main>
 
-        <AppShell.Footer>
+        <AppShell.Footer
+          style={{
+            position: "sticky",
+            bottom: 0,
+            zIndex: 10,
+            transform: isAtBottom ? "translateY(0)" : "translateY(100%)",
+            transition: "transform 0.1s ease-in-out",
+          }}
+        >
           <Footer />
         </AppShell.Footer>
       </AppShell>

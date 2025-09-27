@@ -32,7 +32,7 @@ function Home() {
     <Container
       size="md"
       style={{
-        height: "100vh",
+        minHeight: "calc(100vh - 200px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

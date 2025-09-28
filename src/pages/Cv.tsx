@@ -1,4 +1,12 @@
-import { Container, Title, Button, Box, Group, Center } from "@mantine/core";
+import {
+  Container,
+  Title,
+  Button,
+  Box,
+  Group,
+  Center,
+  Text,
+} from "@mantine/core";
 import { IconDownload, IconArrowLeft } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +33,10 @@ const Cv = () => {
   const cvPath = "/assets/CV_Thomas_MAALSI.pdf";
 
   return (
-    <Container style={{ paddingTop: "5rem", paddingBottom: "6rem" }}>
+    <Container
+      pt={{ base: "2rem", sm: "5rem" }}
+      pb={{ base: "3rem", sm: "6rem" }}
+    >
       <Title
         order={2}
         ta="center"
@@ -58,13 +69,16 @@ const Cv = () => {
 
       <Box
         className="fade-animated-cv fade-cv-3"
+        visibleFrom="sm"
         style={{
           position: "relative",
-          width: "90%",
+          width: "100%",
+          maxWidth: "700px",
           margin: "0 auto",
-          paddingTop: "122%",
+          paddingTop: "106%",
           borderRadius: "8px",
           overflow: "hidden",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.12)",
         }}
       >
         <iframe
@@ -80,6 +94,10 @@ const Cv = () => {
           }}
         />
       </Box>
+
+      <Text ta="center" c="dimmed" hiddenFrom="sm" mb="lg">
+        La prévisualisation du CV est disponible sur un écran plus grand.
+      </Text>
 
       <Center mt="xl" className="fade-animated-cv fade-cv-4">
         <Button

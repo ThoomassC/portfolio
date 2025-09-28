@@ -17,14 +17,11 @@ function App() {
   const isAtBottom = useScrollToBottom(100);
 
   useEffect(() => {
-    // Appliquer la couleur du footer à l'élément racine pour un overscroll cohérent en bas
     document.documentElement.style.backgroundColor = "#0f172a";
 
-    // Appliquer le dégradé au corps de la page
     document.body.style.background =
       "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
 
-    // Fonction de nettoyage pour réinitialiser les styles
     return () => {
       document.documentElement.style.backgroundColor = "";
       document.body.style.background = "";

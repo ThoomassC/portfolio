@@ -13,11 +13,66 @@ function Home() {
         0% { opacity: 0; transform: translateY(30px) scale(0.92); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
+
+      @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }
+
+      @keyframes blink {
+        from, to { border-color: transparent }
+        50% { border-color: #9333ea }
+      }
+
       .fade-animated {
         animation: fadeSlide 0.7s ease-out forwards;
       }
+
+      .typing-title-wrapper {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+        height: 6rem; /* Hauteur pour éviter le décalage lors du retour à la ligne */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .typing-title {
+        overflow: hidden; 
+        border-right: .15em solid #9333ea; 
+        white-space: nowrap; 
+        margin: 0 auto; 
+        animation: 
+          typing 3.5s steps(40, end),
+          blink .75s step-end infinite;
+        max-width: max-content;
+      }
+
+      @media (max-width: 100%) {
+        .typing-title {
+          white-space: normal;
+          word-break: break-word;
+          animation: none; 
+          width: auto; 
+          border-right: none; 
+          font-size: 1.1rem !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .typing-title {
+          font-size: 1.4rem !important;
+        }
+      }
     `;
     document.head.appendChild(style);
+
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
+    };
   }, []);
 
   const navigationItems = [
@@ -37,22 +92,26 @@ function Home() {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
+        padding: "0 1rem",
       }}
     >
       <Stack gap="xl" style={{ width: "100%" }}>
-        <Title
-          order={1}
-          style={{
-            fontSize: "2.5rem",
-            fontWeight: 700,
-            background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "fadeSlide 1.5s ease-out",
-          }}
-        >
-          Laissez-vous guider par mes expériences
-        </Title>
+        <div className="typing-title-wrapper">
+          <Title
+            order={1}
+            className="typing-title"
+            style={{
+              fontSize: "250%",
+              fontWeight: 700,
+              background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Laissez-vous guider par mes expériences
+          </Title>
+        </div>
+
         <Stack
           gap="md"
           align="center"
@@ -71,9 +130,7 @@ function Home() {
               onClick={() => navigate(item.path)}
               className="fade-animated"
               style={{
-                animationDelay: `${
-                  index === 0 ? 0.1 : 0.3 + (index - 1) * 0.2
-                }s`,
+                animationDelay: `${index === 0 ? 0.1 : 0.3 + (index - 1) * 0.2}s`,
                 animationDuration: "0.7s",
                 opacity: 0,
                 width: "100%",
@@ -92,8 +149,7 @@ function Home() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow =
-                  "0 4px 20px rgba(0, 0, 0, 0.05)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.05)";
               }}
             >
               <Title order={4} style={{ fontWeight: 600 }}>

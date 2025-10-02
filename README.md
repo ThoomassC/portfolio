@@ -8,4 +8,4 @@ Le site a été développé simplement avec **React** et **Vite**. J'ai choisi d
 
 ## Mise en ligne
 
-La mise en ligne du portfolio est réalisée via **Netlify**, ce qui permet un déploiement rapide, efficace et gratuit.
+La mise en ligne du portfolio est réalisée via **Vercel**, ce qui permet un déploiement rapide, efficace et gratuit.

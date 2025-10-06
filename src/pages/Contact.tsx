@@ -1,24 +1,12 @@
-import {
-  Container,
-  Title,
-  Stack,
-  Group,
-  Paper,
-  Avatar,
-  Button,
-  Anchor,
-} from "@mantine/core";
-import {
-  IconMapPin,
-  IconMail,
-  IconPhone,
-  IconArrowLeft,
-} from "@tabler/icons-react";
+import { Container, Title, Stack, Group, Paper, Avatar, Button, Anchor } from "@mantine/core";
+import { IconMapPin, IconMail, IconPhone, IconArrowLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Contact = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     const style = document.createElement("style");
@@ -37,6 +25,20 @@ const Contact = () => {
       .fade-7 { animation-delay: 1.4s; }
     `;
     document.head.appendChild(style);
+
+    // Obfuscation simple pour l'email et le téléphone
+    const user = "caronthomas27";
+    const domain = "gmail.com";
+    setEmail(`${user}@${domain}`);
+
+    const phoneParts = ["07", "83", "52", "37", "85"];
+    setPhone(phoneParts.join(" "));
+
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
+    };
   }, []);
 
   return (
@@ -104,25 +106,20 @@ const Contact = () => {
 
           <Group gap="xs" className="fade-animated fade-5">
             <IconMail size={20} />
-            <Anchor
-              href="mailto:caronthomas27@gmail.com"
-              size="sm"
-              underline="hover"
-              c="indigo"
-            >
-              caronthomas27@gmail.com
+            <Anchor href={email ? `mailto:${email}` : "#"} size="sm" underline="hover" c="indigo">
+              {email || "Chargement..."}
             </Anchor>
           </Group>
 
           <Group gap="xs" className="fade-animated fade-6">
             <IconPhone size={20} />
             <Anchor
-              href="tel:+33783523785"
+              href={phone ? `tel:+33${phone.replace(/\s/g, "").substring(1)}` : "#"}
               size="sm"
               underline="hover"
               c="indigo"
             >
-              07 83 52 37 85
+              {phone || "Chargement..."}
             </Anchor>
           </Group>
 

@@ -1,16 +1,25 @@
-import { Container, Title, Stack, Paper, useMantineTheme } from "@mantine/core";
+import { Container, Title, Stack, Paper, Text, Group, Box, ThemeIcon } from "@mantine/core";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  IconBriefcase,
+  IconCode,
+  IconMail,
+  IconFileText,
+  IconRocket,
+  IconChevronRight,
+} from "@tabler/icons-react";
 
 function Home() {
-  const theme = useMantineTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      @keyframes fadeSlide {
-        0% { opacity: 0; transform: translateY(30px) scale(0.92); }
+      html { scroll-behavior: smooth; }
+
+      @keyframes fadeSlideHome {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
 
@@ -24,18 +33,32 @@ function Home() {
         50% { border-color: #9333ea }
       }
 
-      .fade-animated {
-        animation: fadeSlide 0.7s ease-out forwards;
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+      }
+
+      @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .fade-animated-home {
+        animation: fadeSlideHome 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        opacity: 0;
       }
 
       .typing-title-wrapper {
-        display: inline-block;
-        text-align: center;
-        width: 100%;
-        height: 6rem; /* Hauteur pour éviter le décalage lors du retour à la ligne */
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 6rem;
+        margin-bottom: 2rem;
       }
 
       .typing-title {
@@ -44,25 +67,62 @@ function Home() {
         white-space: nowrap; 
         margin: 0 auto; 
         animation: 
-          typing 3.5s steps(40, end),
+          typing 4s steps(50, end) forwards,
           blink .75s step-end infinite;
         max-width: max-content;
+        width: 0;
       }
 
-      @media (max-width: 100%) {
+      .typing-title.animated {
+        animation: 
+          typing 4s steps(50, end) forwards,
+          blink .75s step-end infinite;
+      }
+
+      .nav-card-home {
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        cursor: pointer;
+      }
+
+      .nav-card-home:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25) !important;
+      }
+
+      .nav-card-home:hover .nav-icon {
+        transform: rotate(360deg) scale(1.2);
+      }
+
+      .nav-icon {
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .floating-orb {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .delay-1 { animation-delay: 0.1s; }
+      .delay-2 { animation-delay: 0.2s; }
+      .delay-3 { animation-delay: 0.3s; }
+      .delay-4 { animation-delay: 0.5s; }
+      .delay-5 { animation-delay: 0.7s; }
+      .delay-6 { animation-delay: 0.9s; }
+      .delay-7 { animation-delay: 1.1s; }
+
+      @media (max-width: 768px) {
         .typing-title {
           white-space: normal;
           word-break: break-word;
-          animation: none; 
-          width: auto; 
+          animation: none !important; 
           border-right: none; 
-          font-size: 1.1rem !important;
+          font-size: 1.8rem !important;
+          width: 100% !important;
         }
       }
 
       @media (max-width: 480px) {
         .typing-title {
-          font-size: 1.4rem !important;
+          font-size: 1.5rem !important;
         }
       }
     `;
@@ -76,85 +136,169 @@ function Home() {
   }, []);
 
   const navigationItems = [
-    { label: "Découvrir mes projets", path: "/project" },
-    { label: "Parcourir mes expériences", path: "/experience" },
-    { label: "Explorer mes compétences", path: "/skill" },
-    { label: "Me contacter", path: "/contact" },
-    { label: "Mon CV", path: "/cv" },
+    {
+      label: "Découvrir mes projets",
+      path: "/project",
+      icon: <IconRocket size={28} />,
+      description: "Explorez mes réalisations et projets",
+    },
+    {
+      label: "Parcourir mes expériences",
+      path: "/experience",
+      icon: <IconBriefcase size={28} />,
+      description: "Mon parcours professionnel",
+    },
+    {
+      label: "Explorer mes compétences",
+      path: "/skill",
+      icon: <IconCode size={28} />,
+      description: "Technologies et savoir-faire",
+    },
+    {
+      label: "Me contacter",
+      path: "/contact",
+      icon: <IconMail size={28} />,
+      description: "Restons en contact",
+    },
+    {
+      label: "Mon CV",
+      path: "/cv",
+      icon: <IconFileText size={28} />,
+      description: "Téléchargez mon curriculum vitae",
+    },
   ];
 
   return (
     <Container
-      size="md"
+      size="lg"
       style={{
-        minHeight: "calc(100vh - 200px)",
+        minHeight: "calc(100vh - 120px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        textAlign: "center",
-        padding: "0 1rem",
+        position: "relative",
+        padding: "2rem 1rem",
       }}
     >
-      <Stack gap="xl" style={{ width: "100%" }}>
-        <div className="typing-title-wrapper">
-          <Title
-            order={1}
-            className="typing-title"
-            style={{
-              fontSize: "250%",
-              fontWeight: 700,
-              background: "linear-gradient(90deg, #1e3a8a, #9333ea)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Laissez-vous guider par mes expériences
-          </Title>
-        </div>
+      {/* Orbes décoratives en arrière-plan */}
+      <Box
+        className="floating-orb"
+        style={{
+          position: "absolute",
+          top: "15%",
+          right: "10%",
+          width: "250px",
+          height: "250px",
+          background: "radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(50px)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
+      <Box
+        className="floating-orb"
+        style={{
+          position: "absolute",
+          bottom: "20%",
+          left: "8%",
+          width: "300px",
+          height: "300px",
+          background: "radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, transparent 70%)",
+          borderRadius: "50%",
+          filter: "blur(60px)",
+          pointerEvents: "none",
+          zIndex: 0,
+          animationDelay: "3s",
+        }}
+      />
 
-        <Stack
-          gap="md"
-          align="center"
-          style={{
-            maxWidth: 400,
-            margin: "0 auto",
-            width: "100%",
-          }}
-        >
+      <Stack gap="xl" style={{ width: "100%", maxWidth: 900, position: "relative", zIndex: 1 }}>
+        <Box className="typing-title-wrapper">
+          <Stack gap="md" align="center">
+            <Title
+              order={1}
+              className="typing-title"
+              style={{
+                fontSize: "2.5rem",
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #1e3a8a 0%, #9333ea 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Laissez-vous guider par mes expériences
+            </Title>
+            <Text
+              size="lg"
+              c="dimmed"
+              className="fade-animated-home delay-2"
+              style={{ maxWidth: 600, textAlign: "center" }}
+            >
+              Je transforme vos idées en solutions digitales innovantes
+            </Text>
+          </Stack>
+        </Box>
+
+        <Stack gap="lg" align="center" style={{ width: "100%" }}>
           {navigationItems.map((item, index) => (
             <Paper
               key={index}
               withBorder
-              radius="lg"
-              p="md"
+              radius="xl"
+              p="xl"
               onClick={() => navigate(item.path)}
-              className="fade-animated"
+              className={`nav-card-home fade-animated-home delay-${index + 3}`}
               style={{
-                animationDelay: `${index === 0 ? 0.1 : 0.3 + (index - 1) * 0.2}s`,
-                animationDuration: "0.7s",
-                opacity: 0,
                 width: "100%",
-                textAlign: "center",
-                cursor: "pointer",
-                background: "rgba(255, 255, 255, 0.25)",
-                backdropFilter: "blur(12px)",
-                border: "1px solid rgba(255, 255, 255, 0.3)",
-                boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
-                color: theme.colors.indigo[7],
-                transition: "transform 0.25s ease, box-shadow 0.25s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-                e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.05)";
+                maxWidth: 600,
+                opacity: 0,
+                background:
+                  "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(237, 242, 255, 0.8) 100%)",
+                backdropFilter: "blur(20px)",
+                border: "1px solid rgba(99, 102, 241, 0.15)",
+                boxShadow: "0 8px 32px rgba(99, 102, 241, 0.12)",
               }}
             >
-              <Title order={4} style={{ fontWeight: 600 }}>
-                {item.label}
-              </Title>
+              <Group wrap="nowrap" gap="lg">
+                <ThemeIcon
+                  size={60}
+                  radius="xl"
+                  variant="gradient"
+                  gradient={{ from: "indigo", to: "violet", deg: 135 }}
+                  className="nav-icon"
+                  style={{
+                    flexShrink: 0,
+                  }}
+                >
+                  {item.icon}
+                </ThemeIcon>
+                <div style={{ flex: 1 }}>
+                  <Text
+                    fw={700}
+                    size="lg"
+                    style={{
+                      background: "linear-gradient(135deg, #4338ca, #7c3aed)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {item.label}
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    {item.description}
+                  </Text>
+                </div>
+                <IconChevronRight
+                  size={24}
+                  style={{
+                    color: "#6366f1",
+                    flexShrink: 0,
+                  }}
+                />
+              </Group>
             </Paper>
           ))}
         </Stack>

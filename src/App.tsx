@@ -17,14 +17,27 @@ function App() {
   const isAtBottom = useScrollToBottom(100);
 
   useEffect(() => {
-    document.documentElement.style.backgroundColor = "#0f172a";
+    document.documentElement.style.backgroundColor = "#7c3aed81";
+    document.documentElement.style.overflowX = "hidden";
 
     document.body.style.background =
       "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
 
+    document.body.style.margin = "0";
+    document.body.style.padding = "0";
+    document.body.style.overflowX = "hidden";
+    document.body.style.width = "100%";
+    document.body.style.maxWidth = "100vw";
+
     return () => {
       document.documentElement.style.backgroundColor = "";
+      document.documentElement.style.overflowX = "";
       document.body.style.background = "";
+      document.body.style.margin = "";
+      document.body.style.padding = "";
+      document.body.style.overflowX = "";
+      document.body.style.width = "";
+      document.body.style.maxWidth = "";
     };
   }, []);
 
@@ -33,11 +46,15 @@ function App() {
       <Toaster position="top-right" />
       <Header />
       <AppShell
-        padding="md"
+        padding={0}
         styles={{
           main: {
             background: "transparent",
             paddingTop: "70px",
+            padding: 0,
+            minHeight: "100vh",
+            maxWidth: "100vw",
+            overflowX: "hidden",
           },
         }}
       >
@@ -60,6 +77,9 @@ function App() {
             zIndex: 10,
             transform: isAtBottom ? "translateY(0)" : "translateY(100%)",
             transition: "transform 0.1s ease-in-out",
+            left: 0,
+            right: 0,
+            width: "100%",
           }}
         >
           <Footer />

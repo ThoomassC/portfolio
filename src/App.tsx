@@ -17,27 +17,46 @@ function App() {
   const isAtBottom = useScrollToBottom(100);
 
   useEffect(() => {
-    document.documentElement.style.backgroundColor = "#7c3aed81";
+    // Gradient background
+    const gradientBg = "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
+
+    // Appliquer les styles sur html et body
+    document.documentElement.style.backgroundColor = "#dbeafe";
+    document.documentElement.style.background = gradientBg;
     document.documentElement.style.overflowX = "hidden";
+    document.documentElement.style.minHeight = "100vh";
 
-    document.body.style.background =
-      "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
+    // Gestion des SafeArea
+    document.documentElement.style.paddingTop = "env(safe-area-inset-top)";
+    document.documentElement.style.paddingBottom = "env(safe-area-inset-bottom)";
+    document.documentElement.style.paddingLeft = "env(safe-area-inset-left)";
+    document.documentElement.style.paddingRight = "env(safe-area-inset-right)";
 
+    document.body.style.background = gradientBg;
     document.body.style.margin = "0";
     document.body.style.padding = "0";
     document.body.style.overflowX = "hidden";
     document.body.style.width = "100%";
     document.body.style.maxWidth = "100vw";
+    document.body.style.minHeight = "100vh";
 
     return () => {
       document.documentElement.style.backgroundColor = "";
+      document.documentElement.style.background = "";
       document.documentElement.style.overflowX = "";
+      document.documentElement.style.minHeight = "";
+      document.documentElement.style.paddingTop = "";
+      document.documentElement.style.paddingBottom = "";
+      document.documentElement.style.paddingLeft = "";
+      document.documentElement.style.paddingRight = "";
+
       document.body.style.background = "";
       document.body.style.margin = "";
       document.body.style.padding = "";
       document.body.style.overflowX = "";
       document.body.style.width = "";
       document.body.style.maxWidth = "";
+      document.body.style.minHeight = "";
     };
   }, []);
 

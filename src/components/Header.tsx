@@ -6,7 +6,8 @@ import { useMediaQuery } from "@mantine/hooks";
 const Header = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
@@ -87,30 +88,32 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    if (isDesktop) {
-      // En desktop, toujours visible
-      setIsVisible(true);
-      return;
-    }
-
-    // En mobile, comportement avec scroll
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      const currentScrollY = window.scrollY;
+      const isScrollingUp = currentScrollY < lastScrollY.current;
+
+      // Détection du scroll vers le haut
+      if (isScrollingUp && currentScrollY > 100) {
         setIsVisible(true);
 
+        // Annuler le timeout précédent
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
 
+        // Masquer après 3 secondes
         timeoutRef.current = setTimeout(() => {
           setIsVisible(false);
-        }, 2000);
-      } else {
+        }, 3000);
+      } else if (currentScrollY <= 100) {
+        // Masquer si on est tout en haut
         setIsVisible(false);
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
       }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -121,7 +124,7 @@ const Header = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [isDesktop]);
+  }, []);
 
   if (!isVisible) return null;
 

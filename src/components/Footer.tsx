@@ -1,4 +1,4 @@
-import { Center, Group, ActionIcon, Text, Box } from "@mantine/core";
+import { Center, Group, ActionIcon, Text } from "@mantine/core";
 import { IconBrandGithub, IconBrandLinkedin, IconMail } from "@tabler/icons-react";
 import { useEffect } from "react";
 
@@ -45,33 +45,19 @@ const Footer = () => {
       component="footer"
       style={{
         flexDirection: "column",
-        background: "#4438ca92",
+        background: "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)",
         backdropFilter: "blur(30px) saturate(200%)",
         WebkitBackdropFilter: "blur(30px) saturate(200%)",
         borderTop: "1px solid rgba(99, 102, 241, 0.5)",
         boxShadow: "0 -4px 30px rgba(99, 102, 241, 0.2)",
         paddingTop: "1rem",
-        paddingBottom: "1rem",
+        paddingBottom: "calc(1rem + env(safe-area-inset-bottom))",
+        paddingLeft: "calc(1rem + env(safe-area-inset-left))",
+        paddingRight: "calc(1rem + env(safe-area-inset-right))",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      <Box
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "#7c3aed81",
-          width: "300px",
-          height: "300px",
-          borderRadius: "50%",
-          filter: "blur(50px)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
       <Group gap="md" mb="xs" style={{ position: "relative", zIndex: 1 }}>
         <ActionIcon
           component="a"
@@ -131,7 +117,7 @@ const Footer = () => {
       <Text
         size="xs"
         fw={500}
-        c="#e0e7ff"
+        c="dimmed"
         style={{
           position: "relative",
           zIndex: 1,

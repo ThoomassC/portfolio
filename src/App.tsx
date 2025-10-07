@@ -20,9 +20,9 @@ function App() {
     // Gradient background
     const gradientBg = "linear-gradient(135deg, #dbeafe 0%, #f0f9ff 50%, #e0f2fe 100%)";
 
-    // Appliquer les styles sur html et body
-    document.documentElement.style.backgroundColor = "#dbeafe";
+    // Appliquer le gradient sur HTML (pour couvrir les SafeArea)
     document.documentElement.style.background = gradientBg;
+    document.documentElement.style.backgroundAttachment = "fixed"; // Important !
     document.documentElement.style.overflowX = "hidden";
     document.documentElement.style.minHeight = "100vh";
 
@@ -32,7 +32,8 @@ function App() {
     document.documentElement.style.paddingLeft = "env(safe-area-inset-left)";
     document.documentElement.style.paddingRight = "env(safe-area-inset-right)";
 
-    document.body.style.background = gradientBg;
+    // Body transparent pour laisser voir le gradient du HTML
+    document.body.style.background = "transparent";
     document.body.style.margin = "0";
     document.body.style.padding = "0";
     document.body.style.overflowX = "hidden";
@@ -41,8 +42,8 @@ function App() {
     document.body.style.minHeight = "100vh";
 
     return () => {
-      document.documentElement.style.backgroundColor = "";
       document.documentElement.style.background = "";
+      document.documentElement.style.backgroundAttachment = "";
       document.documentElement.style.overflowX = "";
       document.documentElement.style.minHeight = "";
       document.documentElement.style.paddingTop = "";

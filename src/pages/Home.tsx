@@ -1,413 +1,321 @@
-import { Container, Title, Stack, Paper, Text, Box, ThemeIcon, SimpleGrid } from "@mantine/core";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { IconBriefcase, IconCode, IconMail, IconFileText, IconRocket } from "@tabler/icons-react";
+import {
+  IconArrowDown,
+  IconArrowUpRight,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconBriefcase,
+  IconCode,
+  IconDeviceMobile,
+  IconDownload,
+  IconMail,
+  IconMapPin,
+  IconPhone,
+  IconSchool,
+  IconTestPipe,
+} from "@tabler/icons-react";
+
+const experiences = [
+  {
+    period: "Septembre 2022 — Septembre 2025",
+    dateTime: "2022-09",
+    title: "Développeur informatique en alternance",
+    company: "Linkt",
+    description:
+      "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
+    icon: IconCode,
+  },
+  {
+    period: "Octobre 2025 — Décembre 2025",
+    dateTime: "2025-10",
+    title: "Développeur TMA full-stack",
+    company: "Linkt",
+    description:
+      "Résolution de bugs sur une application en microservices, côté back-end et front-end, avec C# et Angular.",
+    icon: IconBriefcase,
+  },
+  {
+    period: "Décembre 2025 — Février 2026",
+    dateTime: "2025-12",
+    title: "Développeur iOS — cellule de sprint",
+    company: "Linkt",
+    description:
+      "Développement Swift au sein d’une cellule de sprint pour une application iOS.",
+    icon: IconDeviceMobile,
+  },
+  {
+    period: "Février 2026 — Août 2026",
+    dateTime: "2026-02",
+    title: "QA automatisation",
+    company: "Linkt",
+    description:
+      "Conception et maintenance de tests automatisés Java avec Selenium et Cucumber sur deux projets.",
+    icon: IconTestPipe,
+  },
+];
+
+const formations = [
+  {
+    title: "Manager en architectures et applications logicielles des SI",
+    level: "Bac +5 · En cours d’obtention",
+  },
+  {
+    title: "Concepteur développeur d’applications",
+    level: "Bac +3 · Obtenu",
+  },
+  {
+    title: "Développeur informatique",
+    level: "Bac +2 · Obtenu",
+  },
+];
+
+const skillGroups = [
+  {
+    title: "Langages",
+    items: ["JavaScript", "TypeScript", "Java", "C#", "Swift", "HTML", "CSS", "SQL"],
+  },
+  {
+    title: "Développement web",
+    items: ["React", "Angular", "Node.js", "Next.js", "NestJS", "Express", "REST API"],
+  },
+  {
+    title: "Qualité logicielle",
+    items: ["Selenium", "Cucumber", "Jest", "Tests automatisés", "Tests fonctionnels"],
+  },
+  {
+    title: "Données & outils",
+    items: ["PostgreSQL", "MySQL", "MongoDB", "Git", "Docker", "Swagger", "Figma"],
+  },
+];
+
+const projects = [
+  {
+    date: "2024",
+    title: "Application de gestion de budget",
+    description:
+      "Application en cours de développement pour piloter un budget personnel, conçue avec une architecture hexagonale.",
+  },
+  {
+    date: "2022 — 2024",
+    title: "Sites web & APIs",
+    description:
+      "Création de sites dynamiques et d’APIs avec React et Node.js, en appliquant les principes de Clean Architecture.",
+  },
+  {
+    date: "Janvier 2024",
+    title: "GameJam Rouen Métropole",
+    description:
+      "Conception en équipe d’un mini-jeu vidéo lors d’une GameJam de 48 heures, à partir d’un thème imposé.",
+  },
+];
 
 function Home() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.id = "home-styles";
-    style.innerHTML = `
-      html { scroll-behavior: smooth; }
-
-      @keyframes fadeSlideHome {
-        0% { 
-          opacity: 0; 
-          transform: translateY(30px) scale(0.98);
-        }
-        100% { 
-          opacity: 1; 
-          transform: translateY(0) scale(1);
-        }
-      }
-
-      @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
-      }
-
-      @keyframes blink {
-        from, to { border-color: transparent }
-        50% { border-color: #9333ea }
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-      }
-
-      @keyframes bubble {
-        0%, 100% {
-          transform: translateY(0) scale(1);
-          opacity: 0.6;
-        }
-        50% {
-          transform: translateY(-20px) scale(1.05);
-          opacity: 0.8;
-        }
-      }
-
-      .fade-animated-home {
-        animation: fadeSlideHome 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        opacity: 0;
-      }
-
-      .typing-title-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 6rem;
-        margin-bottom: 2rem;
-      }
-
-      .typing-title {
-        overflow: hidden; 
-        border-right: .15em solid #9333ea; 
-        white-space: nowrap; 
-        margin: 0 auto; 
-        animation: 
-          typing 4s steps(50, end) forwards,
-          blink .75s step-end infinite;
-        max-width: max-content;
-        width: 0;
-      }
-
-      .liquid-glass-card {
-        transition:
-          transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-          box-shadow 1s ease,
-          filter 0.8s ease;
-        cursor: pointer;
-        transform: translateY(0) scale(1);
-        filter: brightness(1);
-      }
-
-      .liquid-glass-card:hover {
-        transform: translateY(-6px) scale(1.04) !important;
-        filter: brightness(1.05);
-        box-shadow:
-          0 25px 80px rgba(99, 102, 241, 0.25),
-          inset 0 2px 3px rgba(255, 255, 255, 0.9),
-          inset 0 -1px 2px rgba(0, 0, 0, 0.05);
-      }
-
-      .nav-icon {
-        transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .liquid-glass-card:hover .nav-icon {
-        transform: rotate(360deg) scale(1.12) !important;
-      }
-
-      .floating-orb {
-        animation: float 8s ease-in-out infinite;
-      }
-
-      .floating-bubble {
-        animation: bubble 6s ease-in-out infinite;
-      }
-
-      .delay-1 { animation-delay: 0.1s; }
-      .delay-2 { animation-delay: 0.25s; }
-      .delay-3 { animation-delay: 0.4s; }
-      .delay-4 { animation-delay: 0.55s; }
-      .delay-5 { animation-delay: 0.7s; }
-      .delay-6 { animation-delay: 0.85s; }
-      .delay-7 { animation-delay: 1s; }
-
-      @media (max-width: 768px) {
-        .typing-title {
-          white-space: normal;
-          word-break: break-word;
-          animation: none !important; 
-          border-right: none; 
-          font-size: 2.2rem !important;
-          width: 100% !important;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .typing-title {
-          font-size: 2rem !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      const styleToRemove = document.getElementById("home-styles");
-      if (styleToRemove) {
-        document.head.removeChild(styleToRemove);
-      }
-    };
-  }, []);
-
-  const navigationItems = [
-    {
-      label: "Découvrir mes projets",
-      path: "/project",
-      icon: <IconRocket size={28} />,
-      description: "Explorez mes réalisations",
-    },
-    {
-      label: "Parcourir mes expériences",
-      path: "/experience",
-      icon: <IconBriefcase size={28} />,
-      description: "Mon parcours professionnel",
-    },
-    {
-      label: "Explorer mes compétences",
-      path: "/skill",
-      icon: <IconCode size={28} />,
-      description: "Technologies & savoir-faire",
-    },
-    {
-      label: "Me contacter",
-      path: "/contact",
-      icon: <IconMail size={28} />,
-      description: "Restons en contact",
-    },
-    {
-      label: "Mon CV",
-      path: "/cv",
-      icon: <IconFileText size={28} />,
-      description: "Téléchargez mon CV",
-    },
-  ];
-
   return (
-    <Container
-      size="xl"
-      style={{
-        minHeight: "calc(100vh - 120px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        padding: "2rem 1rem",
-      }}
-    >
-      <Box
-        className="floating-orb floating-bubble"
-        style={{
-          position: "absolute",
-          top: "10%",
-          right: "8%",
-          width: "350px",
-          height: "350px",
-          background:
-            "radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, rgba(99, 102, 241, 0.1) 40%, transparent 70%)",
-          borderRadius: "40% 60% 70% 30% / 40% 50% 60% 50%",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-          zIndex: 0,
-          opacity: 0.7,
-        }}
-      />
-      <Box
-        className="floating-orb floating-bubble"
-        style={{
-          position: "absolute",
-          bottom: "15%",
-          left: "10%",
-          width: "400px",
-          height: "400px",
-          background:
-            "radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, rgba(147, 51, 234, 0.1) 40%, transparent 70%)",
-          borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          filter: "blur(70px)",
-          pointerEvents: "none",
-          zIndex: 0,
-          animationDelay: "3s",
-          opacity: 0.7,
-        }}
-      />
-      <Box
-        className="floating-bubble"
-        style={{
-          position: "absolute",
-          top: "50%",
-          right: "20%",
-          width: "200px",
-          height: "200px",
-          background:
-            "radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(99, 102, 241, 0.2) 50%, transparent 70%)",
-          borderRadius: "50%",
-          filter: "blur(40px)",
-          pointerEvents: "none",
-          zIndex: 0,
-          animationDelay: "1.5s",
-          opacity: 0.5,
-        }}
-      />
+    <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
+      <div className="ambient ambient-one" aria-hidden="true" />
+      <div className="ambient ambient-two" aria-hidden="true" />
 
-      <Stack gap="xl" style={{ width: "100%", position: "relative", zIndex: 1 }}>
-        <Box className="typing-title-wrapper">
-          <Stack gap="md" align="center">
-            <Title
-              order={1}
-              className="typing-title"
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: 800,
-                background: "linear-gradient(135deg, #1e3a8a 0%, #9333ea 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Laissez-vous guider par mes expériences
-            </Title>
-            <Text
-              size="lg"
-              c="dimmed"
-              className="fade-animated-home delay-2"
-              style={{ maxWidth: 600, textAlign: "center" }}
-            >
-              Je transforme vos idées en solutions digitales innovantes
-            </Text>
-          </Stack>
-        </Box>
+      <section className="hero section-shell" aria-labelledby="titre-principal">
+        <div className="container">
+          <nav className="section-nav" aria-label="Navigation principale">
+            <a href="#parcours">Parcours</a>
+            <a href="#competences">Compétences</a>
+            <a href="#projets">Projets</a>
+            <a href="#contact">Contact</a>
+          </nav>
 
-        <div>
-          <SimpleGrid
-            cols={{ base: 1, sm: 2, lg: 3 }}
-            spacing={{ base: "md", sm: "lg" }}
-            style={{ width: "100%", marginBottom: "var(--mantine-spacing-lg)" }}
-          >
-            {navigationItems.slice(0, 3).map((item, index) => (
-              <Paper
-                key={index}
-                withBorder
-                radius="xl"
-                p="lg"
-                onClick={() => navigate(item.path)}
-                className={`liquid-glass-card fade-animated-home delay-${index + 3}`}
-                style={{
-                  opacity: 0,
-                  background: "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(20px) saturate(150%)",
-                  WebkitBackdropFilter: "blur(20px) saturate(150%)",
-                  border: "1px solid rgba(255, 255, 255, 0.6)",
-                  boxShadow: `
-                    0 8px 32px rgba(99, 102, 241, 0.12),
-                    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-                    inset 0 -1px 1px rgba(0, 0, 0, 0.05)
-                  `,
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Stack gap="md" align="center" style={{ textAlign: "center", height: "100%" }}>
-                  <ThemeIcon
-                    size={70}
-                    radius="xl"
-                    variant="gradient"
-                    gradient={{ from: "indigo", to: "violet", deg: 135 }}
-                    className="nav-icon"
-                    style={{
-                      boxShadow:
-                        "0 8px 24px rgba(99, 102, 241, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5)",
-                    }}
-                  >
-                    {item.icon}
-                  </ThemeIcon>
-                  <div>
-                    <Text
-                      fw={700}
-                      size="lg"
-                      style={{
-                        background: "linear-gradient(135deg, #4338ca, #7c3aed)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        marginBottom: 8,
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    <Text size="sm" c="dimmed" fw={500}>
-                      {item.description}
-                    </Text>
-                  </div>
-                </Stack>
-              </Paper>
-            ))}
-          </SimpleGrid>
-
-          <SimpleGrid
-            cols={{ base: 1, sm: 2, lg: 2 }}
-            spacing={{ base: "md", sm: "lg" }}
-            style={{
-              width: "100%",
-              maxWidth: "100%",
-              margin: "0 auto",
-            }}
-          >
-            {navigationItems.slice(3).map((item, index) => (
-              <Paper
-                key={index + 3}
-                withBorder
-                radius="xl"
-                p="lg"
-                onClick={() => navigate(item.path)}
-                className={`liquid-glass-card fade-animated-home delay-${index + 6}`}
-                style={{
-                  opacity: 0,
-                  background: "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(20px) saturate(150%)",
-                  WebkitBackdropFilter: "blur(20px) saturate(150%)",
-                  border: "1px solid rgba(255, 255, 255, 0.6)",
-                  boxShadow: `
-                    0 8px 32px rgba(99, 102, 241, 0.12),
-                    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-                    inset 0 -1px 1px rgba(0, 0, 0, 0.05)
-                  `,
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Stack gap="md" align="center" style={{ textAlign: "center", height: "100%" }}>
-                  <ThemeIcon
-                    size={70}
-                    radius="xl"
-                    variant="gradient"
-                    gradient={{ from: "indigo", to: "violet", deg: 135 }}
-                    className="nav-icon"
-                    style={{
-                      boxShadow:
-                        "0 8px 24px rgba(99, 102, 241, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5)",
-                    }}
-                  >
-                    {item.icon}
-                  </ThemeIcon>
-                  <div>
-                    <Text
-                      fw={700}
-                      size="lg"
-                      style={{
-                        background: "linear-gradient(135deg, #4338ca, #7c3aed)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        marginBottom: 8,
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    <Text size="sm" c="dimmed" fw={500}>
-                      {item.description}
-                    </Text>
-                  </div>
-                </Stack>
-              </Paper>
-            ))}
-          </SimpleGrid>
+          <div className="hero-card liquid-card">
+            <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
+            <h1 id="titre-principal">Thomas Caron</h1>
+            <p className="hero-lede">
+              Je conçois des expériences numériques fiables, du développement applicatif aux tests
+              automatisés.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#contact">
+                Me contacter
+                <IconArrowDown aria-hidden="true" size={18} stroke={2.5} />
+              </a>
+              <a className="button button-secondary" href="/assets/CV_Thomas_MAALSI.pdf" download>
+                <IconDownload aria-hidden="true" size={18} stroke={2.5} />
+                Télécharger mon CV
+              </a>
+            </div>
+            <ul className="hero-details" aria-label="Informations principales">
+              <li>Mont-Saint-Aignan, France</li>
+              <li>Développement web, mobile & qualité logicielle</li>
+            </ul>
+          </div>
         </div>
-      </Stack>
-    </Container>
+      </section>
+
+      <section className="section-shell" id="parcours" aria-labelledby="titre-parcours">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">Expérience</p>
+            <h2 id="titre-parcours">Un parcours construit sur le produit et sa qualité.</h2>
+            <p>
+              Du développement d’outils de production à l’automatisation de tests, j’interviens à
+              chaque étape qui rend une application utile et fiable.
+            </p>
+          </div>
+
+          <div className="journey-layout">
+            <ol className="timeline" aria-label="Expériences professionnelles">
+              {experiences.map((experience) => {
+                const ExperienceIcon = experience.icon;
+
+                return (
+                  <li className="timeline-item liquid-card" key={experience.title}>
+                    <div className="squircle timeline-icon" aria-hidden="true">
+                      <ExperienceIcon size={25} stroke={2} />
+                    </div>
+                    <div>
+                      <time dateTime={experience.dateTime}>{experience.period}</time>
+                      <h3>{experience.title}</h3>
+                      <p className="company">{experience.company}</p>
+                      <p>{experience.description}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+
+            <aside className="education liquid-card" aria-labelledby="titre-formations">
+              <div className="squircle education-icon" aria-hidden="true">
+                <IconSchool size={25} stroke={2} />
+              </div>
+              <p className="eyebrow">Formation</p>
+              <h2 id="titre-formations">Apprendre pour mieux construire.</h2>
+              <p className="school-name">École CESI</p>
+              <ul>
+                {formations.map((formation) => (
+                  <li key={formation.title}>
+                    <strong>{formation.title}</strong>
+                    <span>{formation.level}</span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell" id="competences" aria-labelledby="titre-competences">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">Compétences</p>
+            <h2 id="titre-competences">Un socle technique polyvalent.</h2>
+            <p>
+              Des technologies choisies pour développer, faire évoluer et vérifier la qualité des
+              applications.
+            </p>
+          </div>
+
+          <div className="skills-grid">
+            {skillGroups.map((group) => (
+              <section className="skill-group liquid-card" key={group.title} aria-labelledby={`skill-${group.title}`}>
+                <h3 id={`skill-${group.title}`}>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell" id="projets" aria-labelledby="titre-projets">
+        <div className="container">
+          <div className="section-heading">
+            <p className="eyebrow">Projets</p>
+            <h2 id="titre-projets">Des réalisations, avec le goût du concret.</h2>
+          </div>
+
+          <div className="projects-grid">
+            {projects.map((project) => (
+              <article className="project-card liquid-card" key={project.title}>
+                <p className="project-date">{project.date}</p>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell contact-section" id="contact" aria-labelledby="titre-contact">
+        <div className="container">
+          <div className="contact-card liquid-card">
+            <div className="section-heading section-heading-compact">
+              <p className="eyebrow">Contact</p>
+              <h2 id="titre-contact">Parlons de votre prochain projet.</h2>
+              <p>Une opportunité, une idée ou simplement l’envie d’échanger : je vous répondrai avec plaisir.</p>
+            </div>
+
+            <address className="contact-links">
+              <a href="mailto:caronthomas27@gmail.com">
+                <span className="squircle contact-icon" aria-hidden="true">
+                  <IconMail size={22} stroke={2} />
+                </span>
+                <span>
+                  <small>E-mail</small>
+                  caronthomas27@gmail.com
+                </span>
+                <IconArrowUpRight className="contact-arrow" aria-hidden="true" size={19} />
+              </a>
+              <a href="tel:+33783523785">
+                <span className="squircle contact-icon" aria-hidden="true">
+                  <IconPhone size={22} stroke={2} />
+                </span>
+                <span>
+                  <small>Téléphone</small>
+                  07 83 52 37 85
+                </span>
+                <IconArrowUpRight className="contact-arrow" aria-hidden="true" size={19} />
+              </a>
+              <a
+                href="https://www.google.com/maps?q=Mont-Saint-Aignan"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ouvrir la localisation de Mont-Saint-Aignan dans Google Maps (nouvelle fenêtre)"
+              >
+                <span className="squircle contact-icon" aria-hidden="true">
+                  <IconMapPin size={22} stroke={2} />
+                </span>
+                <span>
+                  <small>Localisation</small>
+                  Mont-Saint-Aignan, France
+                </span>
+                <IconArrowUpRight className="contact-arrow" aria-hidden="true" size={19} />
+              </a>
+            </address>
+
+            <div className="contact-socials" aria-label="Réseaux professionnels">
+              <a
+                className="squircle social-link"
+                href="https://www.linkedin.com/in/thomas-caron27/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Consulter le profil LinkedIn de Thomas Caron (nouvelle fenêtre)"
+              >
+                <IconBrandLinkedin aria-hidden="true" size={22} />
+              </a>
+              <a
+                className="squircle social-link"
+                href="https://github.com/ThoomassC"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Consulter le profil GitHub de Thomas Caron (nouvelle fenêtre)"
+              >
+                <IconBrandGithub aria-hidden="true" size={22} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 

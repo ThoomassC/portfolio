@@ -56,15 +56,21 @@ const experiences = [
 const formations = [
   {
     title: "Manager en architectures et applications logicielles des SI",
-    level: "Bac +5 · En cours d’obtention",
+    level: "Bac +5",
+    status: "En cours",
+    statusType: "in-progress",
   },
   {
     title: "Concepteur développeur d’applications",
-    level: "Bac +3 · Obtenu",
+    level: "Bac +3",
+    status: "Obtenu",
+    statusType: "completed",
   },
   {
     title: "Développeur informatique",
-    level: "Bac +2 · Obtenu",
+    level: "Bac +2",
+    status: "Obtenu",
+    statusType: "completed",
   },
 ];
 
@@ -144,6 +150,8 @@ function Home() {
     <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
       <div className="ambient ambient-one" aria-hidden="true" />
       <div className="ambient ambient-two" aria-hidden="true" />
+      <div className="glass-orb glass-orb-one" aria-hidden="true" />
+      <div className="glass-orb glass-orb-two" aria-hidden="true" />
 
       <section className="hero section-shell" aria-labelledby="titre-principal">
         <div className="container">
@@ -241,7 +249,14 @@ function Home() {
                 {formations.map((formation) => (
                   <li key={formation.title}>
                     <strong>{formation.title}</strong>
-                    <span>{formation.level}</span>
+                    <div className="formation-meta">
+                      <span className="formation-level">{formation.level}</span>
+                      <span
+                        className={`education-status education-status--${formation.statusType}`}
+                      >
+                        {formation.status}
+                      </span>
+                    </div>
                   </li>
                 ))}
               </ul>

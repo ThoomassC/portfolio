@@ -153,18 +153,38 @@ function Home() {
       <div className="glass-orb glass-orb-one" aria-hidden="true" />
       <div className="glass-orb glass-orb-two" aria-hidden="true" />
 
-      <section className="hero section-shell" aria-labelledby="titre-principal">
+      <section className="hero" aria-labelledby="titre-principal">
+        <div className="hero-reference" aria-hidden="true">
+          <img
+            src="/og.png"
+            width={1734}
+            height={907}
+            alt=""
+            fetchPriority="high"
+          />
+        </div>
+        <div className="hero-mobile-content liquid-card" aria-hidden="true">
+          <div>
+            <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
+            <p className="hero-mobile-name">Thomas Caron</p>
+          </div>
+        </div>
+      </section>
+
+      <div className="hero-accessible-copy">
+        <p>Développeur logiciel, full-stack et QA.</p>
+        <h1 id="titre-principal">Thomas Caron</h1>
+      </div>
+
+      <section className="hero-utility" aria-label="Présentation et navigation">
         <div className="container">
-          <nav className="section-nav" aria-label="Navigation principale">
+          <nav className="section-nav section-nav--after-hero" aria-label="Navigation principale">
             <a href="#parcours">Parcours</a>
             <a href="#competences">Compétences</a>
             <a href="#projets">Projets</a>
             <a href="#contact">Contact</a>
           </nav>
-
-          <div className="hero-card liquid-card">
-            <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
-            <h1 id="titre-principal">Thomas Caron</h1>
+          <div className="hero-utility-card liquid-card">
             <p className="hero-lede">
               Je conçois des expériences numériques fiables, du développement
               applicatif aux tests automatisés.

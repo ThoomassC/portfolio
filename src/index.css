@@ -1,4 +1,6 @@
 :root {
+  /* Ajuste cette valeur pour modifier uniquement la taille du nom en page d'accueil. */
+  --hero-name-size: clamp(2.65rem, 7vw, 5.5rem);
   color: #14213a;
   background: #e8f0f5;
   font-family:
@@ -183,7 +185,7 @@ h3 {
 h1 {
   max-width: 12ch;
   margin-bottom: 1.25rem;
-  font-size: clamp(3.25rem, 10vw, 7.5rem);
+  font-size: var(--hero-name-size);
   letter-spacing: -0.075em;
   line-height: 0.91;
 }

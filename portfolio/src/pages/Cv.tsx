@@ -4,7 +4,6 @@ import {
   Stack,
   Paper,
   Button,
-  Anchor,
 } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 

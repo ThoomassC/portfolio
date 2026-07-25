@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   IconArrowDown,
   IconArrowUpRight,
@@ -11,6 +11,7 @@ import {
   IconMail,
   IconMapPin,
   IconMenu2,
+  IconMoon,
   IconPhone,
   IconSchool,
   IconTestPipe,
@@ -79,6 +80,7 @@ const formations = [
 
 const skillGroups = [
   {
+    id: "langages",
     title: "Langages",
     items: [
       "JavaScript",
@@ -92,6 +94,7 @@ const skillGroups = [
     ],
   },
   {
+    id: "developpement-web",
     title: "Développement web",
     items: [
       "React",
@@ -104,6 +107,7 @@ const skillGroups = [
     ],
   },
   {
+    id: "qualite-logicielle",
     title: "Qualité logicielle",
     items: [
       "Selenium",
@@ -114,6 +118,7 @@ const skillGroups = [
     ],
   },
   {
+    id: "donnees-outils",
     title: "Données & outils",
     items: [
       "PostgreSQL",
@@ -152,15 +157,43 @@ const navigationItems = [
   { id: "parcours", label: "Parcours" },
   { id: "competences", label: "Compétences" },
   { id: "projets", label: "Projets" },
+  { id: "accessibilite", label: "Accessibilité" },
   { id: "contact", label: "Contact" },
 ];
+
+type Theme = "light" | "dark";
 
 function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      return window.localStorage.getItem("portfolio-theme") === "dark"
+        ? "dark"
+        : "light";
+    } catch {
+      return "light";
+    }
+  });
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = () => setIsMenuOpen(false);
+  const isDarkTheme = theme === "dark";
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+
+    const themeColor = document.querySelector<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    themeColor?.setAttribute("content", isDarkTheme ? "#081721" : "#e7eff1");
+
+    try {
+      window.localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      // Le thème reste utilisable même si le stockage local est indisponible.
+    }
+  }, [isDarkTheme, theme]);
 
   useEffect(() => {
     const sections = navigationItems
@@ -192,6 +225,61 @@ function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReducedMotion) {
+      return;
+    }
+
+    const root = document.documentElement;
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]"),
+    );
+    root.classList.add("reveal-enabled");
+
+    let animationFrame = 0;
+
+    const updateVisibility = () => {
+      animationFrame = 0;
+      const viewportHeight = window.innerHeight;
+      const visibilityMargin = Math.min(viewportHeight * 0.28, 240);
+
+      elements.forEach((element) => {
+        const { top, bottom } = element.getBoundingClientRect();
+        const isNearViewport =
+          bottom >= -visibilityMargin &&
+          top <= viewportHeight + visibilityMargin;
+
+        element.classList.toggle("is-visible", isNearViewport);
+      });
+    };
+
+    const scheduleVisibilityUpdate = () => {
+      if (animationFrame === 0) {
+        animationFrame = window.requestAnimationFrame(updateVisibility);
+      }
+    };
+
+    window.addEventListener("scroll", scheduleVisibilityUpdate, {
+      passive: true,
+    });
+    window.addEventListener("resize", scheduleVisibilityUpdate);
+    scheduleVisibilityUpdate();
+
+    return () => {
+      if (animationFrame !== 0) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+      window.removeEventListener("scroll", scheduleVisibilityUpdate);
+      window.removeEventListener("resize", scheduleVisibilityUpdate);
+      root.classList.remove("reveal-enabled");
+      elements.forEach((element) => element.classList.remove("is-visible"));
+    };
+  }, []);
+
   return (
     <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
       <div className="liquid-bubble liquid-bubble-one" aria-hidden="true" />
@@ -211,14 +299,33 @@ function Home() {
           }
         }}
       >
-        <div className="container navigation-shell">
+        <div className="container navigation-shell" data-reveal="down">
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label="Thème sombre"
+            aria-pressed={isDarkTheme}
+            onClick={() =>
+              setTheme((currentTheme) =>
+                currentTheme === "light" ? "dark" : "light",
+              )
+            }
+          >
+            <IconMoon aria-hidden="true" size={20} stroke={2.3} />
+            <span>Sombre</span>
+          </button>
+
           <button
             ref={menuButtonRef}
             className="menu-toggle"
             type="button"
             aria-expanded={isMenuOpen}
             aria-controls="navigation-principale"
-            aria-label={isMenuOpen ? "Fermer le menu principal" : "Ouvrir le menu principal"}
+            aria-label={
+              isMenuOpen
+                ? "Fermer le menu principal"
+                : "Ouvrir le menu principal"
+            }
             onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
           >
             {isMenuOpen ? (
@@ -252,18 +359,17 @@ function Home() {
 
       <section className="hero" aria-labelledby="titre-principal">
         <div className="container">
-          <div className="hero-card liquid-card">
+          <div className="hero-card liquid-card" data-reveal="scale">
             <div className="hero-content">
               <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
               <h1 id="titre-principal">Thomas Caron</h1>
               <p className="hero-current-role">
                 <strong>Actuellement</strong>
-                <span>QA automatisation chez Blue Soft</span>
+                <span>Développeur Full Stack chez Blue Soft</span>
               </p>
               <p className="hero-lede">
-                Je développe et fiabilise des applications web et mobiles, du
-                C# et Angular aux tests automatisés Java avec Selenium et
-                Cucumber.
+                Je développe et fiabilise des applications web et mobiles, du C#
+                et Angular aux tests automatisés Java avec Selenium et Cucumber.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#contact">
@@ -279,9 +385,12 @@ function Home() {
                   Télécharger mon CV
                 </a>
               </div>
-              <ul className="hero-details" aria-label="Informations principales">
+              <ul
+                className="hero-details"
+                aria-label="Informations principales"
+              >
                 <li>Mont-Saint-Aignan, France</li>
-                <li>Full-stack · iOS · QA automatisation</li>
+                <li>Motivation - Curiosité - Esprit d’équipe</li>
               </ul>
             </div>
           </div>
@@ -294,7 +403,7 @@ function Home() {
         aria-labelledby="titre-parcours"
       >
         <div className="container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal="up">
             <p className="eyebrow">Expérience</p>
             <h2 id="titre-parcours">
               Un parcours construit sur le produit et sa qualité.
@@ -308,12 +417,13 @@ function Home() {
 
           <div className="journey-layout">
             <ol className="timeline" aria-label="Expériences professionnelles">
-              {experiences.map((experience) => {
+              {experiences.map((experience, index) => {
                 const ExperienceIcon = experience.icon;
 
                 return (
                   <li
-                    className="timeline-item liquid-card"
+                    className={`timeline-item liquid-card reveal-delay-${Math.min(index, 3)}`}
+                    data-reveal="up"
                     key={experience.title}
                   >
                     <div className="squircle timeline-icon" aria-hidden="true">
@@ -333,8 +443,9 @@ function Home() {
             </ol>
 
             <aside
-              className="education liquid-card"
+              className="education liquid-card reveal-delay-2"
               aria-labelledby="titre-formations"
+              data-reveal="up"
             >
               <div className="squircle education-icon" aria-hidden="true">
                 <IconSchool size={25} stroke={2} />
@@ -368,7 +479,7 @@ function Home() {
         aria-labelledby="titre-competences"
       >
         <div className="container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal="up">
             <p className="eyebrow">Compétences</p>
             <h2 id="titre-competences">Un socle technique polyvalent.</h2>
             <p>
@@ -378,13 +489,14 @@ function Home() {
           </div>
 
           <div className="skills-grid">
-            {skillGroups.map((group) => (
+            {skillGroups.map((group, index) => (
               <section
-                className="skill-group liquid-card"
+                className={`skill-group liquid-card reveal-delay-${index % 2}`}
                 key={group.title}
-                aria-labelledby={`skill-${group.title}`}
+                aria-labelledby={`skill-${group.id}`}
+                data-reveal="up"
               >
-                <h3 id={`skill-${group.title}`}>{group.title}</h3>
+                <h3 id={`skill-${group.id}`}>{group.title}</h3>
                 <ul>
                   {group.items.map((item) => (
                     <li key={item}>{item}</li>
@@ -402,7 +514,7 @@ function Home() {
         aria-labelledby="titre-projets"
       >
         <div className="container">
-          <div className="section-heading">
+          <div className="section-heading" data-reveal="up">
             <p className="eyebrow">Projets</p>
             <h2 id="titre-projets">
               Des réalisations, avec le goût du concret.
@@ -410,8 +522,12 @@ function Home() {
           </div>
 
           <div className="projects-grid">
-            {projects.map((project) => (
-              <article className="project-card liquid-card" key={project.title}>
+            {projects.map((project, index) => (
+              <article
+                className={`project-card liquid-card reveal-delay-${index}`}
+                data-reveal="up"
+                key={project.title}
+              >
                 <p className="project-date">{project.date}</p>
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
@@ -422,12 +538,83 @@ function Home() {
       </section>
 
       <section
+        className="section-shell accessibility-section"
+        id="accessibilite"
+        aria-labelledby="titre-accessibilite"
+      >
+        <div className="container">
+          <div className="section-heading" data-reveal="up">
+            <p className="eyebrow">Accessibilité</p>
+            <h2 id="titre-accessibilite">
+              Un portfolio pensé pour être utilisable par tous.
+            </h2>
+            <p>
+              Ce site vise un niveau de conformité aussi élevé que possible au
+              RGAA 4.1.2 et fait l’objet d’améliorations continues.
+            </p>
+          </div>
+
+          <div className="accessibility-card liquid-card" data-reveal="up">
+            <div className="accessibility-introduction">
+              <p className="accessibility-status">
+                <span>État actuel</span>
+                Audit technique réalisé en juillet 2026
+              </p>
+              <h3>Plusieurs façons de parcourir le même contenu.</h3>
+              <p>
+                Le portfolio est conçu pour rester lisible, compréhensible et
+                navigable avec différents appareils et modes d’interaction.
+              </p>
+            </div>
+
+            <div>
+              <ul className="accessibility-list">
+                <li>
+                  <strong>Navigation</strong>
+                  <span>
+                    Lien d’évitement, titres structurés et utilisation au
+                    clavier.
+                  </span>
+                </li>
+                <li>
+                  <strong>Lecture</strong>
+                  <span>
+                    Contrastes renforcés, textes redimensionnables et thème
+                    sombre optionnel.
+                  </span>
+                </li>
+                <li>
+                  <strong>Confort</strong>
+                  <span>
+                    Mise en page responsive et préférence de réduction des
+                    mouvements respectée.
+                  </span>
+                </li>
+              </ul>
+
+              <p className="accessibility-limit">
+                <strong>Limite connue :</strong> le CV PDF téléchargeable est en
+                cours de remise en accessibilité.
+              </p>
+
+              <a
+                className="button button-secondary accessibility-contact"
+                href="mailto:caronthomas27@gmail.com?subject=Signalement%20accessibilit%C3%A9%20du%20portfolio"
+              >
+                Signaler un problème d’accessibilité
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
         className="section-shell contact-section"
         id="contact"
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <div className="contact-card liquid-card">
+          <div className="contact-card liquid-card" data-reveal="up">
             <div className="section-heading section-heading-compact">
               <p className="eyebrow">Contact</p>
               <h2 id="titre-contact">Parlons de votre prochain projet.</h2>

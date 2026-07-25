@@ -642,6 +642,30 @@ h1 {
   font-weight: 800;
 }
 
+.mission-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mission-list li {
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--divider-color);
+}
+
+.mission-list h4 {
+  margin: 0 0 0.35rem;
+  color: var(--strong-copy);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.mission-list p {
+  margin-bottom: 0;
+}
+
 .education {
   --liquid-radius: 2rem;
   padding: 1.8rem;
@@ -722,10 +746,9 @@ h1 {
   color: #765000;
 }
 
-.skills-grid,
-.projects-grid {
+.skills-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -757,11 +780,50 @@ h1 {
 }
 
 .projects-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .project-card {
   min-height: 100%;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+}
+
+.project-meta .project-date {
+  margin-bottom: 0;
+}
+
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.28rem 0.58rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.project-status--completed {
+  background: #d9f3e7;
+  color: #075b40;
+}
+
+.project-status--in-progress {
+  background: #fff0ca;
+  color: #765000;
 }
 
 .accessibility-card {

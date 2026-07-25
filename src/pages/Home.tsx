@@ -6,7 +6,6 @@ import {
   IconBrandLinkedin,
   IconBriefcase,
   IconCode,
-  IconDeviceMobile,
   IconDownload,
   IconMail,
   IconMapPin,
@@ -14,7 +13,6 @@ import {
   IconMoon,
   IconPhone,
   IconSchool,
-  IconTestPipe,
   IconX,
 } from "@tabler/icons-react";
 
@@ -26,34 +24,40 @@ const experiences = [
     company: "Linkt",
     description:
       "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
+    missions: [],
     icon: IconCode,
   },
   {
-    period: "Octobre 2025 — Décembre 2025",
+    period: "Octobre 2025 — Août 2026",
     dateTime: "2025-10",
-    title: "Développeur TMA full-stack",
+    title: "Développeur Full Stack",
     company: "Blue Soft",
     description:
-      "Résolution de bugs sur une application en microservices, côté back-end et front-end, avec C# et Angular.",
+      "Trois missions successives couvrant la maintenance applicative, le développement mobile et l’automatisation des tests.",
+    missions: [
+      {
+        period: "Octobre 2025 — Décembre 2025",
+        dateTime: "2025-10",
+        title: "TMA full-stack — C# et Angular",
+        description:
+          "Résolution de bugs sur une application en microservices, côté back-end et front-end.",
+      },
+      {
+        period: "Décembre 2025 — Février 2026",
+        dateTime: "2025-12",
+        title: "Développement iOS — Swift",
+        description:
+          "Développement au sein d’une cellule de sprint pour une application iOS.",
+      },
+      {
+        period: "Février 2026 — Août 2026",
+        dateTime: "2026-02",
+        title: "QA et tests automatisés — Java",
+        description:
+          "Conception et maintenance de tests avec Selenium et Cucumber sur deux projets.",
+      },
+    ],
     icon: IconBriefcase,
-  },
-  {
-    period: "Décembre 2025 — Février 2026",
-    dateTime: "2025-12",
-    title: "Développeur iOS — cellule de sprint",
-    company: "Blue Soft",
-    description:
-      "Développement Swift au sein d’une cellule de sprint pour une application iOS.",
-    icon: IconDeviceMobile,
-  },
-  {
-    period: "Février 2026 — Août 2026",
-    dateTime: "2026-02",
-    title: "QA automatisation",
-    company: "Blue Soft",
-    description:
-      "Conception et maintenance de tests automatisés Java avec Selenium et Cucumber sur deux projets.",
-    icon: IconTestPipe,
   },
 ];
 
@@ -80,55 +84,45 @@ const formations = [
 
 const skillGroups = [
   {
-    id: "langages",
-    title: "Langages",
+    id: "experience-professionnelle",
+    title: "Expérience professionnelle",
     items: [
-      "JavaScript",
-      "TypeScript",
-      "Java",
       "C#",
-      "Swift",
-      "HTML",
-      "CSS",
-      "SQL",
-    ],
-  },
-  {
-    id: "developpement-web",
-    title: "Développement web",
-    items: [
-      "React",
       "Angular",
-      "Node.js",
-      "Next.js",
-      "NestJS",
-      "Express",
-      "REST API",
-    ],
-  },
-  {
-    id: "qualite-logicielle",
-    title: "Qualité logicielle",
-    items: [
+      "Java",
       "Selenium",
       "Cucumber",
-      "Jest",
+      "Swift",
+      "Git",
+      "SQL",
       "Tests automatisés",
       "Tests fonctionnels",
     ],
   },
   {
-    id: "donnees-outils",
-    title: "Données & outils",
+    id: "projets-personnels",
+    title: "Projets personnels",
     items: [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Node.js",
+      "Express",
+      "HTML",
+      "CSS",
+      "REST API",
+      "Jest",
       "PostgreSQL",
       "MySQL",
       "MongoDB",
-      "Git",
-      "Docker",
       "Swagger",
       "Figma",
     ],
+  },
+  {
+    id: "en-apprentissage",
+    title: "En apprentissage",
+    items: ["Next.js", "NestJS", "Docker"],
   },
 ];
 
@@ -136,20 +130,34 @@ const projects = [
   {
     date: "2024",
     title: "Application de gestion de budget",
+    status: "En cours",
+    statusType: "in-progress",
     description:
       "Application en cours de développement pour piloter un budget personnel, conçue avec une architecture hexagonale.",
   },
   {
     date: "2022 — 2024",
     title: "Sites web & APIs",
+    status: "Fait",
+    statusType: "completed",
     description:
       "Création de sites dynamiques et d’APIs avec React et Node.js, en appliquant les principes de Clean Architecture.",
   },
   {
     date: "Janvier 2024",
     title: "GameJam Rouen Métropole",
+    status: "Fait",
+    statusType: "completed",
     description:
       "Conception en équipe d’un mini-jeu vidéo lors d’une GameJam de 48 heures, à partir d’un thème imposé.",
+  },
+  {
+    date: "2026",
+    title: "Portfolio personnel",
+    status: "Fait",
+    statusType: "completed",
+    description:
+      "Conception de ce portfolio responsive en React et TypeScript, avec un design liquid glass, un thème sombre et une attention portée au RGAA.",
   },
 ];
 
@@ -436,6 +444,22 @@ function Home() {
                       <h3>{experience.title}</h3>
                       <p className="company">{experience.company}</p>
                       <p>{experience.description}</p>
+                      {experience.missions.length > 0 && (
+                        <ul
+                          className="mission-list"
+                          aria-label={`Missions réalisées chez ${experience.company}`}
+                        >
+                          {experience.missions.map((mission) => (
+                            <li key={mission.title}>
+                              <time dateTime={mission.dateTime}>
+                                {mission.period}
+                              </time>
+                              <h4>{mission.title}</h4>
+                              <p>{mission.description}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </li>
                 );
@@ -528,7 +552,14 @@ function Home() {
                 data-reveal="up"
                 key={project.title}
               >
-                <p className="project-date">{project.date}</p>
+                <div className="project-meta">
+                  <p className="project-date">{project.date}</p>
+                  <span
+                    className={`project-status project-status--${project.statusType}`}
+                  >
+                    {project.status}
+                  </span>
+                </div>
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
               </article>

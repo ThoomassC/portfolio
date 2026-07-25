@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   IconArrowDown,
   IconArrowUpRight,
@@ -9,9 +10,11 @@ import {
   IconDownload,
   IconMail,
   IconMapPin,
+  IconMenu2,
   IconPhone,
   IconSchool,
   IconTestPipe,
+  IconX,
 } from "@tabler/icons-react";
 
 const experiences = [
@@ -145,68 +148,142 @@ const projects = [
   },
 ];
 
+const navigationItems = [
+  { id: "parcours", label: "Parcours" },
+  { id: "competences", label: "Compétences" },
+  { id: "projets", label: "Projets" },
+  { id: "contact", label: "Contact" },
+];
+
 function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
+  useEffect(() => {
+    const sections = navigationItems
+      .map(({ id }) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSection = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (firstEntry, secondEntry) =>
+              Math.abs(firstEntry.boundingClientRect.top) -
+              Math.abs(secondEntry.boundingClientRect.top),
+          )[0];
+
+        if (visibleSection) {
+          setActiveSection(visibleSection.target.id);
+        }
+      },
+      {
+        rootMargin: "-20% 0px -65% 0px",
+        threshold: [0, 0.1],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
-      <div className="ambient ambient-one" aria-hidden="true" />
-      <div className="ambient ambient-two" aria-hidden="true" />
-      <div className="glass-orb glass-orb-one" aria-hidden="true" />
-      <div className="glass-orb glass-orb-two" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-one" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-two" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-three" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-four" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-five" aria-hidden="true" />
+      <div className="liquid-bubble liquid-bubble-six" aria-hidden="true" />
 
-      <section className="hero" aria-labelledby="titre-principal">
-        <div className="hero-reference" aria-hidden="true">
-          <img
-            src="/og.png"
-            width={1734}
-            height={907}
-            alt=""
-            fetchPriority="high"
-          />
-        </div>
-        <div className="hero-mobile-content liquid-card" aria-hidden="true">
-          <div>
-            <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
-            <p className="hero-mobile-name">Thomas Caron</p>
+      <nav
+        className="main-navigation"
+        aria-label="Navigation principale"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && isMenuOpen) {
+            closeMenu();
+            menuButtonRef.current?.focus();
+          }
+        }}
+      >
+        <div className="container navigation-shell">
+          <button
+            ref={menuButtonRef}
+            className="menu-toggle"
+            type="button"
+            aria-expanded={isMenuOpen}
+            aria-controls="navigation-principale"
+            aria-label={isMenuOpen ? "Fermer le menu principal" : "Ouvrir le menu principal"}
+            onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+          >
+            {isMenuOpen ? (
+              <IconX aria-hidden="true" size={22} stroke={2.4} />
+            ) : (
+              <IconMenu2 aria-hidden="true" size={22} stroke={2.4} />
+            )}
+            <span>Menu</span>
+          </button>
+
+          <div
+            id="navigation-principale"
+            className={`section-nav section-nav--site${isMenuOpen ? " is-open" : ""}`}
+          >
+            {navigationItems.map(({ id, label }) => (
+              <a
+                href={`#${id}`}
+                aria-current={activeSection === id ? "location" : undefined}
+                key={id}
+                onClick={() => {
+                  setActiveSection(id);
+                  closeMenu();
+                }}
+              >
+                {label}
+              </a>
+            ))}
           </div>
         </div>
-      </section>
+      </nav>
 
-      <div className="hero-accessible-copy">
-        <p>Développeur logiciel, full-stack et QA.</p>
-        <h1 id="titre-principal">Thomas Caron</h1>
-      </div>
-
-      <section className="hero-utility" aria-label="Présentation et navigation">
+      <section className="hero" aria-labelledby="titre-principal">
         <div className="container">
-          <nav className="section-nav section-nav--after-hero" aria-label="Navigation principale">
-            <a href="#parcours">Parcours</a>
-            <a href="#competences">Compétences</a>
-            <a href="#projets">Projets</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <div className="hero-utility-card liquid-card">
-            <p className="hero-lede">
-              Je conçois des expériences numériques fiables, du développement
-              applicatif aux tests automatisés.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#contact">
-                Me contacter
-                <IconArrowDown aria-hidden="true" size={18} stroke={2.5} />
-              </a>
-              <a
-                className="button button-secondary"
-                href="/assets/CV_Thomas_MAALSI.pdf"
-                download
-              >
-                <IconDownload aria-hidden="true" size={18} stroke={2.5} />
-                Télécharger mon CV
-              </a>
+          <div className="hero-card liquid-card">
+            <div className="hero-content">
+              <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
+              <h1 id="titre-principal">Thomas Caron</h1>
+              <p className="hero-current-role">
+                <strong>Actuellement</strong>
+                <span>QA automatisation chez Blue Soft</span>
+              </p>
+              <p className="hero-lede">
+                Je développe et fiabilise des applications web et mobiles, du
+                C# et Angular aux tests automatisés Java avec Selenium et
+                Cucumber.
+              </p>
+              <div className="hero-actions">
+                <a className="button button-primary" href="#contact">
+                  Me contacter
+                  <IconArrowDown aria-hidden="true" size={18} stroke={2.5} />
+                </a>
+                <a
+                  className="button button-secondary"
+                  href="/assets/CV_Thomas_MAALSI.pdf"
+                  download
+                >
+                  <IconDownload aria-hidden="true" size={18} stroke={2.5} />
+                  Télécharger mon CV
+                </a>
+              </div>
+              <ul className="hero-details" aria-label="Informations principales">
+                <li>Mont-Saint-Aignan, France</li>
+                <li>Full-stack · iOS · QA automatisation</li>
+              </ul>
             </div>
-            <ul className="hero-details" aria-label="Informations principales">
-              <li>Mont-Saint-Aignan, France</li>
-              <li>Développement web, mobile & qualité logicielle</li>
-            </ul>
           </div>
         </div>
       </section>

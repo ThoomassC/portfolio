@@ -8,7 +8,19 @@
       name="description"
       content="Portfolio de Thomas Caron, développeur logiciel full-stack et QA."
     />
-    <meta name="theme-color" content="#e8f0f5" />
+    <meta name="theme-color" content="#e7eff1" />
+    <script>
+      try {
+        if (window.localStorage.getItem("portfolio-theme") === "dark") {
+          document.documentElement.dataset.theme = "dark";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", "#081721");
+        }
+      } catch {
+        // Le thème clair reste le thème par défaut.
+      }
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:title" content="Thomas Caron — Développeur logiciel" />

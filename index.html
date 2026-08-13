@@ -1,14 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap"
-      rel="stylesheet"
-    />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Thomas - Portfolio</title>
+    <meta
+      name="description"
+      content="Portfolio de Thomas Caron, développeur logiciel full-stack et QA."
+    />
+    <meta name="theme-color" content="#e7eff1" />
+    <script>
+      try {
+        if (window.localStorage.getItem("portfolio-theme") === "dark") {
+          document.documentElement.dataset.theme = "dark";
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", "#081721");
+        }
+      } catch {
+        // Le thème clair reste le thème par défaut.
+      }
+    </script>
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content="Thomas Caron — Développeur logiciel" />
+    <meta
+      property="og:description"
+      content="Développeur logiciel full-stack et QA, de la conception aux tests automatisés."
+    />
+    <meta property="og:image" content="/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>Thomas Caron — Développeur logiciel</title>
   </head>
   <body>
     <div id="root"></div>

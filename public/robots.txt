@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-omega-umber-81.vercel.app/sitemap.xml

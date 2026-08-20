@@ -7,6 +7,14 @@ export const profile = {
   mapsUrl: "https://www.google.com/maps?q=Mont-Saint-Aignan",
   linkedInUrl: "https://www.linkedin.com/in/thomas-caron27/",
   gitHubUrl: "https://github.com/ThoomassC",
+  portrait: {
+    src: "/assets/portrait-thomas-caron.jpg",
+    width: 900,
+    height: 1200,
+    /** Alternative descriptive : le portrait porte de l'information (identité), il
+        n'est donc pas décoratif et ne peut pas recevoir un alt vide. */
+    alt: "Thomas Caron, souriant, en chemise bleu marine sur fond clair.",
+  },
   cv: {
     href: "/assets/CV-Thomas-Caron-Developpeur-Full-Stack-QA.pdf",
     fileName: "CV-Thomas-Caron-Developpeur-Full-Stack-QA.pdf",

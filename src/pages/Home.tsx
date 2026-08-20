@@ -46,61 +46,74 @@ const Home = () => {
       <section className="hero" aria-labelledby="titre-principal">
         <div className="container">
           <div className="hero-card liquid-card" data-reveal="scale">
-            <div className="hero-content">
-              <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
-              <h1 id="titre-principal">{profile.name}</h1>
-              <p className="hero-current-role">
-                <strong>Actuellement</strong>
-                <span>Développeur Full Stack chez Blue Soft</span>
-              </p>
-              <p className="hero-availability">
-                Disponible à partir d’octobre 2027 — CDI ou freelance
-              </p>
-              <p className="hero-lede">
-                Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
-                tests automatisés Java avec Selenium et Cucumber.
-              </p>
-              <div className="hero-actions">
-                <a className="button button-primary" href="#contact">
-                  Me contacter
-                  <IconArrowDown aria-hidden="true" size={18} stroke={2.5} />
-                </a>
-                <a
-                  className="button button-secondary"
-                  href={profile.cv.href}
-                  download={profile.cv.fileName}
-                >
-                  <IconDownload aria-hidden="true" size={18} stroke={2.5} />
-                  {profile.cv.label}
-                </a>
+            <div className="hero-layout">
+              <div className="hero-content">
+                <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
+                <h1 id="titre-principal">{profile.name}</h1>
+                <p className="hero-current-role">
+                  <strong>Actuellement</strong>
+                  <span>Développeur Full Stack chez Blue Soft</span>
+                </p>
+                <p className="hero-availability">
+                  Disponible à partir d’octobre 2027 — CDI ou freelance
+                </p>
+                <p className="hero-lede">
+                  Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
+                  tests automatisés Java avec Selenium et Cucumber.
+                </p>
+                <div className="hero-actions">
+                  <a className="button button-primary" href="#contact">
+                    Me contacter
+                    <IconArrowDown aria-hidden="true" size={18} stroke={2.5} />
+                  </a>
+                  <a
+                    className="button button-secondary"
+                    href={profile.cv.href}
+                    download={profile.cv.fileName}
+                  >
+                    <IconDownload aria-hidden="true" size={18} stroke={2.5} />
+                    {profile.cv.label}
+                  </a>
+                </div>
+                <ul className="hero-socials" aria-label="Profils en ligne">
+                  <li>
+                    <a
+                      className="squircle social-link"
+                      href={profile.gitHubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Profil GitHub de Thomas Caron (nouvelle fenêtre)"
+                    >
+                      <IconBrandGithub aria-hidden="true" size={22} />
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="squircle social-link"
+                      href={profile.linkedInUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Profil LinkedIn de Thomas Caron (nouvelle fenêtre)"
+                    >
+                      <IconBrandLinkedin aria-hidden="true" size={22} />
+                    </a>
+                  </li>
+                </ul>
+                <ul className="hero-details" aria-label="Informations principales">
+                  <li>Mont-Saint-Aignan (Rouen) — mobile Paris, remote partiel</li>
+                </ul>
               </div>
-              <ul className="hero-socials" aria-label="Profils en ligne">
-                <li>
-                  <a
-                    className="squircle social-link"
-                    href={profile.gitHubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Profil GitHub de Thomas Caron (nouvelle fenêtre)"
-                  >
-                    <IconBrandGithub aria-hidden="true" size={22} />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="squircle social-link"
-                    href={profile.linkedInUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Profil LinkedIn de Thomas Caron (nouvelle fenêtre)"
-                  >
-                    <IconBrandLinkedin aria-hidden="true" size={22} />
-                  </a>
-                </li>
-              </ul>
-              <ul className="hero-details" aria-label="Informations principales">
-                <li>Mont-Saint-Aignan (Rouen) — mobile Paris, remote partiel</li>
-              </ul>
+
+              <div className="hero-portrait">
+                <img
+                  src={profile.portrait.src}
+                  width={profile.portrait.width}
+                  height={profile.portrait.height}
+                  alt={profile.portrait.alt}
+                  fetchPriority="high"
+                  decoding="async"
+                />
+              </div>
             </div>
           </div>
         </div>

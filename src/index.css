@@ -41,6 +41,8 @@
   /* Loi de proximité : l'écart entre cartes reste supérieur au padding interne / 1.5. */
   --grid-gap: clamp(1.25rem, 2.5vw, var(--space-6));
   --header-height: 4rem;
+  /* Écart entre le haut du viewport et l'îlot flottant du header. */
+  --header-offset: 0.75rem;
 
   /* Typographie — 6 pas fixes + 3 tailles d'affichage fluides. */
   --text-xs: 0.75rem; /* 12 */
@@ -69,26 +71,50 @@
      cartes de quoi se détacher, ce qu'un blanc pur ne permet pas. Le texte est sombre
      et le verre blanc — l'inverse exact du thème sombre, où le verre est teinté sombre.
      ------------------------------------------------------------------------ */
-  --site-background: #c4d8de;
+  --site-background: #b1bdc0;
 
   /* Couleur de texte — 5 rôles, pas 12 emplacements. Sombres sur fond clair. */
-  --text-strong: #0c2731; /* titres, libellés forts         */
-  --text-body: #1d3a45; /* paragraphes                    */
-  --text-muted: #31505c; /* métadonnées, légendes          */
-  --text-accent: #065a6b; /* accent typographique           */
+  --text-strong: #10282c; /* titres, libellés forts         */
+  --text-body: #253b3e; /* paragraphes                    */
+  --text-muted: #35494d; /* métadonnées, légendes          */
+  --text-accent: #004d59; /* accent typographique           */
   --text-on-accent: #ffffff; /* texte posé sur un aplat accent */
 
   /* Accent — un seul teal, décliné par usage. */
-  --accent: #0b7d90;
-  --accent-hover: #096b7c;
-  --accent-active: #075967;
-  --accent-quiet: rgba(11, 125, 144, 0.12);
-  --accent-quiet-border: rgba(11, 125, 144, 0.45);
+  --accent: #007a8b;
+  --accent-hover: #006a79;
+  --accent-active: #005b67;
+  --accent-quiet: rgba(0, 122, 139, 0.12);
+  --accent-quiet-border: rgba(0, 122, 139, 0.5);
+
+  /* ---------------------------------------------------------------------------
+     COLOUR CONTRACT — read this before using any hue anywhere in this file.
+
+     The site is teal, and 94% of its colour used to sit inside a 10-degree hue band:
+     the accent dissolved into a field of its own hue and stopped reading as a signal.
+     Direction 2 keeps the teal at 210 deg and gives it the MONOPOLY on actions and
+     states, then introduces a terracotta at 30 deg (the exact complement) that carries
+     the decorative and editorial layer only. The teal becomes legible again by hue
+     opposition against a warm field.
+
+     1. `--accent` (teal): actions and states, exclusively. Buttons, links, focus,
+        badges, status pills.
+     2. `--accent-secondary` / `--halo-tint-warm` (terracotta): decor and editorial
+        only — background bubbles, eyebrows, purely decorative icon tiles. NEVER on a
+        control, NEVER on a status. A warm colour on a button breaks the contract and
+        makes the teal unreadable as a signal.
+     3. Neutrals stay at 210 deg with floor chroma for everything else. Amber and
+        violet remain reserved for the "En cours" and "À venir" statuses.
+
+     A control whose icon is its only visible content (`.social-link`) is a control,
+     not decor: it keeps teal ink and a measured contrast (>= 3:1, WCAG 1.4.11).
+     ------------------------------------------------------------------------ */
+  --accent-secondary: #6f2a21; /* 5.38:1 on the page bg, 6.99:1 on the glass fallback */
 
   /* Verre liquide. Blanc translucide : sur un fond clair il éclaircit, ce qui creuse
      l'écart avec le texte sombre. L'alpha reste bas — c'est du verre, pas un panneau. */
-  --glass-fill: rgba(255, 255, 255, 0.32);
-  --glass-fill-solid: #dfecf0;
+  --glass-fill: rgba(255, 255, 255, 0.18);
+  --glass-fill-solid: #ccd6d8;
   --glass-blur: 32px;
   --glass-saturate: 1.6;
   /* Ménisque : la bande de bord filtre son arrière-plan autrement que le centre. */
@@ -124,46 +150,71 @@
   /* Halos lumineux d'arrière-plan — dégradé radial fondu, pas un aplat.
      Un disque opaque interdirait tout verre transparent : son centre garde sa couleur
      quel que soit le flou appliqué. */
-  --halo-tint: #4aa5b8;
-  --halo-core: #8fd2df; /* replis si color-mix indisponible */
-  --halo-mix-with: #eafaff;
-  --halo-blur: 3rem;
-  --halo-opacity: 0.42;
+  --halo-tint: #6caab5;
+  /* Warm halo — decorative layer of the colour contract above. Three bubbles out of
+     six carry it, so the teal reads by hue opposition instead of dissolving. */
+  --halo-tint-warm: #dca398;
+  --halo-opacity: 0.9;
 
   /* Surfaces secondaires */
-  --header-surface: rgba(196, 216, 222, 0.82);
+  /* Le header est un verre FUMÉ : il assombrit son arrière-plan au lieu de
+     l'éclaircir, donc il ne peut jamais devenir blanc. Comme c'est le même matériau
+     dans les deux thèmes, ses couleurs ne dépendent plus du thème. */
+  /* Aplat de repli du header, sombre dans les DEUX thèmes : ses couleurs de texte
+     étant sorties du système de thème, son fond doit l'être aussi. Avec
+     --glass-fill-solid on mesurait 1.01:1 — navigation invisible. */
+  --header-solid: #0e3542;
+  --header-text: #dfebf0;
+  --header-text-strong: #f6fcfe;
+  --header-control-border: rgba(246, 252, 254, 0.44);
+  --header-control-surface: rgba(246, 252, 254, 0.1);
+  --header-control-surface-hover: rgba(246, 252, 254, 0.2);
+  --header-text-hover: #8aebf2;
   --header-blur: 24px;
-  --panel-surface: rgba(255, 255, 255, 0.42);
-  --panel-surface-hover: rgba(255, 255, 255, 0.66);
-  --soft-surface: rgba(255, 255, 255, 0.42);
-  --soft-surface-hover: rgba(255, 255, 255, 0.66);
-  --soft-surface-active: rgba(255, 255, 255, 0.82);
-  --chip-surface: rgba(255, 255, 255, 0.55);
-  --mobile-navigation-surface: #d8e8ec;
+  /* Transformation de luminance du verre du header. Sans elle, mesuré : les libellés
+     tombent à 1.03:1 en clair et 1.00:1 en sombre quand le portrait défile derrière.
+     En clair, éclaircir ne suffit pas — l'obstacle est la chemise bleu marine sous du
+     texte sombre — d'où l'écrasement du contraste avant le gain de luminosité. */
+  --header-luminance: contrast(0.55) brightness(0.4);
+  --panel-surface: rgba(255, 255, 255, 0.365);
+  --panel-surface-hover: rgba(255, 255, 255, 0.765);
+  /* `--soft-surface*` were literal duplicates of `--panel-surface*` in both themes:
+     two names, one value, and nothing said which one to reach for. They are aliases
+     now, so a change to the panel surface can no longer drift from the soft one. */
+  --soft-surface: var(--panel-surface);
+  --soft-surface-hover: var(--panel-surface-hover);
+  --soft-surface-active: rgba(255, 255, 255, 0.933);
+  --chip-surface: rgba(255, 255, 255, 0.564);
+  --mobile-navigation-surface: #d2dcdd;
   --icon-surface-start: rgba(255, 255, 255, 0.8);
-  --icon-surface-end: rgba(150, 205, 219, 0.6);
-  --skip-surface: #0c2731;
-  --skip-text: #f2fafc;
+  --icon-surface-end: rgba(108, 170, 181, 0.55);
+  --skip-surface: var(--text-strong);
+  --skip-text: #f7fbfb;
 
   /* Traits */
-  --border-subtle: rgba(12, 39, 49, 0.16); /* purement décoratif */
-  --control-border: #5c7783; /* ≥ 3:1, WCAG 1.4.11 */
+  --border-subtle: rgba(16, 40, 44, 0.16); /* purement décoratif */
+  --control-border: #445a5f; /* 3.80:1 sur le fond de page, WCAG 1.4.11 */
 
-  /* Badges d'état : la couleur d'action du site, pour tenir la direction artistique.
-     Blanc sur #0b7d90 = 4.83:1, conforme AA pour du texte courant. */
-  --badge-live-surface: #0b7d90;
+  /* Badges d'état : famille du bouton d'action (direction artistique du propriétaire),
+     mais UN CRAN PLUS PROFOND, pour que le bouton plein reste le teal le plus clair et
+     le plus saturé de l'écran — sinon le bouton « Me contacter » et les pastilles
+     « Actuellement » / « Disponible… » forment trois aplats identiques et rien ne dit
+     lequel est cliquable (mesuré : ΔE = 0,00 entre --accent et --badge-live-surface).
+     #094e59 : blanc/pastille 9.35:1 (contre 4.83:1 avant, pire ratio du site),
+     ΔE OKLab contre --accent 14.4, teinte 211.7 deg (accent 211.6 deg). */
+  --badge-live-surface: #094e59;
   --badge-live-text: #ffffff;
   --status-done-surface: var(--badge-live-surface);
   --status-done-text: var(--badge-live-text);
-  --status-progress-surface: #fbeec6;
-  --status-progress-text: #6b4a00;
+  --status-progress-surface: #ffe6af;
+  --status-progress-text: #744c00; /* 6.19:1 */
   /* « À venir » : violet, pour ne se confondre ni avec l'acquis (teal) ni avec
-     l'en-cours (ambre). 7.68:1. */
-  --status-upcoming-surface: #e8e4fb;
-  --status-upcoming-text: #453596;
+     l'en-cours (ambre). 6.53:1. */
+  --status-upcoming-surface: #d4cbff;
+  --status-upcoming-text: #46338c;
 
   /* Focus — double liseré, garanti visible sur n'importe quel fond. */
-  --focus-outer: #064e5e;
+  --focus-outer: #002a30;
   --focus-inner: #ffffff;
 
   color: var(--text-body);
@@ -190,23 +241,27 @@
    -------------------------------------------------------------------------- */
 
 :root[data-theme="dark"] {
-  --site-background: #081721;
+  --site-background: #0d1a1c;
 
-  --text-strong: #eef7fa;
-  --text-body: #e4eff4;
-  --text-muted: #d3e2e9;
-  --text-accent: #7ee5ed;
+  --text-strong: #dee8eb;
+  --text-body: #c3d0d2;
+  --text-muted: #abbbbd;
+  --text-accent: #60c6d7;
   --text-on-accent: #ffffff;
 
-  --accent: #0b7d90;
-  --accent-hover: #0e8a9e;
-  --accent-active: #096472;
-  --accent-quiet: rgba(126, 229, 237, 0.16);
-  --accent-quiet-border: rgba(126, 229, 237, 0.55);
+  --accent: #007a8b;
+  --accent-hover: #068a9b;
+  --accent-active: #006775;
+  --accent-quiet: rgba(0, 122, 139, 0.18);
+  --accent-quiet-border: rgba(0, 122, 139, 0.6);
 
-  --glass-fill: rgba(2, 11, 17, 0.34);
-  --glass-fill-solid: #10242f;
-  --glass-border: rgba(202, 234, 241, 0.2);
+  /* Decorative / editorial hue — see the colour contract in the light block. Never on
+     a control, never on a status. */
+  --accent-secondary: #ffc0b5; /* 9.79:1 on the glass fallback */
+
+  --glass-fill: rgba(2, 11, 17, 0.2);
+  --glass-fill-solid: #1d2729;
+  --glass-border: rgba(226, 244, 248, 0.2);
   --glass-specular: linear-gradient(
     142deg,
     rgba(219, 243, 249, 0.78) 0%,
@@ -227,38 +282,48 @@
     radial-gradient(90% 70% at 4% 108%, rgba(59, 148, 168, 0.14) 0%, transparent 66%);
   --glass-shadow: rgba(0, 0, 0, 0.5);
 
-  --halo-tint: #0b7d90;
-  --halo-core: #2d8b9c; /* replis si color-mix indisponible */
-  --halo-mix-with: #7fd4e4;
-  --halo-opacity: 0.28;
+  --halo-tint: #286771;
+  --halo-tint-warm: #7c554e;
+  --halo-opacity: 0.8;
 
-  --header-surface: rgba(8, 23, 33, 0.78);
-  --panel-surface: rgba(226, 244, 248, 0.06);
-  --panel-surface-hover: rgba(226, 244, 248, 0.12);
-  --soft-surface: rgba(226, 244, 248, 0.06);
-  --soft-surface-hover: rgba(226, 244, 248, 0.12);
-  --soft-surface-active: rgba(226, 244, 248, 0.18);
-  --chip-surface: rgba(226, 244, 248, 0.1);
-  --mobile-navigation-surface: #122732;
-  --icon-surface-start: rgba(35, 116, 127, 0.48);
-  --icon-surface-end: rgba(22, 72, 92, 0.52);
-  --skip-surface: #dff4f8;
-  --skip-text: #06212c;
+  --header-luminance: contrast(0.6) brightness(0.42);
+  --header-solid: #123f4e;
+  --panel-surface: rgba(226, 244, 248, 0.049);
+  --panel-surface-hover: rgba(226, 244, 248, 0.125);
+  --soft-surface: var(--panel-surface);
+  --soft-surface-hover: var(--panel-surface-hover);
+  --soft-surface-active: rgba(226, 244, 248, 0.164);
+  --chip-surface: rgba(226, 244, 248, 0.087);
+  --mobile-navigation-surface: #212b2d;
+  --icon-surface-start: rgba(0, 122, 139, 0.34);
+  --icon-surface-end: rgba(40, 103, 113, 0.45);
+  --skip-surface: var(--text-strong);
+  --skip-text: #0f1e20;
 
-  --border-subtle: rgba(190, 224, 233, 0.18);
-  --control-border: #7e98a5;
+  --border-subtle: rgba(226, 244, 248, 0.18);
+  --control-border: #91aaae; /* 6.23:1 sur le repli de carte */
 
-  --badge-live-surface: #0b7d90;
+  /* Même règle qu'en thème clair : la pastille reste dans la famille du bouton, un cran
+     plus profond. Valeur résolue (et non choisie à la main) sous trois contraintes,
+     toutes mesurées :
+       1. blanc sur pastille  8.47:1  (seuil 4.5:1)  — le libellé est blanc ;
+       2. pastille vs carte   1.80:1  (seuil 3:1)    — INATTEIGNABLE : aucun teal ne
+          tient à la fois 4.5:1 contre le blanc et 3:1 contre une carte sombre. La
+          pastille porte donc sa propre bordure (`border: 1px solid currentColor`,
+          c'est-à-dire blanche), mesurée à 15.28:1 contre la carte ;
+       3. ΔE OKLab contre --accent  12.0  (seuil 10) ;
+     teinte 213.7 deg contre 211.6 deg pour --accent, soit +2.1 deg — famille tenue. */
+  --badge-live-surface: #005563;
   --badge-live-text: #ffffff;
   --status-done-surface: var(--badge-live-surface);
   --status-done-text: var(--badge-live-text);
-  --status-progress-surface: #33280a;
-  --status-progress-text: #eeca7d;
-  --status-upcoming-surface: #241f4a;
-  --status-upcoming-text: #c7bcf7; /* 8.73:1 */
+  --status-progress-surface: #4b3500;
+  --status-progress-text: #e2b677; /* 6.19:1 */
+  --status-upcoming-surface: #25134d;
+  --status-upcoming-text: #a29cdd; /* 6.52:1 */
 
-  --focus-outer: #8aebf2;
-  --focus-inner: #04121a;
+  --focus-outer: #7cddee;
+  --focus-inner: #061315;
 
   color-scheme: dark;
 }
@@ -277,7 +342,7 @@ html {
   min-width: 320px;
   scroll-behavior: smooth;
   /* L'en-tête est collant : sans cette réserve les titres arrivent sous la barre. */
-  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+  scroll-padding-top: calc(var(--header-height) + var(--header-offset) + var(--space-4));
   background: var(--site-background);
 }
 
@@ -351,7 +416,8 @@ h1 {
 
 .eyebrow {
   margin: 0 0 var(--space-3);
-  color: var(--text-accent);
+  /* Editorial layer, not a control: the warm hue of the colour contract. */
+  color: var(--accent-secondary);
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   letter-spacing: 0.12em;
@@ -430,30 +496,23 @@ summary:focus-visible,
   aspect-ratio: 1;
   border: 0;
   border-radius: 50%;
-  /* Halo, pas disque : le centre s'éclaircit et le bord se fond dans le vide. C'est
-     ce qui rend un verre à alpha 0.24 lisible — un aplat opaque, même flouté, garde
-     la couleur de son centre et interdirait toute transparence. */
-  background: radial-gradient(
-    circle at 36% 32%,
-    var(--halo-core) 0%,
-    var(--halo-tint) 44%,
-    transparent 74%
-  );
-  filter: blur(var(--halo-blur));
+  /* Disques pleins : ni dégradé, ni cœur éclairci, ni bord fondu. Le dégradé radial
+     précédent mélangeait le centre à du blanc et s'éteignait vers le transparent, si
+     bien que les bulles n'étaient jamais des cercles complets. C'est le remplissage
+     teinté des cartes, et non l'effacement des bulles, qui protège le texte. */
+  background: var(--halo-tint);
   opacity: var(--halo-opacity);
   box-shadow: none;
   pointer-events: none;
 }
 
-@supports (color: color-mix(in oklab, red 50%, white)) {
-  .liquid-bubble {
-    background: radial-gradient(
-      circle at 36% 32%,
-      color-mix(in oklab, var(--halo-tint) 78%, var(--halo-mix-with)) 0%,
-      var(--halo-tint) 44%,
-      transparent 74%
-    );
-  }
+/* Three bubbles out of six are warm. This is the decorative half of the colour
+   contract (see the light `:root` block): the teal of the actions only reads as a
+   signal if the field around it is not teal too. Decor only — never a control. */
+.liquid-bubble-two,
+.liquid-bubble-four,
+.liquid-bubble-six {
+  background: var(--halo-tint-warm);
 }
 
 .liquid-bubble-one {
@@ -624,21 +683,6 @@ summary:focus-visible,
     brightness(var(--glass-edge-brightness));
 }
 
-/* Réfraction réelle du bord : le ménisque déforme ce qui passe derrière (feTurbulence
-   adouci + feDisplacementMap), comme le fait un vrai chant de verre. Le filtre est
-   inline en data-URI : aucun asset supplémentaire, aucun élément à ajouter au DOM.
-   Déclaration séparée et redondante — si un moteur n'honore pas `url()` dans
-   backdrop-filter (WebKit), c'est la déclaration précédente qui reste et le bord garde
-   son ménisque sans déformation. Jamais de var() ici : une substitution invalide
-   retomberait sur `none` et supprimerait tout le flou. */
-@supports (backdrop-filter: url("#gr")) or (-webkit-backdrop-filter: url("#gr")) {
-  .liquid-card {
-    backdrop-filter: blur(var(--glass-edge-blur)) saturate(var(--glass-edge-saturate))
-      brightness(var(--glass-edge-brightness))
-      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22gr%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22116%25%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.011%200.019%22%20numOctaves%3D%222%22%20seed%3D%2211%22%20result%3D%22n%22%2F%3E%3CfeGaussianBlur%20in%3D%22n%22%20stdDeviation%3D%221.4%22%20result%3D%22s%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22s%22%20scale%3D%2214%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%2F%3E%3C%2Ffilter%3E%3C%2Fsvg%3E#gr");
-  }
-}
-
 /* Cœur du verre : rentré de la largeur du ménisque, il porte le flou de lecture et les
    reflets diffus. Le contraste du texte se joue ici, pas sur la bande de bord.
    `z-index: -1` le place au-dessus du fond de la carte et sous son contenu — un masque
@@ -699,24 +743,82 @@ summary:focus-visible,
    7. En-tête collant et navigation
    -------------------------------------------------------------------------- */
 
+/* Îlot flottant : le header est un panneau de verre détaché des bords, aligné sur la
+   largeur des cartes. Une barre pleine largeur terminée par un filet d'un pixel était
+   le seul élément du site à ne pas parler le langage de formes des cartes. */
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--header-offset);
   z-index: 20;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--header-surface);
-  backdrop-filter: blur(var(--header-blur)) saturate(1.4);
-  -webkit-backdrop-filter: blur(var(--header-blur)) saturate(1.4);
+  width: min(100% - var(--space-5), 76rem);
+  margin: var(--header-offset) auto 0;
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: 1.75rem;
+  corner-shape: superellipse(1.45);
+  /* Verre pur : aucun remplissage. Le matériau vient du liseré spéculaire, de la
+     réfraction du bord et d'une transformation de luminance — pas d'un aplat.
+     La luminance n'est pas cosmétique : sans elle, mesuré, les libellés tombent à
+     1.00:1 quand le portrait blanc défile derrière. Les matériaux d'Apple font de
+     même (vibrancy), et iOS expose « Réduire la transparence » pour la même raison. */
+  background: transparent;
+  box-shadow:
+    0 1rem 2.5rem -0.75rem var(--glass-shadow),
+    0 0.125rem 0.5rem -0.25rem var(--glass-shadow);
+  backdrop-filter: blur(var(--header-blur)) saturate(1.7) var(--header-luminance, brightness(1));
+  -webkit-backdrop-filter: blur(var(--header-blur)) saturate(1.7)
+    var(--header-luminance, brightness(1));
+}
+
+/* Liseré spéculaire : anneau fin en dégradé directionnel, allumé en haut-gauche,
+   rappel au coin opposé. C'est lui qui donne au header son épaisseur de verre. */
+.site-header::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: var(--glass-specular);
+  content: "";
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Reflet diffus dans le coin haut-gauche, hors de la zone de lecture. */
+.site-header::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: radial-gradient(
+    130% 220% at 6% -60%,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    transparent 66%
+  );
+  content: "";
+  pointer-events: none;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .site-header {
-    background: var(--site-background);
+    background: var(--header-solid);
   }
 }
 
 .site-header__inner {
   position: relative;
+  z-index: 2;
+  width: 100%;
   min-height: var(--header-height);
   display: flex;
   flex-wrap: nowrap;
@@ -726,9 +828,9 @@ summary:focus-visible,
 
 .site-header__brand {
   margin-right: auto;
-  padding: var(--space-2) 0;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
-  color: var(--text-strong);
+  color: var(--header-text-strong);
   font-size: var(--text-md);
   font-weight: var(--weight-bold);
   letter-spacing: -0.01em;
@@ -737,7 +839,7 @@ summary:focus-visible,
 }
 
 .site-header__brand:hover {
-  color: var(--text-accent);
+  color: var(--header-text-hover);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 0.25em;
@@ -771,7 +873,7 @@ summary:focus-visible,
   /* Même rayon que .theme-toggle : la barre d'en-tête doit avoir un seul vocabulaire
      d'arrondi, pas deux. */
   border-radius: var(--radius-md);
-  color: var(--text-body);
+  color: var(--header-text);
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
   text-decoration: none;
@@ -781,8 +883,8 @@ summary:focus-visible,
 }
 
 .section-nav a:hover {
-  background: var(--soft-surface-hover);
-  color: var(--text-accent);
+  background: var(--header-control-surface-hover);
+  color: var(--header-text-hover);
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 0.28em;
@@ -814,10 +916,10 @@ summary:focus-visible,
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--header-control-border);
   border-radius: var(--radius-md);
-  background: var(--soft-surface);
-  color: var(--text-strong);
+  background: var(--header-control-surface);
+  color: var(--header-text-strong);
   font: inherit;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
@@ -834,9 +936,9 @@ summary:focus-visible,
 
 .menu-toggle:hover,
 .theme-toggle:hover {
-  border-color: var(--text-accent);
-  background: var(--soft-surface-hover);
-  color: var(--text-accent);
+  border-color: var(--header-text-hover);
+  background: var(--header-control-surface-hover);
+  color: var(--header-text-hover);
 }
 
 .menu-toggle:active,
@@ -869,8 +971,8 @@ summary:focus-visible,
 .hero {
   position: relative;
   z-index: 1;
-  min-height: calc(100vh - var(--header-height));
-  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100vh - var(--header-height) - var(--header-offset));
+  min-height: calc(100svh - var(--header-height) - var(--header-offset));
   display: grid;
   align-items: center;
   padding-block: var(--space-7);
@@ -881,6 +983,38 @@ summary:focus-visible,
   max-width: 75rem;
   margin-inline: auto;
   padding: clamp(1.5rem, 3vw, var(--space-7)) clamp(1.5rem, 6vw, 5rem);
+}
+
+/* Le hero passe en deux colonnes : le contenu occupait 52rem dans une carte de 75rem,
+   laissant 30 % de vide à droite sur tous les écrans. */
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem);
+  align-items: center;
+  gap: clamp(var(--space-5), 4vw, var(--space-8));
+}
+
+/* Le portrait est affiché tel quel, sans voile ni fondu : aucune retouche CSS sur
+   l'image. Le liseré à la couleur d'accent détache la photo — et surtout son fond de
+   studio clair — du verre de la carte, sur lequel elle se fondait sinon. */
+.hero-portrait {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  border-radius: 1.25rem;
+  corner-shape: superellipse(1.45);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.hero-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  /* Le cadrage se fait ici, pas dans le fichier : le portrait d'origine reste intact
+     et le point de visée peut être ajusté sans retoucher l'image. */
+  object-fit: cover;
+  object-position: 50% 12%;
 }
 
 .hero-content {
@@ -1052,6 +1186,9 @@ summary:focus-visible,
   corner-shape: superellipse(1.6);
 }
 
+/* Géométrie et matériau communs. La COULEUR D'ENCRE est volontairement absente de ce
+   groupe : les trois premières tuiles sont du décor, `.social-link` est un contrôle, et
+   la règle d'emploi de la couleur les sépare (voir le contrat dans `:root`). */
 .timeline-icon,
 .education-icon,
 .contact-icon,
@@ -1063,18 +1200,29 @@ summary:focus-visible,
   height: 3rem;
   border: 1px solid var(--border-subtle);
   background: linear-gradient(135deg, var(--icon-surface-start), var(--icon-surface-end));
-  color: var(--text-accent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 0.375rem 0.875rem rgba(24, 95, 119, 0.14);
 }
 
-/* Contrôle, pas décor : sa bordure doit tenir 3:1 (WCAG 1.4.11), contrairement aux
-   tuiles d'icônes purement décoratives ci-dessus. */
+/* Decor only: these three tiles sit next to a heading whose text already carries the
+   meaning, so their ink takes the warm editorial hue. */
+.timeline-icon,
+.education-icon,
+.contact-icon {
+  color: var(--accent-secondary);
+}
+
+/* Contrôle, pas décor : son icône est le seul contenu visible du lien (le libellé est
+   en `.visually-hidden`), donc son encre PORTE DU SENS. Elle reste teal — la couleur
+   des actions — et doit tenir un contraste mesuré ≥ 3:1 (WCAG 1.4.11), au repos comme
+   au survol ; sa bordure aussi. C'est pour cela qu'elle est sortie du groupe d'encre
+   décorative ci-dessus : une encre chaude ici casserait le contrat de couleur. */
 .social-link {
   width: 2.75rem;
   height: 2.75rem;
   border-color: var(--control-border);
+  color: var(--text-accent);
   text-decoration: none;
   transition:
     background-color 160ms ease,
@@ -1084,7 +1232,15 @@ summary:focus-visible,
 
 .social-link:hover {
   border-color: var(--text-accent);
-  background: linear-gradient(135deg, #bdecea, #9fcbdc);
+  /* Le fond de survol était un dégradé cyan clair CODÉ EN DUR, sans variante de thème :
+     en sombre, l'encre du lien (--text-accent, un cyan clair) tombait à 1.17:1 mesuré
+     sur ce fond clair, et l'icône — seul contenu visible du lien — disparaissait au
+     survol. Le survol est maintenant un FILM de survol tokenisé posé sur le matériau de
+     repos : il suit le thème, et l'écart repos/survol reste perceptible sans jamais
+     inverser le sens de la luminance. */
+  background:
+    linear-gradient(135deg, var(--soft-surface-hover), var(--soft-surface-hover)),
+    linear-gradient(135deg, var(--icon-surface-start), var(--icon-surface-end));
 }
 
 .social-link:active {
@@ -1162,6 +1318,35 @@ summary:focus-visible,
 .section-heading {
   max-width: 45rem;
   margin-bottom: clamp(var(--space-6), 5vw, var(--space-8));
+}
+
+/* Au-delà de 62rem, le titre et son chapô se répartissent sur toute la largeur : sinon
+   la moitié droite du conteneur reste vide six sections de suite. La variante compacte
+   de la carte contact est exclue, elle vit dans une grille qui lui est propre. */
+@media (min-width: 62rem) {
+  .section-heading:not(.section-heading-compact) {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    column-gap: var(--space-7);
+    align-items: end;
+  }
+
+  .section-heading:not(.section-heading-compact) .eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .section-heading:not(.section-heading-compact) h2 {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .section-heading:not(.section-heading-compact) > p:last-child {
+    grid-column: 2;
+    max-width: 34rem;
+    margin-bottom: 0;
+    padding-bottom: 0.35rem;
+  }
 }
 
 .section-heading h2 {
@@ -1504,9 +1689,11 @@ summary:focus-visible,
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3);
+  /* Padding horizontal plus large que le vertical : sur une pastille, la courbe
+     empiète sur les angles, donc l'icône et la flèche ont besoin de recul latéral. */
+  padding: var(--space-3) var(--space-4);
   border: 1px solid var(--control-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--panel-surface);
   color: var(--text-strong);
   font-weight: var(--weight-semibold);
@@ -1686,6 +1873,27 @@ html.reveal-enabled [data-reveal]:focus-within {
 }
 
 @media (max-width: 50rem) {
+  /* Une colonne obligatoire : la colonne de portrait réclamait 14rem au minimum, ce
+     qui écrasait la colonne de texte à quelques dizaines de pixels et coupait chaque
+     mot. Le portrait passe au-dessus, recadré en bandeau pour ne pas repousser le CTA
+     hors de l'écran. */
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .hero-portrait {
+    order: -1;
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .hero-portrait img {
+    aspect-ratio: 3 / 2;
+    max-height: 34vh;
+    object-position: 50% 18%;
+  }
+
   :root {
     --header-height: 3.5rem;
   }
@@ -1724,9 +1932,27 @@ html.reveal-enabled [data-reveal]:focus-within {
     display: flex;
   }
 
+  /* Le panneau déroulant n'est pas du verre fumé : il a son propre fond opaque, qui
+     suit le thème. Ses liens doivent donc revenir aux couleurs du thème, sinon du texte
+     clair se retrouve sur un panneau clair. */
   .section-nav--site a {
     width: 100%;
     justify-content: flex-start;
+    color: var(--text-body);
+  }
+
+  .section-nav--site a:hover {
+    background: var(--soft-surface-hover);
+    color: var(--text-accent);
+  }
+
+  .section-nav--site a:active {
+    background: var(--soft-surface-active);
+  }
+
+  .section-nav--site a[aria-current="location"] {
+    background: var(--accent);
+    color: var(--text-on-accent);
   }
 
   .hero {
@@ -1781,9 +2007,23 @@ html.reveal-enabled [data-reveal]:focus-within {
     font-size: var(--text-base);
   }
 
+  /* WCAG 4.1.2 — ces deux boutons n'ont PAS d'aria-label : leur nom accessible est
+     leur texte visible, par choix d'architecture (SiteHeader.tsx). Un `display: none`
+     retirait ce texte de l'arbre d'accessibilité et, sous 416 px, un lecteur d'écran
+     annonçait « bouton, bouton » (mesuré : nom vide à 390 px et à 320 px).
+     On reprend donc le patron `.visually-hidden` : le libellé sort de l'affichage mais
+     reste dans le calcul du nom. Les cibles restent ≥ 24×24 px (WCAG 2.5.8). */
   .menu-toggle span,
   .theme-toggle span {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    padding: 0;
+    margin: -1px;
   }
 }
 
@@ -1792,15 +2032,57 @@ html.reveal-enabled [data-reveal]:focus-within {
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-transparency: reduce) {
-  .liquid-card,
-  .site-header {
+  .liquid-card {
     background: var(--glass-fill-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header {
+    background: var(--header-solid);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
 
   .liquid-bubble {
     display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Langage de formes : le squircle appliqué à tous les éléments arrondis, pas
+   seulement aux cartes. `corner-shape` n'existe que sur Chromium 139+ ; ailleurs la
+   déclaration est ignorée et le `border-radius` d'origine s'applique tel quel.
+   -------------------------------------------------------------------------- */
+@supports (corner-shape: superellipse(1.45)) {
+  .button,
+  .theme-toggle,
+  .menu-toggle,
+  .section-nav a,
+  .site-header__brand,
+  .skill-group li,
+  .experience-stack li,
+  .project-stack li,
+  .education-status,
+  .project-status,
+  .hero-current-role strong,
+  .accessibility-status span,
+  .hero-availability,
+  .accessibility-list li,
+  .section-nav--site,
+  .skip-link {
+    corner-shape: superellipse(1.45);
+  }
+
+  /* Les pastilles réellement circulaires gardent une superellipse plus douce, sinon
+     un rayon de 999px cumulé à une superellipse marquée produit un losange arrondi. */
+  .education-status,
+  .project-status,
+  .hero-current-role strong,
+  .accessibility-status span,
+  .hero-availability,
+  .contact-links a {
+    corner-shape: superellipse(1.2);
   }
 }
 
@@ -1823,7 +2105,7 @@ html.reveal-enabled [data-reveal]:focus-within {
   }
 
   .site-header {
-    background: var(--site-background);
+    background: var(--header-solid);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
@@ -1832,6 +2114,20 @@ html.reveal-enabled [data-reveal]:focus-within {
 @media (forced-colors: active) {
   .liquid-bubble {
     display: none;
+  }
+
+  /* Chromium ne désactive PAS `backdrop-filter` en couleurs forcées : mesuré, le header
+     gardait `blur(24px) saturate(1.7) contrast(0.55) brightness(0.4)`, ce qui assombrit
+     le `Canvas` forcé en une dalle gris foncé — les liens de navigation tombaient à
+     1.71:1 en clair. Les glyphes s'en sortent grâce au backplate de Chromium, mais les
+     icônes n'en bénéficient pas, et un moteur sans backplate (contraste élevé de
+     Firefox) perdrait le texte. Même classe de bug que celle déjà traitée par
+     --header-solid pour les trois autres modes de repli, oubliée ici. */
+  .site-header {
+    background: Canvas;
+    border: 1px solid CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .liquid-card,

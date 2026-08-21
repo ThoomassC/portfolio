@@ -67,54 +67,97 @@
 
   /* ---------------------------------------------------------------------------
      THÈME CLAIR (thème par défaut, valeur "light" du sélecteur).
-     Clair mais jamais blanc : un fond doux laisse au verre de quoi réfracter et aux
-     cartes de quoi se détacher, ce qu'un blanc pur ne permet pas. Le texte est sombre
-     et le verre blanc — l'inverse exact du thème sombre, où le verre est teinté sombre.
+
+     A HIGH-KEY floor, not a soft mid one. #daecf0 is a very light tinted water —
+     OKLab L 0.931, chroma 0.020 on the accent hue — where the retired #b1bdc0 sat at
+     L 0.790 and read as grey-green mud. The mud came from the luminosity, not from the
+     hue: at a nearly identical chroma, lifting L is enough. And a luminous floor is
+     what gives the dark ink room to bite — `--text-body` measures 8.27:1 on it, where
+     the old pair measured 6.15:1 and missed the 7:1 this site targets.
+
+     The counterpart is measured too: the floor/card gap falls from 1.300:1 to 1.171:1,
+     and pure white is now only 1.218:1 away from the floor. A card can therefore no
+     longer separate itself by whitening. In this theme the separation is carried by
+     the DROP SHADOW and by an INK rim — see `--glass-border` and `--glass-shadow` —
+     and the quiet surfaces became ink washes rather than white ones. The text stays
+     dark and the glass stays white: the exact inverse of the dark theme.
      ------------------------------------------------------------------------ */
-  --site-background: #b1bdc0;
+  --site-background: #daecf0;
 
-  /* Couleur de texte — 5 rôles, pas 12 emplacements. Sombres sur fond clair. */
-  --text-strong: #10282c; /* titres, libellés forts         */
-  --text-body: #253b3e; /* paragraphes                    */
-  --text-muted: #35494d; /* métadonnées, légendes          */
-  --text-accent: #004d59; /* accent typographique           */
-  --text-on-accent: #ffffff; /* texte posé sur un aplat accent */
+  /* Couleur de texte — 5 rôles, pas 12 emplacements. Sombres sur fond clair.
+     LE SUPPORT DE RÉFÉRENCE N'EST PAS LE FOND DE PAGE. Les bulles de `.liquid-bubble`
+     sont des DISQUES PLEINS (voir leur règle, § 5), donc le support réel d'une carte est
+     le halo composé sous le remplissage de verre, pas `--site-background` :
+     #daecf0 → halo #7eccdb à 0.9 → #87cfdd → --glass-fill blanc 0.40 → #b7e2eb.
+     Le pire cas de lecture ajoute par-dessus un lavis de survol
+     (`--panel-surface-hover`), et c'est LUI qui décide de ces quatre encres.
+     Deux colonnes mesurées : fond de page, puis carte-sur-halo.
+     `--text-muted` et `--text-accent` ont été assombris pour cette raison : à #53686d
+     et #006775 ils mesuraient 3.53:1 et 3.94:1 sur le lavis de survol d'une
+     carte-sur-halo — sous 4.5:1 pour du texte de 14 px. */
+  --text-strong: #07282d; /* titres, libellés forts     12.76:1 | 11.20:1 */
+  --text-body: #2c464b; /* paragraphes                 8.27:1 |  7.26:1 */
+  --text-muted: #42565b; /* métadonnées, légendes       6.35:1 |  5.57:1 — 4.64:1 sur lavis de survol */
+  --text-accent: #005b69; /* accent typographique        6.38:1 |  5.60:1 — 4.66:1 sur lavis de survol */
+  --text-on-accent: #ffffff; /* texte posé sur un aplat accent                  */
 
-  /* Accent — un seul teal, décliné par usage. */
-  --accent: #007a8b;
-  --accent-hover: #006a79;
-  --accent-active: #005b67;
-  --accent-quiet: rgba(0, 122, 139, 0.12);
-  --accent-quiet-border: rgba(0, 122, 139, 0.5);
+  /* Accent — un seul teal, décliné par usage. Blanc sur l'aplat : 5.12:1 au repos,
+     6.38:1 au survol, 7.90:1 à l'appui. */
+  --accent: #00798a;
+  --accent-hover: #006978;
+  --accent-active: #005a67;
+  --accent-quiet: rgba(0, 121, 138, 0.1);
+  --accent-quiet-border: rgba(0, 121, 138, 0.42);
 
   /* ---------------------------------------------------------------------------
      COLOUR CONTRACT — read this before using any hue anywhere in this file.
 
      The site is teal, and 94% of its colour used to sit inside a 10-degree hue band:
      the accent dissolved into a field of its own hue and stopped reading as a signal.
-     Direction 2 keeps the teal at 210 deg and gives it the MONOPOLY on actions and
-     states, then introduces a terracotta at 30 deg (the exact complement) that carries
-     the decorative and editorial layer only. The teal becomes legible again by hue
-     opposition against a warm field.
+     Direction 2 keeps the teal at 211.5 deg and gives it the MONOPOLY on actions and
+     states, then introduces a SMOKED COPPER at 31.5 deg — the exact complement,
+     opposition measured at 179.8 deg — that carries the decorative and editorial layer
+     only. The teal becomes legible again by hue opposition against a warm field.
 
      1. `--accent` (teal): actions and states, exclusively. Buttons, links, focus,
         badges, status pills.
-     2. `--accent-secondary` / `--halo-tint-warm` (terracotta): decor and editorial
+     2. `--accent-secondary` / `--halo-tint-warm` (smoked copper): decor and editorial
         only — background bubbles, eyebrows, purely decorative icon tiles. NEVER on a
         control, NEVER on a status. A warm colour on a button breaks the contract and
         makes the teal unreadable as a signal.
-     3. Neutrals stay at 210 deg with floor chroma for everything else. Amber and
-        violet remain reserved for the "En cours" and "À venir" statuses.
+     3. Neutrals stay at 211.5 deg with floor chroma (C 0.012 to 0.038) for everything
+        else, so nothing turns dirty and the teal aplat stays the only saturated field
+        on screen. Amber and violet remain reserved for the "En cours" and "À venir"
+        statuses.
+
+     The warm hue is LOCKED near 31 deg by the 180-degree opposition this contract
+     demands, so the only room left is chroma and LUMINOSITY — and the luminosity is not
+     a taste call, it is what keeps decor from impersonating signal. Measured in OKLab:
+     `--accent` sits at L 0.529. A copper at L 0.518 (the retired #945448) is the SAME
+     VALUE as the accent — 1.13:1 between the two, so decor and signal became
+     interchangeable, and `.eyebrow` (spaced bold capitals, the most fragile typographic
+     form on the page) fell from 8.50:1 to 4.76:1 on the floor. #773c32 measures
+     L 0.429 / C 0.085, hue 30.9 deg, opposition to the accent 179.2 deg: the contract's
+     180-degree rule is kept, and the value gap is restored — 1.66:1 against the accent,
+     6.96:1 on the floor, 6.11:1 on a card-on-halo. For reference the retired brick
+     #6f2a21 sat at L 0.383 / C 0.100, i.e. 0.146 below the teal; #773c32 sits 0.100
+     below it. Rule of thumb for any future warm value: keep it at least ~0.08 OKLab L
+     under `--accent`, or the decorative layer starts reading as an action.
 
      A control whose icon is its only visible content (`.social-link`) is a control,
      not decor: it keeps teal ink and a measured contrast (>= 3:1, WCAG 1.4.11).
      ------------------------------------------------------------------------ */
-  --accent-secondary: #6f2a21; /* 5.38:1 on the page bg, 6.99:1 on the glass fallback */
+  --accent-secondary: #773c32; /* 6.96:1 on the page bg, 6.11:1 on a card-on-halo, 8.15:1 on the glass fallback */
 
   /* Verre liquide. Blanc translucide : sur un fond clair il éclaircit, ce qui creuse
-     l'écart avec le texte sombre. L'alpha reste bas — c'est du verre, pas un panneau. */
-  --glass-fill: rgba(255, 255, 255, 0.18);
-  --glass-fill-solid: #ccd6d8;
+     l'écart avec le texte sombre.
+     Alpha raised from 0.18 to 0.40 with the new floor. At 0.18 the fill lifted the card
+     by 1.037:1 against #daecf0 (1.139:1 against the old floor) — the card had stopped
+     detaching. 0.40 measures 1.084:1, and that is as far as this material goes while
+     staying frankly transparent: pure white itself is only 1.218:1 away. The lift that
+     the floor can no longer give is taken over by the ink rim and the shadow below. */
+  --glass-fill: rgba(255, 255, 255, 0.4);
+  --glass-fill-solid: #f4fcfd;
   --glass-blur: 32px;
   --glass-saturate: 1.6;
   /* Ménisque : la bande de bord filtre son arrière-plan autrement que le centre. */
@@ -123,7 +166,29 @@
   --glass-edge-saturate: 2.4;
   --glass-edge-brightness: 1.08;
   --glass-rim-width: 1.5px;
-  --glass-border: rgba(255, 255, 255, 0.72);
+  /* INK rim, not a white one — the one structural change the new floor forces. A white
+     hairline at 0.72 measured 1.627:1 against the old floor but only 1.154:1 against
+     #daecf0: a white liner on a nearly white ground draws nothing.
+
+     THE WHITE BEVEL IS NOT A BACKUP. An earlier note here claimed the card kept "an
+     inked outline AND a lit inner edge" because `--glass-specular` still paints its
+     1.5px ring. Measured, that ring does nothing on this floor: its brightest stop
+     (white at 0.98) sits at ΔE OKLab 4.2 from the fill it is drawn on, and the
+     THEORETICAL CEILING at alpha 1.0 is ΔE 4.3 — white on a fill of L 0.959 cannot
+     draw an edge, whatever the alpha. The only relay indice when the rim weakens is
+     THE DROP SHADOW (`--glass-shadow`, ΔE 18.6 against the floor). So this border
+     carries the outline essentially alone, and its alpha is sized accordingly.
+
+     Alpha 0.18 -> 0.30. At 0.18 the rim measured ΔE 10.3 where a bubble passes behind
+     the card, against ΔE 14.5 for its dark counterpart in the same situation: the
+     lighter of the two themes had the weaker outline. And because the bubbles ANIMATE
+     (`halo-breathe` 26-37 s plus the scroll parallax), that shortfall is not static —
+     the contour dissolves in MOVING segments as a halo drifts under it. At 0.30 the rim
+     measures ΔE 17.3 on a card-on-halo and ΔE 19.3 on the bare floor, at parity with
+     the dark theme (14.5 / 17.6). Contrast against the fill: 1.806:1 on halo,
+     1.860:1 on bare floor — still one clear step above `--border-subtle` (1.281:1 on
+     the floor), which stays the purely decorative hairline. */
+  --glass-border: rgba(7, 40, 45, 0.3);
   /* Liseré directionnel : allumé en haut-gauche, éteint en bas-droite, rappel au coin
      opposé. Jamais d'arrêt sombre : sur un anneau de 1,5 px il se lirait comme un
      trait en travers de la carte. La séparation d'avec le fond vient de l'ombre portée. */
@@ -144,16 +209,40 @@
       rgba(255, 255, 255, 0.14) 44%,
       transparent 72%
     ),
-    radial-gradient(90% 70% at 4% 108%, rgba(11, 125, 144, 0.1) 0%, transparent 66%);
-  --glass-shadow: rgba(10, 44, 56, 0.24);
+    radial-gradient(90% 70% at 4% 108%, rgba(0, 121, 138, 0.1) 0%, transparent 66%);
+  /* The shadow is what now carries the card off the floor, so it GAINS weight instead
+     of losing it: alpha 0.24 -> 0.30, and the hue leaves the retired #0a2c38 for the
+     ink of `--text-strong`. The palette note suggested rgba(4, 52, 61, 0.20) while
+     asking for a deeper shadow; 0.20 is a LIGHTER alpha than 0.24, so it contradicts
+     its own intent and the intent is what was kept. The blur and the offsets live in
+     the `box-shadow` declarations, out of a token's reach, so the extra weight can only
+     come from the alpha. */
+  --glass-shadow: rgba(7, 40, 45, 0.3);
 
-  /* Halos lumineux d'arrière-plan — dégradé radial fondu, pas un aplat.
-     Un disque opaque interdirait tout verre transparent : son centre garde sa couleur
-     quel que soit le flou appliqué. */
-  --halo-tint: #6caab5;
+  /* Halos lumineux d'arrière-plan — APLATS, et c'est assumé. Une version précédente de
+     ce commentaire promettait « un dégradé radial fondu, pas un aplat » et affirmait
+     qu'« un disque opaque interdirait tout verre transparent » : c'est faux, et il faut
+     le savoir avant de valider une couleur. Le mécanisme réel (voir `.liquid-bubble`,
+     § 5) est `background: var(--halo-tint); opacity: var(--halo-opacity)` — des DISQUES
+     PLEINS, sans dégradé, sans cœur éclairci, sans bord fondu. Ce qui protège le texte
+     n'est pas l'effacement de la bulle, c'est le remplissage teinté de la carte.
+
+     CONSÉQUENCE À RETENIR POUR TOUTE MESURE : le support d'une carte n'est ni
+     `--site-background` ni `--glass-fill-solid`, c'est le HALO composé sous le
+     remplissage de verre. Chaîne mesurée en thème clair :
+     #daecf0 → #7eccdb à 0.9 → #87cfdd → blanc 0.40 → #b7e2eb.
+     Une palette validée contre `--site-background` seul est validée contre le
+     meilleur cas. */
+  --halo-tint: #7eccdb;
   /* Warm halo — decorative layer of the colour contract above. Three bubbles out of
-     six carry it, so the teal reads by hue opposition instead of dissolving. */
-  --halo-tint-warm: #dca398;
+     six carry it, so the teal reads by hue opposition instead of dissolving.
+     Opposition to the accent measured at 179.1 deg.
+     Alpha is shared with the cold bubbles, so PRESENCE is carried by the tint alone.
+     At #f4c3b9 the composed bubble sat at ΔE OKLab 9.6 against the floor while its cold
+     neighbour sat at 13.0: the cold layer visually crushed the warm one, which defeats
+     the very reason the warm layer exists. #ecb2a7 measures ΔE 13.3 — parity — for a
+     contrast against the floor of 1.441:1 versus 1.434:1 for the cold bubble. */
+  --halo-tint-warm: #ecb2a7;
   --halo-opacity: 0.9;
 
   /* Surfaces secondaires */
@@ -162,59 +251,162 @@
      dans les deux thèmes, ses couleurs ne dépendent plus du thème. */
   /* Aplat de repli du header, sombre dans les DEUX thèmes : ses couleurs de texte
      étant sorties du système de thème, son fond doit l'être aussi. Avec
-     --glass-fill-solid on mesurait 1.01:1 — navigation invisible. */
-  --header-solid: #0e3542;
-  --header-text: #dfebf0;
-  --header-text-strong: #f6fcfe;
-  --header-control-border: rgba(246, 252, 254, 0.44);
-  --header-control-surface: rgba(246, 252, 254, 0.1);
-  --header-control-surface-hover: rgba(246, 252, 254, 0.2);
-  --header-text-hover: #8aebf2;
+     --glass-fill-solid on mesure 1.00:1 pour --header-text-strong et 1.23:1 pour
+     --header-text sur le repli clair — navigation invisible.
+     SINGLE VALUE now, and no longer a themed pair: this token used to be redefined in
+     the dark block while its four text tokens already lived outside the theme system.
+     The smoked glass is the same material whichever theme is on, so a theme-dependent
+     fallback was the last inconsistency left in the block. Measured on #04343d:
+     10.50:1 for --header-text, 12.87:1 for --header-text-strong, 8.95:1 for
+     --header-text-hover — identical in both themes, by construction. */
+  --header-solid: #04343d;
+  --header-text: #d8e6e9;
+  --header-text-strong: #f6fbfc;
+  /* Translucides dérivés de --header-text-strong, à garder alignés sur lui.
+
+     LES TROIS MESURES QUI SUIVENT SONT DES ESTIMATIONS, pas des relevés exacts. Le
+     header est du verre : ses couleurs effectives dépendent de --header-luminance
+     (`contrast(0.55) brightness(0.4)`), modélisé ici en sRGB non linéaire selon Filter
+     Effects, FLOU EXCLU. La direction est certaine, la troisième décimale ne l'est pas.
+     Modèle : sol #daecf0 → saturate(1.7) → contrast(0.55) → brightness(0.4) → #454b4d.
+     Balayé sur six sols plausibles (sol nu, carte-sur-halo, portrait blanc, repli
+     opaque), le verre reste dans #2c474c…#4f4f4f — un sol PLUS CLAIR donne un verre
+     PLUS CLAIR, donc le nouveau fond de page à L 0.931 dégrade les encres claires du
+     header. C'est ce qui rend ces deux corrections nécessaires alors qu'elles ne sont
+     pas des régressions du diff de palette.
+
+     --header-control-border : alpha 0.44 -> 0.62. C'est le SEUL contour qui identifie
+     `.theme-toggle` et `.menu-toggle` comme des boutons (leur fond mesure 1.25:1 contre
+     le verre). À 0.44, mesuré : 3.05:1 contre le verre et 2.31:1 contre l'intérieur du
+     contrôle — sous le seuil 3:1 de WCAG 1.4.11 du côté intérieur. À 0.62 : 4.42:1 et
+     3.35:1. Seul l'alpha bouge, l'alignement de teinte sur --header-text-strong est
+     préservé. */
+  --header-control-border: rgba(246, 251, 252, 0.62);
+  --header-control-surface: rgba(246, 251, 252, 0.1);
+  --header-control-surface-hover: rgba(246, 251, 252, 0.2);
+  /* ÉTAT D'APPUI À PORTÉE HEADER, et non plus `--soft-surface-active`. Les quatre
+     couleurs de texte de ce bloc sont délibérément sorties du système de thème parce que
+     le verre fumé est le même matériau dans les deux thèmes ; consommer un token THÉMÉ
+     pour l'appui était la dernière incohérence. Elle avait un effet mesurable : avec le
+     lavis d'encre clair, le survol éclaircissait le contrôle puis l'appui redescendait
+     SOUS le repos (ΔE OKLab repos→appui 2.0 pour `.section-nav a`), et comme ce lien n'a
+     aucun `transform`, il ne restait plus aucun retour d'appui.
+     Cette valeur ASSOMBRIT, comme un appui doit le faire sur du verre fumé : ΔE 7.6
+     repos→appui pour `.section-nav a` (14.1 pour les deux boutons, qui partent d'un fond
+     de contrôle), et le libellé MONTE au lieu de descendre — --header-text 9.41:1,
+     --header-text-strong 11.54:1.
+     À noter : la valeur d'avant le diff de palette était cassée dans l'AUTRE sens
+     (`rgba(255, 255, 255, 0.933)`, un blanc quasi opaque, mettait --header-text à
+     1.15:1 — libellé invisible à l'appui). Le lavis d'encre du diff est donc une
+     demi-correction, pas une régression ; c'est elle qu'on termine ici.
+     Écartée : « blanc à 0.30 » — ΔE 12.8 mais le libellé retombe à 3.07:1. */
+  --header-control-surface-active: rgba(4, 20, 24, 0.35);
+  /* Mesuré 3.43:1 à #83e2e7 sur le verre réel au survol d'un lien de nav, contre 4.91:1
+     sur le repli opaque --header-solid : c'est pour cela qu'un test mesurant le repli
+     ne voyait rien. #cff5f7 mesure 4.43:1 sur le même verre (4.18:1 au pire sol balayé,
+     un portrait blanc, 4.88:1 au mieux). RESTE OUVERT : sous ce modèle, 4.43:1 est
+     encore sous 4.5:1 pour du 16 px. La correction est un gain net de ~1 point, pas une
+     mise en conformité complète ; la fermer demande de voir le rendu réel du flou. */
+  --header-text-hover: #cff5f7;
   --header-blur: 24px;
   /* Transformation de luminance du verre du header. Sans elle, mesuré : les libellés
      tombent à 1.03:1 en clair et 1.00:1 en sombre quand le portrait défile derrière.
      En clair, éclaircir ne suffit pas — l'obstacle est la chemise bleu marine sous du
      texte sombre — d'où l'écrasement du contraste avant le gain de luminosité. */
   --header-luminance: contrast(0.55) brightness(0.4);
-  --panel-surface: rgba(255, 255, 255, 0.365);
-  --panel-surface-hover: rgba(255, 255, 255, 0.765);
+  /* Quiet surfaces are INK washes in this theme, no longer white ones. On a card whose
+     opaque fallback is #f4fcfd there is nothing left to lighten: the old white fills
+     measured 1.014:1 (panel), 1.022:1 (chip) and 1.031:1 (hover) against that card —
+     four names for one white sheet, and every step of the interaction ladder lost. Ink
+     on the accent hue restores the ladder: 1.100:1 at rest, 1.214:1 on hover,
+     1.291:1 once pressed. Same state-layer pattern as the dark theme, mirrored — there
+     the layer lightens, here it deepens.
+     Text keeps its margin on the deepest wash: --text-body 7.50:1 and --text-strong
+     11.58:1 on it. The lightest ground these washes land on is the mobile navigation
+     panel, where --text-accent measures 5.76:1 on hover and 5.42:1 when pressed.
+     The worst ground is a card-on-halo (see --halo-tint): there the hover wash puts
+     --text-muted at 4.64:1 and --text-accent at 4.66:1 — that pair is what sizes both
+     inks, not the page floor. */
+  --panel-surface: rgba(7, 40, 45, 0.05);
+  --panel-surface-hover: rgba(7, 40, 45, 0.1);
   /* `--soft-surface*` were literal duplicates of `--panel-surface*` in both themes:
      two names, one value, and nothing said which one to reach for. They are aliases
      now, so a change to the panel surface can no longer drift from the soft one. */
   --soft-surface: var(--panel-surface);
   --soft-surface-hover: var(--panel-surface-hover);
-  --soft-surface-active: rgba(255, 255, 255, 0.933);
-  --chip-surface: rgba(255, 255, 255, 0.564);
-  --mobile-navigation-surface: #d2dcdd;
-  --icon-surface-start: rgba(255, 255, 255, 0.8);
-  --icon-surface-end: rgba(108, 170, 181, 0.55);
+  --soft-surface-active: rgba(7, 40, 45, 0.13);
+  /* Same treatment, one step further: ink at 0.06 against ink at 0.05 measured ΔE OKLab
+     0.7 on the opaque card — two names for one appearance, well under the step of 10
+     this file treats as perceptible. A chip reads by its SHAPE (pill plus
+     `--border-subtle`), not by its fill, so this becomes an explicit alias rather than a
+     value that only pretends to differ. Same pattern as `--soft-surface` just above.
+     The dark theme keeps a distinct value: there the wash lightens, and 0.087 against
+     0.049 is a real step. */
+  --chip-surface: var(--panel-surface);
+  --mobile-navigation-surface: #e8f5f8;
+  /* Both stops come from --halo-tint (#7eccdb) now: the end still carried the retired
+     #6caab5, and a white start at 0.8 left the tile invisible on a #f4fcfd card.
+     Measured against the card: 1.138:1 at the start, 1.351:1 at the end. `.social-link`
+     is a control, so its teal ink is measured on both stops — 6.57:1 and 5.53:1 at
+     rest, 5.44:1 and 4.61:1 once the hover wash lands; its `--control-border` rim
+     measures 4.27:1 and 3.59:1, above the 3:1 of WCAG 1.4.11 everywhere. */
+  --icon-surface-start: rgba(126, 204, 219, 0.24);
+  --icon-surface-end: rgba(126, 204, 219, 0.55);
   --skip-surface: var(--text-strong);
-  --skip-text: #f7fbfb;
+  --skip-text: #f1f8fa;
 
   /* Traits */
-  --border-subtle: rgba(16, 40, 44, 0.16); /* purement décoratif */
-  --control-border: #445a5f; /* 3.80:1 sur le fond de page, WCAG 1.4.11 */
+  --border-subtle: rgba(7, 40, 45, 0.13); /* purement décoratif — 1.28:1 sur le fond */
+  /* WCAG 1.4.11 se mesure sur le PIRE support, pas sur le fond de page : ce contour vit
+     sur `.button-secondary`, `.contact-links a` et `.social-link`, donc sur un lavis
+     posé sur une carte, elle-même posée sur un halo. À #60797e ce cas mesurait 3.05:1 —
+     conforme d'un cheveu, sans aucune marge pour une variation de halo. #5a7378 mesure
+     3.32:1 au même endroit.
+     Le pire support n'est pas le lavis de REPOS mais celui d'APPUI (`.button-secondary`
+     au clic) : #5a7378 y mesurait 2.86:1, donc sous le seuil. #526b70 y mesure 3.21:1.
+     Colonnes : fond de page 4.66:1 | carte-sur-halo 4.08:1 | + lavis de repos 3.74:1 |
+     + lavis de survol 3.39:1 | + lavis d'appui 3.21:1 | repli de carte opaque 5.46:1. */
+  --control-border: #526b70;
 
   /* Badges d'état : famille du bouton d'action (direction artistique du propriétaire),
      mais UN CRAN PLUS PROFOND, pour que le bouton plein reste le teal le plus clair et
      le plus saturé de l'écran — sinon le bouton « Me contacter » et les pastilles
      « Actuellement » / « Disponible… » forment trois aplats identiques et rien ne dit
      lequel est cliquable (mesuré : ΔE = 0,00 entre --accent et --badge-live-surface).
-     #094e59 : blanc/pastille 9.35:1 (contre 4.83:1 avant, pire ratio du site),
-     ΔE OKLab contre --accent 14.4, teinte 211.7 deg (accent 211.6 deg). */
-  --badge-live-surface: #094e59;
+     #00515d : blanc/pastille 8.99:1, ΔE OKLab contre --accent 13.14, teinte 211.78 deg
+     contre 211.73 deg pour --accent (écart 0.05 deg — famille tenue), et 8.65:1 contre
+     le repli de carte. */
+  --badge-live-surface: #00515d;
   --badge-live-text: #ffffff;
   --status-done-surface: var(--badge-live-surface);
   --status-done-text: var(--badge-live-text);
-  --status-progress-surface: #ffe6af;
-  --status-progress-text: #744c00; /* 6.19:1 */
+  --status-progress-surface: #ffe4ba;
+  --status-progress-text: #7a4a00; /* 6.08:1 */
   /* « À venir » : violet, pour ne se confondre ni avec l'acquis (teal) ni avec
-     l'en-cours (ambre). 6.53:1. */
-  --status-upcoming-surface: #d4cbff;
-  --status-upcoming-text: #46338c;
+     l'en-cours (ambre). 5.85:1. Écarts de teinte OKLCH entre les trois pastilles :
+     133.0 deg (acquis/en cours), 142.6 deg (en cours/à venir), 84.4 deg (acquis/à
+     venir) — mesures exactes, mais N'EN TIREZ AUCUNE CONCLUSION SUR LA LISIBILITÉ.
 
-  /* Focus — double liseré, garanti visible sur n'importe quel fond. */
-  --focus-outer: #002a30;
+     Une version précédente de ce commentaire concluait « aucune confusion possible sans
+     la couleur ». C'est faux pour un dichromate : un écart de teinte OKLCH ne dit rien
+     de la discriminabilité pour un daltonien. Mesuré en simulation deutéranope (Viénot,
+     Brettel & Mollon 1999), l'ambre #ffe4ba et le violet #e2d9ff tombent à 1.10:1 l'un
+     contre l'autre — indiscernables. En thème sombre les trois pastilles s'effondrent
+     ensemble : 1.09:1, 1.09:1 et 1.19:1 entre elles.
+
+     LE GARDE-FOU RÉEL EST LE LIBELLÉ TEXTUEL, rendu par `src/pages/Home.tsx` (le
+     `<span className="education-status …">{formation.status}</span>` du bloc formations
+     et le `<span className="project-status …">{project.status}</span>` du bloc projets)
+     : « Obtenu », « En cours », « À venir ». La couleur est un renfort, jamais le
+     porteur de l'information. Ne retirez pas ce texte. */
+  --status-upcoming-surface: #e2d9ff;
+  --status-upcoming-text: #5e4099;
+
+  /* Focus — double liseré, garanti visible sur n'importe quel fond. Presque de l'encre
+     (L 0.224) : c'est la seule bande de luminosité qui tienne 3:1 à la fois contre le
+     fond de page (13.96:1) et contre l'aplat accent (3.32:1). Contre l'anneau intérieur
+     blanc : 17.01:1 ; contre le repli de carte : 16.35:1. */
+  --focus-outer: #002026;
   --focus-inner: #ffffff;
 
   color: var(--text-body);
@@ -241,27 +433,54 @@
    -------------------------------------------------------------------------- */
 
 :root[data-theme="dark"] {
-  --site-background: #0d1a1c;
+  /* Le fond sombre n'était pas boueux, seulement un peu vert : sa luminance bouge à
+     peine (Y 0.0091 -> 0.0103), et le chroma reste au plancher (0.017) — ni noir pur,
+     ni dérive verte.
+     LA TEINTE, EN REVANCHE, N'A PRESQUE PAS BOUGÉ, et une version précédente de ce
+     commentaire annonçait « de 208 à 211.5 deg pour s'aligner sur l'accent ». Mesuré :
+     #0d1a1c = 208.07 deg, #101c1e = 208.95 deg, `--accent` sombre = 212.12 deg. Le
+     déplacement réel est de 0.9 deg et il reste 3.2 deg jusqu'à l'accent.
+     La cible est de plus INATTEIGNABLE à ce chroma : les voisins 8 bits de rgb(16,28,30)
+     donnent 202.0 / 208.95 / 215.1 / 216.6 deg — la grille sRGB ne propose rien entre
+     208.95 et 215.1. Le gain de ce fond est la luminosité et la propreté du chroma,
+     pas l'alignement de teinte. */
+  --site-background: #101c1e;
 
-  --text-strong: #dee8eb;
-  --text-body: #c3d0d2;
-  --text-muted: #abbbbd;
-  --text-accent: #60c6d7;
+  /* Ratios mesurés sur le fond de page. */
+  --text-strong: #e1ecee; /* 14.45:1 */
+  --text-body: #c7d4d6; /* 11.45:1 */
+  /* Relevé en contrepartie de --halo-tint (voir plus bas) : sur le lavis de survol d'une
+     carte-sur-halo, mesuré 6.55:1 sur la carte, 5.73:1 avec le lavis de repos et 4.58:1
+     avec celui de survol. Encre et corps restent deux rôles distincts : ΔE OKLab 9.1
+     contre --text-body (contre 12.6 avant, mais un ΔE de 2.4 aurait été la conséquence
+     d'une encre relevée jusqu'à 4.5:1 sans toucher au halo — c'est le halo qui devait
+     céder, pas la hiérarchie du texte). */
+  --text-muted: #a9b7ba; /*  8.43:1 */
+  --text-accent: #6ccddf; /*  9.48:1 */
   --text-on-accent: #ffffff;
 
-  --accent: #007a8b;
-  --accent-hover: #068a9b;
-  --accent-active: #006775;
-  --accent-quiet: rgba(0, 122, 139, 0.18);
-  --accent-quiet-border: rgba(0, 122, 139, 0.6);
+  /* The dark accent is DEEPER than the light one, and that is not a taste call. With the
+     same hex in both themes, the dark hover — which has to lighten — measured 4.10:1
+     against white and missed the 4.5:1 floor. With the base lowered to #006e7e, the
+     hover #008092 holds 4.66:1 (5.95:1 at rest, 7.36:1 pressed) and the perceived
+     step base/hover stays frank: ΔE OKLab 5.73. */
+  --accent: #006e7e;
+  --accent-hover: #008092;
+  --accent-active: #005f6c;
+  --accent-quiet: rgba(0, 110, 126, 0.16);
+  --accent-quiet-border: rgba(0, 110, 126, 0.55);
 
   /* Decorative / editorial hue — see the colour contract in the light block. Never on
-     a control, never on a status. */
-  --accent-secondary: #ffc0b5; /* 9.79:1 on the glass fallback */
+     a control, never on a status. Opposition to the accent measured at 179.7 deg. */
+  --accent-secondary: #f1b7ab; /* 8.15:1 on the glass fallback, 10.03:1 on the page bg */
 
   --glass-fill: rgba(2, 11, 17, 0.2);
-  --glass-fill-solid: #1d2729;
+  --glass-fill-solid: #222d2f;
   --glass-border: rgba(226, 244, 248, 0.2);
+  /* Le blanc translucide de ce liseré (#dbf3f9) a été confronté à la nouvelle encre
+     claire du thème (#e1ecee) : ΔE OKLab 1.95, très en dessous du cran de 10 que ce
+     fichier tient pour perceptible. Aucun ajustement nécessaire, la teinte est gardée
+     telle quelle. */
   --glass-specular: linear-gradient(
     142deg,
     rgba(219, 243, 249, 0.78) 0%,
@@ -279,51 +498,82 @@
       rgba(190, 232, 241, 0.06) 44%,
       transparent 72%
     ),
-    radial-gradient(90% 70% at 4% 108%, rgba(59, 148, 168, 0.14) 0%, transparent 66%);
+    radial-gradient(90% 70% at 4% 108%, rgba(57, 149, 165, 0.14) 0%, transparent 66%);
   --glass-shadow: rgba(0, 0, 0, 0.5);
 
-  --halo-tint: #286771;
-  --halo-tint-warm: #7c554e;
+  /* Les bulles sont des DISQUES PLEINS (voir --halo-tint en thème clair) : à #1a6976 le
+     halo éclaircissait tant la carte posée dessus — chaîne mesurée #101c1e → halo à 0.8
+     → --glass-fill rgba(2, 11, 17, 0.2) → #144a54 — que --text-muted tombait à 3.04:1
+     sur le lavis de survol. Relever l'encre jusqu'à 4.5:1 l'aurait fait fusionner avec
+     --text-body (ΔE OKLab 2.4) : c'est donc le halo qui cède. À #11454f la carte
+     redescend à #0e333b et --text-muted remonte à 4.58:1 dans le même pire cas. */
+  --halo-tint: #11454f;
+  /* The warm bubble needed the SAME concession as the cold one, and not getting it just
+     moved the worst case from one bubble to the other. At #794e46 the composed bubble sat
+     at ΔE OKLab 21.4 against the floor while the lowered cold bubble sat at 12.2, so in
+     dark mode the binding substrate had become the warm halo: a card over it measured
+     #503935, and on the hover wash --text-muted fell to 3.71:1, --text-accent to 4.17:1
+     and --control-border to 2.92:1 (2.63:1 on the press wash). #4f332e brings the bubble
+     to ΔE 11.8 — parity with the cold one at 12.2, the same rule applied in the light
+     block — and the card down to #352726: --text-muted 4.85:1, --text-accent 5.46:1,
+     --control-border 3.81:1 on hover and 3.41:1 on press. Hue held at 30.5 deg. */
+  --halo-tint-warm: #4f332e;
   --halo-opacity: 0.8;
 
   --header-luminance: contrast(0.6) brightness(0.42);
-  --header-solid: #123f4e;
+  /* `--header-solid` n'est plus redéfini ici : c'est désormais une valeur unique, avec
+     ses quatre couleurs de texte, dans le bloc clair. Voir la justification là-bas. */
   --panel-surface: rgba(226, 244, 248, 0.049);
   --panel-surface-hover: rgba(226, 244, 248, 0.125);
   --soft-surface: var(--panel-surface);
   --soft-surface-hover: var(--panel-surface-hover);
   --soft-surface-active: rgba(226, 244, 248, 0.164);
   --chip-surface: rgba(226, 244, 248, 0.087);
-  --mobile-navigation-surface: #212b2d;
-  --icon-surface-start: rgba(0, 122, 139, 0.34);
-  --icon-surface-end: rgba(40, 103, 113, 0.45);
+  --mobile-navigation-surface: #1d282a;
+  /* Les deux arrêts portaient l'ancien accent et l'ancien halo sombres : re-dérivés
+     respectivement de --accent (#006e7e) et de --halo-tint (#1a6976). */
+  --icon-surface-start: rgba(0, 110, 126, 0.34);
+  --icon-surface-end: rgba(26, 105, 118, 0.45);
   --skip-surface: var(--text-strong);
-  --skip-text: #0f1e20;
+  --skip-text: #101c1e;
 
-  --border-subtle: rgba(226, 244, 248, 0.18);
-  --control-border: #91aaae; /* 6.23:1 sur le repli de carte */
+  --border-subtle: rgba(225, 236, 238, 0.16);
+  /* RÉGRESSION FRANCHE CORRIGÉE. À #7b8d90, le pire support — lavis de repos sur une
+     carte-sur-halo — mesurait 2.51:1, SOUS le seuil 3:1 de WCAG 1.4.11, là où la valeur
+     d'avant le diff (#91aaae) tenait 3.55:1. En thème sombre cette bordure est le SEUL
+     indice qui identifie `.button-secondary`, `.contact-links a` et `.social-link` comme
+     des contrôles : leur fond mesure 1.13:1 contre la carte. #91a3a6 mesure 4.50:1 sur
+     ce même pire support (3.60:1 avec le lavis de survol, 3.20:1 avec celui d'appui),
+     5.38:1 sur le repli de carte et 6.62:1 sur le fond de page. */
+  --control-border: #91a3a6;
 
   /* Même règle qu'en thème clair : la pastille reste dans la famille du bouton, un cran
      plus profond. Valeur résolue (et non choisie à la main) sous trois contraintes,
      toutes mesurées :
-       1. blanc sur pastille  8.47:1  (seuil 4.5:1)  — le libellé est blanc ;
-       2. pastille vs carte   1.80:1  (seuil 3:1)    — INATTEIGNABLE : aucun teal ne
+       1. blanc sur pastille 10.09:1  (seuil 4.5:1)  — le libellé est blanc ;
+       2. pastille vs carte   1.40:1  (seuil 3:1)    — INATTEIGNABLE : aucun teal ne
           tient à la fois 4.5:1 contre le blanc et 3:1 contre une carte sombre. La
           pastille porte donc sa propre bordure (`border: 1px solid currentColor`,
-          c'est-à-dire blanche), mesurée à 15.28:1 contre la carte ;
-       3. ΔE OKLab contre --accent  12.0  (seuil 10) ;
-     teinte 213.7 deg contre 211.6 deg pour --accent, soit +2.1 deg — famille tenue. */
-  --badge-live-surface: #005563;
+          c'est-à-dire blanche), mesurée à 14.15:1 contre la carte ;
+       3. ΔE OKLab contre --accent  12.39  (seuil 10) ;
+     teinte 211.79 deg contre 212.12 deg pour --accent, soit 0.33 deg — famille tenue.
+     Écartée pour ce cas : une pastille plus CLAIRE que le bouton avec une encre sombre
+     satisfait les quatre contraintes numériquement, mais viole la règle éditoriale du
+     bloc clair — le bouton plein reste le teal le plus clair et le plus saturé de
+     l'écran. La bordure reste la moins mauvaise sortie. */
+  --badge-live-surface: #004954;
   --badge-live-text: #ffffff;
   --status-done-surface: var(--badge-live-surface);
   --status-done-text: var(--badge-live-text);
-  --status-progress-surface: #4b3500;
-  --status-progress-text: #e2b677; /* 6.19:1 */
-  --status-upcoming-surface: #25134d;
-  --status-upcoming-text: #a29cdd; /* 6.52:1 */
+  --status-progress-surface: #4a3512;
+  --status-progress-text: #e8c184; /* 6.85:1 */
+  --status-upcoming-surface: #392c57;
+  --status-upcoming-text: #c7b8f4; /* 6.93:1 */
 
-  --focus-outer: #7cddee;
-  --focus-inner: #061315;
+  /* Inverse du thème clair : ici c'est l'anneau extérieur qui est clair. 12.96:1 sur le
+     fond de page, 4.43:1 sur l'aplat accent, 12.96:1 contre l'anneau intérieur. */
+  --focus-outer: #b8e7e9;
+  --focus-inner: #101c1e;
 
   color-scheme: dark;
 }
@@ -890,8 +1140,10 @@ summary:focus-visible,
   text-underline-offset: 0.28em;
 }
 
+/* Ce lien n'a AUCUN `transform` : son fond d'appui est son seul retour d'interaction.
+   D'où le token à portée header et non `--soft-surface-active`, qui est thémé. */
 .section-nav a:active {
-  background: var(--soft-surface-active);
+  background: var(--header-control-surface-active);
 }
 
 .section-nav a[aria-current="location"] {
@@ -943,7 +1195,7 @@ summary:focus-visible,
 
 .menu-toggle:active,
 .theme-toggle:active {
-  background: var(--soft-surface-active);
+  background: var(--header-control-surface-active);
   transform: translateY(1px);
 }
 
@@ -1148,7 +1400,7 @@ summary:focus-visible,
 }
 
 .button-primary {
-  --elevation: 0 0.5rem 1.25rem rgba(11, 94, 112, 0.24);
+  --elevation: 0 0.5rem 1.25rem rgba(3, 95, 108, 0.24);
   background: var(--accent);
   color: var(--text-on-accent);
   box-shadow: var(--elevation);
@@ -1159,7 +1411,7 @@ summary:focus-visible,
 }
 
 .button-primary:active {
-  --elevation: 0 0.125rem 0.375rem rgba(11, 94, 112, 0.28);
+  --elevation: 0 0.125rem 0.375rem rgba(3, 95, 108, 0.28);
   background: var(--accent-active);
   box-shadow: var(--elevation);
   transform: translateY(1px);
@@ -1202,7 +1454,7 @@ summary:focus-visible,
   background: linear-gradient(135deg, var(--icon-surface-start), var(--icon-surface-end));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0.375rem 0.875rem rgba(24, 95, 119, 0.14);
+    0 0.375rem 0.875rem rgba(6, 98, 111, 0.14);
 }
 
 /* Decor only: these three tiles sit next to a heading whose text already carries the
@@ -2031,6 +2283,45 @@ html.reveal-enabled [data-reveal]:focus-within {
    13. Préférences utilisateur
    -------------------------------------------------------------------------- */
 
+/* APLATISSEMENT DES SURFACES TRANSLUCIDES — commun aux deux modes qui ont pour objet
+   même de rendre les surfaces opaques. Aucun des tokens ci-dessous n'était neutralisé,
+   ni ici ni dans `prefers-contrast: more` : les cartes devenaient opaques mais les
+   lavis, les puces et les tuiles d'icône restaient des couches alpha, donc leur couleur
+   effective continuait de dépendre de ce qui passait derrière. Autrement dit, les deux
+   modes ne tenaient leur promesse qu'à moitié.
+
+   Chaque valeur est la COMPOSITION MESURÉE du token translucide sur `--glass-fill-solid`
+   du thème correspondant (#f4fcfd en clair, #222d2f en sombre), c'est-à-dire le support
+   que `.liquid-card` prend dans ces deux modes. Rien n'est deviné, et rien ne change
+   d'apparence : seule la dépendance à l'arrière-plan disparaît.
+
+   Les deux modes partagent ce bloc à dessein : dupliquer douze valeurs dans deux
+   requêtes média est le moyen le plus sûr de les laisser dériver.
+
+   `--soft-surface`, `--soft-surface-hover` et (en clair) `--chip-surface` sont des alias
+   de `--panel-surface*` : ils suivent automatiquement et ne sont pas redéclarés.
+   Pires paires mesurées après aplatissement — clair : --text-muted 5.51:1 et
+   --control-border 3.59:1 sur `--icon-surface-end` ; sombre : --text-muted 4.74:1 sur
+   `--panel-surface-hover` et --control-border 3.30:1 sur `--soft-surface-active`. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root {
+    --panel-surface: #e8f1f3; /* encre 0.05 sur #f4fcfd */
+    --panel-surface-hover: #dce7e8; /* encre 0.10 */
+    --soft-surface-active: #d5e0e2; /* encre 0.13 */
+    --icon-surface-start: #d8f0f5; /* halo 0.24 */
+    --icon-surface-end: #b3e2ea; /* halo 0.55 */
+  }
+
+  :root[data-theme="dark"] {
+    --panel-surface: #2b3739; /* encre claire 0.049 sur #222d2f */
+    --panel-surface-hover: #3a4648; /* 0.125 */
+    --soft-surface-active: #414e50; /* 0.164 */
+    --chip-surface: #333e40; /* 0.087 — pas un alias en sombre */
+    --icon-surface-start: #16434a; /* accent 0.34 */
+    --icon-surface-end: #1e484f; /* halo 0.45 */
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .liquid-card {
     background: var(--glass-fill-solid);
@@ -2091,9 +2382,15 @@ html.reveal-enabled [data-reveal]:focus-within {
     display: none;
   }
 
+  /* `--glass-fill-solid`, et non `--site-background`. En clair, #daecf0 (Y 0.812) est
+     PLUS SOMBRE que #f4fcfd (Y 0.960) : l'utilisateur qui demandait explicitement plus
+     de contraste en obtenait MOINS que celui qui demandait moins de transparence, sur le
+     même contenu. Mesuré sur la correction : --text-body passe de 8.27:1 à 9.68:1,
+     --text-muted de 6.35:1 à 7.44:1, et la bordure --text-strong de 12.76:1 à 14.95:1.
+     Les deux modes convergent maintenant sur le même support. */
   .liquid-card {
     border-color: var(--text-strong);
-    background: var(--site-background);
+    background: var(--glass-fill-solid);
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;

@@ -7,10 +7,18 @@ export type Theme = "light" | "dark";
 const STORAGE_KEY = "portfolio-theme";
 const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 
-/** Doit rester aligné sur le script inline de `index.html`. */
+/**
+ * Doit rester aligné sur le script inline de `index.html`.
+ *
+ * Une seule valeur par thème, égale à `--site-background` de `index.css` : le header
+ * est un îlot flottant (`--header-offset`), donc c'est bien le fond de page que le
+ * navigateur borde en haut de l'écran. Trois valeurs contradictoires cohabitaient
+ * auparavant entre ce fichier et `index.html`, et la barre d'adresse mobile
+ * n'annonçait la couleur d'aucune des deux.
+ */
 const THEME_COLORS: Record<Theme, string> = {
-  light: "#e7eff1",
-  dark: "#081721",
+  light: "#daecf0",
+  dark: "#101c1e",
 };
 
 function isTheme(value: string | null): value is Theme {

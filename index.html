@@ -8,7 +8,10 @@
       name="description"
       content="Portfolio de Thomas Caron, développeur logiciel full-stack et QA."
     />
-    <meta name="theme-color" content="#c4d8de" />
+    <!-- Doit rester aligné sur THEME_COLORS de src/hooks/useTheme.ts et sur
+         --site-background de src/index.css : c'est le fond de page que le navigateur
+         borde en haut de l'écran, le header étant un îlot flottant. -->
+    <meta name="theme-color" content="#daecf0" />
     <script>
       // Applique le thème avant le premier rendu pour éviter tout flash.
       // Priorité : choix explicite mémorisé, sinon préférence du système.
@@ -16,13 +19,10 @@
         var stored = window.localStorage.getItem("portfolio-theme");
         var dark =
           stored === "dark" ||
-          (stored !== "light" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches);
+          (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
         if (dark) {
           document.documentElement.dataset.theme = "dark";
-          document
-            .querySelector('meta[name="theme-color"]')
-            ?.setAttribute("content", "#081721");
+          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#101c1e");
         }
       } catch {
         // Le thème clair reste le thème par défaut.
@@ -36,10 +36,7 @@
       content="Développeur logiciel full-stack et QA, de la conception aux tests automatisés."
     />
     <meta property="og:image" content="https://portfolio-omega-umber-81.vercel.app/og.jpg" />
-    <meta
-      property="og:image:alt"
-      content="Thomas Caron, développeur logiciel full-stack et QA."
-    />
+    <meta property="og:image:alt" content="Thomas Caron, développeur logiciel full-stack et QA." />
     <meta property="og:url" content="https://portfolio-omega-umber-81.vercel.app/" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="https://portfolio-omega-umber-81.vercel.app/" />
@@ -57,10 +54,7 @@
           "addressLocality": "Mont-Saint-Aignan",
           "addressCountry": "FR"
         },
-        "sameAs": [
-          "https://www.linkedin.com/in/thomas-caron27/",
-          "https://github.com/ThoomassC"
-        ],
+        "sameAs": ["https://www.linkedin.com/in/thomas-caron27/", "https://github.com/ThoomassC"],
         "knowsAbout": [
           "C#",
           "Angular",

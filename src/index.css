@@ -1121,8 +1121,8 @@ summary:focus-visible,
   align-items: center;
   padding: var(--space-2) var(--space-3);
   /* Même rayon que .theme-toggle : la barre d'en-tête doit avoir un seul vocabulaire
-     d'arrondi, pas deux. */
-  border-radius: var(--radius-md);
+     d'arrondi, pas deux. Pilule, comme .button. */
+  border-radius: var(--radius-pill);
   color: var(--header-text);
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
@@ -1169,7 +1169,7 @@ summary:focus-visible,
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--header-control-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--header-control-surface);
   color: var(--header-text-strong);
   font: inherit;
@@ -1385,7 +1385,11 @@ summary:focus-visible,
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  /* Pill, not the 1rem radius this used to carry: a 1rem corner on a 48px control read
+     as a rounded rectangle rather than a button, and it disagreed with the controls that
+     were already pills (`.contact-links a`, `.hero-availability`). One rounding
+     vocabulary for everything you can press. */
+  border-radius: var(--radius-pill);
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
   line-height: 1.35;
@@ -2346,10 +2350,6 @@ html.reveal-enabled [data-reveal]:focus-within {
    déclaration est ignorée et le `border-radius` d'origine s'applique tel quel.
    -------------------------------------------------------------------------- */
 @supports (corner-shape: superellipse(1.45)) {
-  .button,
-  .theme-toggle,
-  .menu-toggle,
-  .section-nav a,
   .site-header__brand,
   .skill-group li,
   .experience-stack li,
@@ -2366,7 +2366,13 @@ html.reveal-enabled [data-reveal]:focus-within {
   }
 
   /* Les pastilles réellement circulaires gardent une superellipse plus douce, sinon
-     un rayon de 999px cumulé à une superellipse marquée produit un losange arrondi. */
+     un rayon de 999px cumulé à une superellipse marquée produit un losange arrondi.
+     Les boutons et les contrôles du header portent désormais --radius-pill : ils
+     relèvent donc de cette règle et non de la superellipse marquée ci-dessus. */
+  .button,
+  .theme-toggle,
+  .menu-toggle,
+  .section-nav a,
   .education-status,
   .project-status,
   .hero-current-role strong,

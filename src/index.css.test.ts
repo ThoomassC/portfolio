@@ -268,13 +268,59 @@ const MINIMUM_TEXT_CASES = contrastCases(AA_TEXT, [
   ["--header-text-hover", "--header-solid"],
 ]);
 
+/* ---------------------------------------------------------------------------
+   ORDRE DES DEUX ANNEAUX DE FOCUS — à lire avant de « re-corriger » la paire
+   `--focus-inner` / `--accent` ci-dessous en `--focus-outer` / `--accent`.
+
+   La règle `:focus-visible` de la feuille (`a[href]`, `button`, `input`, `select`,
+   `textarea`, `summary`, `[role="button"]`, `[tabindex]` — § 3 Base) peint ceci :
+
+     outline: 2px solid var(--focus-inner);
+     outline-offset: 2px;
+     box-shadow:
+       0 0 0 2px var(--focus-inner),   |  0 → 2 px du bord de l'élément
+       0 0 0 5px var(--focus-outer),   |  0 → 5 px, donc VISIBLE de 2 à 5 px
+       var(--elevation, 0 0 rgba(0, 0, 0, 0));
+
+   Les `box-shadow` se peignent dans l'ordre de déclaration, la première par-dessus :
+   l'étalement de 2 px masque le centre de celui de 5 px. En partant du bord de
+   l'élément vers l'extérieur, on traverse donc `--focus-inner` (0 → 2 px, ombre),
+   `--focus-inner` encore (2 → 4 px, l'`outline` décalée de 2 px et large de 2 px,
+   peinte AU-DESSUS des ombres), puis `--focus-outer` (4 → 5 px).
+
+   Conséquence, et c'est tout l'objet de ce commentaire : la bande qui TOUCHE l'aplat
+   d'un bouton plein (`.button-primary`, `background: var(--accent)`) est
+   `--focus-inner`. `--focus-outer` ne touche jamais `--accent` — son voisin est ce qui
+   entoure le bouton, c'est-à-dire le fond de page ou le sol d'une carte. Mesurer
+   `--focus-outer` contre `--accent` mesurait une adjacence qui n'existe pas ; pire, la
+   contrainte était mathématiquement insatisfiable en thème clair (voir le bloc
+   `--focus-outer` de la feuille : l'intervalle de luminance imposé par le fond de page
+   et celui imposé par l'aplat accent sont disjoints), donc aucune palette ne pouvait
+   la satisfaire.
+
+   Les trois contraintes réelles du double liseré sont, dans l'ordre des bandes :
+     1. `--focus-inner` contre l'aplat accent          — ici, à 3:1 ;
+     2. `--focus-inner` contre `--focus-outer`          — ici, à 3:1 : les deux bandes
+        doivent rester distinguables l'une de l'autre ;
+     3. `--focus-outer` contre son dehors               — le fond de page ici, et les
+        sols de carte composés dans `COMPOSITE_NON_TEXT_CASES`, parce qu'un bouton
+        focalisé vit dans une carte bien plus souvent que sur le fond nu.
+   ------------------------------------------------------------------------ */
 const NON_TEXT_CASES = contrastCases(AA_NON_TEXT, [
   ["--control-border", "--site-background"],
   // Double liseré de focus : chaque anneau doit se détacher de ce qu'il borde.
   ["--focus-outer", "--site-background"],
-  ["--focus-outer", "--accent"],
+  // La bande qui touche l'aplat accent est l'anneau INTÉRIEUR — voir ci-dessus.
+  ["--focus-inner", "--accent"],
   ["--focus-outer", "--focus-inner"],
 ]);
+
+/** Toutes les paires opaque-contre-opaque, pour le contrôle de sensibilité final. */
+const ALL_OPAQUE_CASES: readonly ContrastCase[] = [
+  ...ENHANCED_TEXT_CASES,
+  ...MINIMUM_TEXT_CASES,
+  ...NON_TEXT_CASES,
+];
 
 /* ---------------------------------------------------------------------------
    Supports COMPOSÉS.
@@ -599,6 +645,21 @@ const COMPOSITE_NON_TEXT_CASES: readonly CompositeCase[] = [
   // `--control-border` cerne trois contrôles posés sur une carte : `.button-secondary`,
   // `.social-link` et `.contact-links a`. Son voisin extérieur est le sol de la carte.
   ...CARD_FLOORS.flatMap((floor) => inksOn(floor, AA_NON_TEXT, ["--control-border"])),
+  /*
+   * Anneau EXTÉRIEUR du double liseré de focus contre son vrai voisinage.
+   *
+   * `NON_TEXT_CASES` ne le confrontait qu'à `--site-background`, or presque aucun
+   * élément focalisable du site n'est posé sur le fond nu : `.button-primary`,
+   * `.button-secondary`, `.contact-links a`, `.social-link` et les ancres de projet
+   * vivent tous dans une `.liquid-card`, donc sur le sol composé décor + verre. Le
+   * trou était là — l'anneau extérieur pouvait tenir 3:1 contre le fond de page et
+   * disparaître sur une carte, sans qu'aucune assertion ne le dise.
+   *
+   * L'anneau est un INDICATEUR DE FOCUS, pas un décor de conteneur : les 3:1 de WCAG
+   * 1.4.11 s'appliquent pleinement ici, sans le rabais de `MIN_RIM_CONTRAST` accordé
+   * aux liserés de `.liquid-card`.
+   */
+  ...CARD_FLOORS.flatMap((floor) => inksOn(floor, AA_NON_TEXT, ["--focus-outer"])),
   // Son voisin intérieur est le lavis qu'il entoure.
   ...WASH_SUPPORTS.filter(({ wash }) => wash.enclosedByControlBorder).flatMap(({ support }) =>
     inksOn(support, AA_NON_TEXT, ["--control-border"])
@@ -886,6 +947,20 @@ function failureCount(theme: Theme, cases: readonly CompositeCase[]): number {
   }).length;
 }
 
+/** Le même compteur pour les paires opaques. Une exception compte comme un échec. */
+function opaqueFailureCount(theme: Theme, cases: readonly ContrastCase[]): number {
+  return cases.filter((testCase) => {
+    try {
+      return (
+        contrastRatio(tokenValue(theme, testCase.ink), tokenValue(theme, testCase.surface)) <
+        testCase.threshold
+      );
+    } catch {
+      return true;
+    }
+  }).length;
+}
+
 const LIGHT_BASELINE_FAILURES = failureCount(LIGHT_THEME, ALL_COMPOSITE_CASES);
 
 const MUTATIONS: readonly {
@@ -910,6 +985,20 @@ const MUTATIONS: readonly {
     value: "rgba(7, 40, 45, 0)",
   },
   { label: "--halo-tint passé en quasi-noir", token: "--halo-tint", value: "#050708" },
+  /*
+   * Preuve que les cas `--focus-outer` sur les sols de carte ont des dents.
+   *
+   * `#e4e7f0` est un gris bleuté clair : il tient encore 1.05:1 contre le fond de page
+   * — donc un test qui ne regarderait que `--site-background` le laisserait passer de
+   * justesse dans le mauvais sens — et il s'effondre à 1.07:1 → 1.12:1 contre les
+   * quatre sols de carte. Sans les cas ajoutés à `COMPOSITE_NON_TEXT_CASES`, cette
+   * ligne ne créerait AUCUN échec supplémentaire et ce test passerait au rouge.
+   */
+  {
+    label: "--focus-outer rapproché du sol des cartes",
+    token: "--focus-outer",
+    value: "#e4e7f0",
+  },
 ];
 
 describe("sensibilité des supports composés", () => {
@@ -923,6 +1012,51 @@ describe("sensibilité des supports composés", () => {
         failures,
         `${failures} paires en échec après mutation, contre ${LIGHT_BASELINE_FAILURES} sur la feuille du jour`
       ).toBeGreaterThan(LIGHT_BASELINE_FAILURES);
+    }
+  );
+});
+
+/**
+ * Sensibilité des paires OPAQUES, et d'abord de l'assertion réécrite.
+ *
+ * Une assertion corrigée sans contrôle de morsure n'est qu'un assouplissement bien
+ * rédigé. Celle-ci mute `--focus-inner` — en mémoire, jamais dans la feuille — vers un
+ * indigo CHOISI POUR NE CASSER QUE LA NOUVELLE PAIRE : `#6272b0` est à ΔE OKLab 17.5
+ * de `--accent`, assez proche pour tomber à 2.13:1 contre l'aplat accent en clair et
+ * 2.03:1 en sombre (sous les 3:1), mais assez éloigné de l'anneau extérieur pour tenir
+ * 4.55:1 en clair et 4.45:1 en sombre — l'assertion `--focus-inner` / `--focus-outer`
+ * reste donc verte sous cette mutation. Le seul échec ajouté est celui de la paire
+ * `--focus-inner` / `--accent` : si quelqu'un la retire, ce test devient rouge.
+ *
+ * Les deux thèmes sont mutés parce que les deux définissent leur propre couple
+ * d'anneaux, inversé de l'un à l'autre (anneau extérieur noir en clair, crème en
+ * sombre).
+ */
+const OPAQUE_MUTATIONS: readonly {
+  readonly label: string;
+  readonly token: string;
+  readonly value: string;
+}[] = [
+  {
+    label: "--focus-inner rapproché de l'aplat accent",
+    token: "--focus-inner",
+    value: "#6272b0",
+  },
+];
+
+describe.each(THEMES)("sensibilité des paires opaques du thème $name", (theme: Theme) => {
+  const baseline = opaqueFailureCount(theme, ALL_OPAQUE_CASES);
+
+  it.each(OPAQUE_MUTATIONS)(
+    "devrait faire échouer davantage de paires quand $label",
+    ({ token, value }) => {
+      const mutated = withToken(theme, token, value);
+      const failures = opaqueFailureCount(mutated, ALL_OPAQUE_CASES);
+
+      expect(
+        failures,
+        `${failures} paires en échec après mutation, contre ${baseline} sur la feuille du jour`
+      ).toBeGreaterThan(baseline);
     }
   );
 });

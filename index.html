@@ -11,7 +11,7 @@
     <!-- Doit rester aligné sur THEME_COLORS de src/hooks/useTheme.ts et sur
          --site-background de src/index.css : c'est le fond de page que le navigateur
          borde en haut de l'écran, le header étant un îlot flottant. -->
-    <meta name="theme-color" content="#daecf0" />
+    <meta name="theme-color" content="#e9ecf7" />
     <script>
       // Applique le thème avant le premier rendu pour éviter tout flash.
       // Priorité : choix explicite mémorisé, sinon préférence du système.
@@ -22,7 +22,7 @@
           (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
         if (dark) {
           document.documentElement.dataset.theme = "dark";
-          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#101c1e");
+          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#15171e");
         }
       } catch {
         // Le thème clair reste le thème par défaut.

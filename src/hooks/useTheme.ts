@@ -17,8 +17,8 @@ const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
  * n'annonçait la couleur d'aucune des deux.
  */
 const THEME_COLORS: Record<Theme, string> = {
-  light: "#daecf0",
-  dark: "#101c1e",
+  light: "#e9ecf7",
+  dark: "#15171e",
 };
 
 function isTheme(value: string | null): value is Theme {

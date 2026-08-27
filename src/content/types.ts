@@ -70,6 +70,19 @@ export type Project = {
   readonly links: readonly ProjectLink[];
 };
 
+/**
+ * Une pratique personnelle tenue dans la durée. Même vocabulaire que `Project` et
+ * `Experience` : une icône `TablerIcon` et des `ProjectLink` — un tableau vide quand
+ * la pratique n'a rien de public à montrer, comme pour un projet sans dépôt liable.
+ */
+export type Passion = {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly icon: TablerIcon;
+  readonly links: readonly ProjectLink[];
+};
+
 export type NavigationItem = {
   readonly id: string;
   readonly label: string;

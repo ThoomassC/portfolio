@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
+import { profile } from "./content/profile";
 import { setPrefersColorScheme, setPrefersReducedMotion } from "./test/setup";
 
 function timeElements(): HTMLTimeElement[] {
@@ -73,7 +74,7 @@ describe("structure de la page", () => {
       screen.getByRole("heading", {
         level: 3,
         name: /apprendre pour mieux construire/i,
-      }),
+      })
     ).toBeInTheDocument();
   });
 });
@@ -120,10 +121,7 @@ describe("dates", () => {
     render(<App />);
 
     const incoherents = timeElements()
-      .filter(
-        (element) =>
-          !(element.textContent ?? "").includes(element.dateTime.slice(0, 4)),
-      )
+      .filter((element) => !(element.textContent ?? "").includes(element.dateTime.slice(0, 4)))
       .map(describeTime);
 
     expect(incoherents).toEqual([]);
@@ -136,10 +134,14 @@ describe("hero", () => {
     const hero = getHero();
 
     expect(
-      within(hero).getByRole("link", { name: /github/i }).getAttribute("href"),
+      within(hero)
+        .getByRole("link", { name: /github/i })
+        .getAttribute("href")
     ).toMatch(/github\.com/i);
     expect(
-      within(hero).getByRole("link", { name: /linkedin/i }).getAttribute("href"),
+      within(hero)
+        .getByRole("link", { name: /linkedin/i })
+        .getAttribute("href")
     ).toMatch(/linkedin\.com/i);
   });
 
@@ -147,9 +149,7 @@ describe("hero", () => {
     render(<App />);
 
     expect(
-      within(getHero()).getByText(
-        /Disponible à partir d’octobre 2027 — CDI ou freelance/i,
-      ),
+      within(getHero()).getByText(/Disponible à partir d’octobre 2027 — CDI/i)
     ).toBeInTheDocument();
   });
 });
@@ -180,9 +180,72 @@ describe("téléchargement du CV", () => {
   it("devrait annoncer le format du fichier dans le libellé du lien", () => {
     render(<App />);
 
-    expect(
-      screen.getByRole("link", { name: /télécharger mon cv.*pdf/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /télécharger mon cv.*pdf/i })).toBeInTheDocument();
+  });
+});
+
+describe("passions", () => {
+  it("devrait rendre la section avec son titre accessible", () => {
+    render(<App />);
+
+    const section = screen.getByRole("region", {
+      name: /ce que je fais du reste de mon temps/i,
+    });
+
+    expect(section).toHaveAttribute("id", "passions");
+  });
+
+  it("devrait présenter les quatre passions dans l'ordre", () => {
+    render(<App />);
+    const liste = screen.getByRole("list", { name: /pratiques personnelles/i });
+
+    const titres = within(liste)
+      .getAllByRole("heading", { level: 3 })
+      .map((titre) => titre.textContent);
+
+    expect(titres).toEqual(["Natation", "Sauvetage en mer", "Projets personnels", "Anglais"]);
+  });
+
+  /**
+   * Le SEUL endroit du site où une reformulation malheureuse deviendrait un mensonge :
+   * la formation SNSM n'est pas commencée. Ce test verrouille les deux sens — la
+   * préparation doit être dite, et aucun vocabulaire de qualification acquise ne doit
+   * apparaître dans la carte.
+   */
+  it("devrait formuler la SNSM comme un projet en cours et non comme une qualification acquise", () => {
+    render(<App />);
+    const liste = screen.getByRole("list", { name: /pratiques personnelles/i });
+
+    const carte = within(liste)
+      .getByRole("heading", { level: 3, name: /sauvetage en mer/i })
+      .closest("li");
+
+    expect(carte).not.toBeNull();
+    expect(carte).toHaveTextContent(/je prépare mon entrée en formation à la SNSM/i);
+    expect(carte).not.toHaveTextContent(/\b(sauveteur|dipl[ôo]m|certifi|breveté|formé|membre)\w*/i);
+  });
+
+  it("devrait ouvrir le lien GitHub dans un nouvel onglet, sans exposer l'opener", () => {
+    render(<App />);
+    const liste = screen.getByRole("list", { name: /pratiques personnelles/i });
+
+    const lien = within(liste).getByRole("link", { name: /github.*nouvelle fenêtre/i });
+
+    expect(lien).toHaveAttribute("href", profile.gitHubUrl);
+    expect(lien).toHaveAttribute("target", "_blank");
+    expect(lien.getAttribute("rel")).toMatch(/noopener/);
+  });
+
+  it("devrait proposer une entrée de navigation « Passions » pointant sur la section", () => {
+    render(<App />);
+    const navigation = screen.getByRole("navigation", {
+      name: /navigation principale/i,
+    });
+
+    const lien = within(navigation).getByRole("link", { name: "Passions" });
+
+    expect(lien).toHaveAttribute("href", "#passions");
+    expect(document.getElementById("passions")).not.toBeNull();
   });
 });
 
@@ -204,11 +267,11 @@ describe("contact", () => {
       name: /réseaux professionnels/i,
     });
 
+    expect(within(socials).getAllByRole("listitem").length).toBeGreaterThanOrEqual(2);
     expect(
-      within(socials).getAllByRole("listitem").length,
-    ).toBeGreaterThanOrEqual(2);
-    expect(
-      within(socials).getByRole("link", { name: /linkedin/i }).closest("li"),
+      within(socials)
+        .getByRole("link", { name: /linkedin/i })
+        .closest("li")
     ).not.toBeNull();
   });
 });

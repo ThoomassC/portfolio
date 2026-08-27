@@ -13,6 +13,7 @@ import {
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
 import { formations } from "../content/formations";
+import { passions } from "../content/passions";
 import { profile } from "../content/profile";
 import { projects } from "../content/projects";
 import { skillGroups } from "../content/skills";
@@ -54,9 +55,7 @@ const Home = () => {
                   <strong>Actuellement</strong>
                   <span>Développeur Full Stack chez Blue Soft</span>
                 </p>
-                <p className="hero-availability">
-                  Disponible à partir d’octobre 2027 — CDI ou freelance
-                </p>
+                <p className="hero-availability">Disponible à partir d’octobre 2027 — CDI</p>
                 <p className="hero-lede">
                   Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
                   tests automatisés Java avec Selenium et Cucumber.
@@ -348,6 +347,57 @@ const Home = () => {
               </a>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="section-shell" id="passions" aria-labelledby="titre-passions">
+        <div className="container">
+          <div className="section-heading" data-reveal="up">
+            <p className="eyebrow">Hors du travail</p>
+            <h2 id="titre-passions">Ce que je fais du reste de mon temps.</h2>
+            <p>
+              Des pratiques tenues dans la durée plutôt que par à-coups, et qui servent chacune un
+              objectif.
+            </p>
+          </div>
+
+          <ul className="passions-grid" aria-label="Pratiques personnelles">
+            {passions.map((passion, index) => {
+              const PassionIcon = passion.icon;
+
+              return (
+                <li
+                  className={`passion-card liquid-card reveal-delay-${Math.min(index, 3)}`}
+                  data-reveal="up"
+                  key={passion.id}
+                >
+                  <div className="squircle passion-icon" aria-hidden="true">
+                    <PassionIcon size={25} stroke={2} />
+                  </div>
+                  <div>
+                    <h3>{passion.title}</h3>
+                    <p>{passion.description}</p>
+                    {passion.links.length > 0 && (
+                      <div className="passion-links">
+                        {passion.links.map((link) => (
+                          <a
+                            key={link.href}
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {link.label}
+                            <span className="visually-hidden"> (nouvelle fenêtre)</span>
+                            <IconArrowUpRight aria-hidden="true" size={17} stroke={2.2} />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 

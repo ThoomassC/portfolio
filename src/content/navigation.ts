@@ -5,6 +5,7 @@ export const navigationItems: readonly NavigationItem[] = [
   { id: "competences", label: "Compétences" },
   { id: "projets", label: "Projets" },
   { id: "accessibilite", label: "Accessibilité" },
+  { id: "passions", label: "Passions" },
   { id: "contact", label: "Contact" },
 ];
 

@@ -1577,6 +1577,7 @@ summary:focus-visible,
 .timeline-icon,
 .education-icon,
 .contact-icon,
+.passion-icon,
 .social-link {
   flex: 0 0 auto;
   display: inline-grid;
@@ -1593,11 +1594,15 @@ summary:focus-visible,
     0 0.375rem 0.875rem rgba(37, 46, 89, 0.14);
 }
 
-/* Decor only: these three tiles sit next to a heading whose text already carries the
-   meaning, so their ink takes the warm editorial hue. */
+/* Decor only: these four tiles sit next to a heading whose text already carries the
+   meaning — they are `aria-hidden` in the markup — so their ink takes the warm editorial
+   hue. `.passion-icon` belongs here and NOT with `.social-link`: it names nothing, the
+   passion's own <h3> does. An accent tile there would claim an action that does not
+   exist. */
 .timeline-icon,
 .education-icon,
-.contact-icon {
+.contact-icon,
+.passion-icon {
   color: var(--accent-secondary);
 }
 
@@ -1797,6 +1802,7 @@ summary:focus-visible,
 
 .timeline h3,
 .project-card h3,
+.passion-card h3,
 .skill-group h3 {
   margin-bottom: var(--space-1);
   font-size: var(--text-md);
@@ -1805,13 +1811,15 @@ summary:focus-visible,
 }
 
 .timeline p,
-.project-card p {
+.project-card p,
+.passion-card p {
   color: var(--text-body);
   line-height: 1.6;
 }
 
 .timeline p:last-child,
-.project-card p:last-child {
+.project-card p:last-child,
+.passion-card p:last-child {
   margin-bottom: 0;
 }
 
@@ -1939,7 +1947,12 @@ summary:focus-visible,
   margin-bottom: 0;
 }
 
-.project-links {
+/* Un seul patron de lien sortant DANS une carte : souligné, encre d'accent, flèche
+   d'ouverture. `.passion-links` le partage plutôt que de le recopier — et porte son
+   propre nom plutôt que d'emprunter celui des projets, pour qu'un futur changement de
+   l'un des deux n'ait pas à démêler à qui la règle appartenait. */
+.project-links,
+.passion-links {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-4);
@@ -1948,7 +1961,8 @@ summary:focus-visible,
   list-style: none;
 }
 
-.project-links a {
+.project-links a,
+.passion-links a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -1962,11 +1976,13 @@ summary:focus-visible,
   transition: text-decoration-color 160ms ease;
 }
 
-.project-links a:hover {
+.project-links a:hover,
+.passion-links a:hover {
   text-decoration-thickness: 2px;
 }
 
-.project-links a:active {
+.project-links a:active,
+.passion-links a:active {
   color: var(--accent-active);
 }
 
@@ -2045,6 +2061,30 @@ summary:focus-visible,
 
 .accessibility-contact {
   width: fit-content;
+}
+
+/* Passions — même grille à deux colonnes que `.projects-grid`, mais sur une LISTE :
+   quatre pratiques comparables se comptent, et le rôle `list` donne cet effectif aux
+   lecteurs d'écran, ce qu'une suite d'`<article>` ne fait pas. La puce est retirée à
+   l'affichage seulement ; `aria-label` sur la liste lui garde son nom. */
+.passions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Géométrie de `.timeline-item` : tuile d'icône puis bloc de texte. Le `min-height`
+   égalise les deux cartes d'une même rangée, comme sur `.project-card`. */
+.passion-card {
+  --liquid-radius: var(--radius-lg);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  min-height: 100%;
+  padding: var(--card-padding);
 }
 
 .contact-section {
@@ -2367,7 +2407,8 @@ html.reveal-enabled [data-reveal]:focus-within {
   }
 
   .skills-grid,
-  .projects-grid {
+  .projects-grid,
+  .passions-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2375,7 +2416,12 @@ html.reveal-enabled [data-reveal]:focus-within {
     grid-template-columns: 1fr;
   }
 
-  .timeline-icon {
+  /* `.passion-card` GARDE ses deux colonnes, contrairement à `.timeline-item` : la
+     timeline empile parce que son bloc de texte est long (dates, stack, sous-missions)
+     et qu'une colonne de 3rem l'étranglait. Une passion tient en deux lignes ; mesuré à
+     320 px, la colonne de texte garde encore ~190 px. */
+  .timeline-icon,
+  .passion-icon {
     width: 2.75rem;
     height: 2.75rem;
   }

@@ -131,10 +131,7 @@ type IntersectionRecord = {
 
 const intersectionRecords: IntersectionRecord[] = [];
 
-function buildEntry(
-  target: Element,
-  isIntersecting: boolean,
-): IntersectionObserverEntry {
+function buildEntry(target: Element, isIntersecting: boolean): IntersectionObserverEntry {
   const rect = target.getBoundingClientRect();
 
   return {
@@ -154,10 +151,7 @@ class ControllableIntersectionObserver implements IntersectionObserver {
   readonly thresholds: ReadonlyArray<number>;
   private readonly record: IntersectionRecord;
 
-  constructor(
-    callback: IntersectionObserverCallback,
-    options?: IntersectionObserverInit,
-  ) {
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
     this.root = options?.root ?? null;
     this.rootMargin = options?.rootMargin ?? "0px";
     const threshold = options?.threshold ?? 0;
@@ -199,7 +193,7 @@ vi.stubGlobal("IntersectionObserver", ControllableIntersectionObserver);
 
 function activeRecordsObserving(target: Element): IntersectionRecord[] {
   return intersectionRecords.filter(
-    (record) => !record.disconnected && record.observed.has(target),
+    (record) => !record.disconnected && record.observed.has(target)
   );
 }
 
@@ -211,10 +205,7 @@ export function notifyIntersection(target: Element, isIntersecting: boolean) {
 }
 
 /** Même chose, mais en un seul lot d'entrées par observateur. */
-export function notifyIntersections(
-  targets: readonly Element[],
-  isIntersecting: boolean,
-) {
+export function notifyIntersections(targets: readonly Element[], isIntersecting: boolean) {
   intersectionRecords
     .filter((record) => !record.disconnected)
     .forEach((record) => {
@@ -230,18 +221,15 @@ export function notifyIntersections(
 
 export function observeCountFor(target: Element): number {
   return intersectionRecords.reduce(
-    (total, record) =>
-      total + record.observeCalls.filter((element) => element === target).length,
-    0,
+    (total, record) => total + record.observeCalls.filter((element) => element === target).length,
+    0
   );
 }
 
 export function unobserveCountFor(target: Element): number {
   return intersectionRecords.reduce(
-    (total, record) =>
-      total +
-      record.unobserveCalls.filter((element) => element === target).length,
-    0,
+    (total, record) => total + record.unobserveCalls.filter((element) => element === target).length,
+    0
   );
 }
 
@@ -253,5 +241,14 @@ afterEach(() => {
   window.localStorage.clear();
   document.documentElement.removeAttribute("data-theme");
   document.documentElement.className = "";
+  /**
+   * Le hash est un état global que jsdom ne remet pas à zéro. Un test qui clique une
+   * ancre le laissait renseigné pour tous les suivants, et `useDeepLinkScroll` appelait
+   * alors `scrollIntoView` — que jsdom n'implémente pas — sur des rendus qui n'avaient
+   * rien demandé. La suite ne le voyait qu'en ordre aléatoire, le test fautif passant
+   * en dernier par défaut. `replaceState` nettoie sans émettre de `hashchange`, donc
+   * sans réveiller les écouteurs des tests de lien profond.
+   */
+  window.history.replaceState(null, "", window.location.pathname + window.location.search);
   vi.restoreAllMocks();
 });

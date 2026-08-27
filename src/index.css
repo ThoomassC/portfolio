@@ -2341,18 +2341,13 @@ html.reveal-enabled [data-reveal]:focus-within {
   }
 }
 
-@media (max-width: 26rem) {
-  .site-header__brand {
-    font-size: var(--text-base);
-  }
-
-  /* The header is `flex-wrap: nowrap`, so every pixel here is taken from the brand text.
-     The avatar gives some back rather than pushing the row into an overflow. */
-  .site-header__avatar {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
+/* The portrait costs the header row 24.5px of min-content width, and the row is
+   `flex-wrap: nowrap`: past a point it is the avatar — `flex: 0 0 auto` — that leaves its
+   link's box instead of shrinking. Measured in WebKit on the real stylesheet: between
+   417px and 521px the photo overflowed its link by 22px and ran 6px INTO the Menu button,
+   the pill's outline crossing the face. Compacting the two labels earlier buys the room
+   back: with icon-only buttons the row needs 367px, so it fits from 417px down. */
+@media (max-width: 33rem) {
   /* WCAG 4.1.2 — ces deux boutons n'ont PAS d'aria-label : leur nom accessible est
      leur texte visible, par choix d'architecture (SiteHeader.tsx). Un `display: none`
      retirait ce texte de l'arbre d'accessibilité et, sous 416 px, un lecteur d'écran
@@ -2370,6 +2365,30 @@ html.reveal-enabled [data-reveal]:focus-within {
     border: 0;
     padding: 0;
     margin: -1px;
+  }
+}
+
+@media (max-width: 26rem) {
+  .site-header__brand {
+    font-size: var(--text-base);
+  }
+
+  /* The header is `flex-wrap: nowrap`, so every pixel here is taken from the brand text.
+     The avatar gives some back rather than pushing the row into an overflow. */
+  .site-header__avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+/* Below 345px even the compact row cannot hold the portrait: measured, it left its link
+   by 16.5px, came within 0.5px of the Menu button, and the focus ring — drawn on the
+   link's box — cut vertically through the face, leaving half the photo outside the very
+   indicator that designates it. The image is decorative, so dropping it is the honest
+   move rather than shaving four values to buy 3.5px of margin. */
+@media (max-width: 22rem) {
+  .site-header__avatar {
+    display: none;
   }
 }
 

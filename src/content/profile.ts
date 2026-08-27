@@ -11,8 +11,12 @@ export const profile = {
     src: "/assets/portrait-thomas-caron.jpg",
     width: 900,
     height: 1200,
-    /** Alternative descriptive : le portrait porte de l'information (identité), il
-        n'est donc pas décoratif et ne peut pas recevoir un alt vide. */
+    /** Alternative descriptive POUR LE HERO, où l'image est seule et porte l'identité
+        à elle seule. Dans un contexte qui affiche déjà le nom à côté d'elle — l'en-tête,
+        voir SiteHeader.tsx — l'équivalent textuel est donc déjà fourni et l'alternative
+        doit être VIDE : WCAG 1.1.1 proscrit le doublon, et une alternative descriptive y
+        ferait annoncer « Thomas Caron Thomas Caron, souriant, en chemise… ». Une même
+        image peut recevoir des alternatives différentes selon son contexte. */
     alt: "Thomas Caron, souriant, en chemise bleu marine sur fond clair.",
   },
   cv: {

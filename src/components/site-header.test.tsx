@@ -2,6 +2,7 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "../App";
+import { profile } from "../content/profile";
 import { setPrefersColorScheme, setPrefersReducedMotion } from "../test/setup";
 
 const NAVIGATION_PANEL_ID = "navigation-principale";
@@ -25,6 +26,36 @@ async function openMenu(user: ReturnType<typeof userEvent.setup>) {
 beforeEach(() => {
   setPrefersColorScheme("light");
   setPrefersReducedMotion(true);
+});
+
+function getBrandLink(): HTMLElement {
+  // Plusieurs liens de la page portent le nom : on reste dans le landmark d'en-tête.
+  return within(screen.getByRole("banner")).getByRole("link", { name: profile.name });
+}
+
+describe("portrait de l'en-tête", () => {
+  it("devrait afficher le portrait à côté du nom", () => {
+    render(<App />);
+
+    const portrait = within(getBrandLink()).getByRole("presentation", { hidden: true });
+
+    expect(portrait).toHaveAttribute("src", profile.portrait.src);
+  });
+
+  /**
+   * Le portrait du hero porte une alternative descriptive : il y est seul et porte
+   * l'identité. Dans l'en-tête il vit DANS le lien qui affiche déjà le nom, donc une
+   * alternative descriptive ferait annoncer « Thomas Caron Thomas Caron, souriant, en
+   * chemise bleu marine… ». Le nom accessible du lien doit rester son texte visible.
+   */
+  it("devrait laisser le nom accessible du lien égal à son texte visible", () => {
+    render(<App />);
+
+    const brand = getBrandLink();
+
+    expect(brand).toHaveAccessibleName(profile.name);
+    expect(within(brand).getByRole("presentation", { hidden: true })).toHaveAttribute("alt", "");
+  });
 });
 
 describe("menu mobile de l'en-tête", () => {
@@ -103,9 +134,7 @@ describe("menu mobile de l'en-tête", () => {
     render(<App />);
     const toggle = await openMenu(user);
 
-    await user.click(
-      within(getMainNavigation()).getByRole("link", { name: "Projets" }),
-    );
+    await user.click(within(getMainNavigation()).getByRole("link", { name: "Projets" }));
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });

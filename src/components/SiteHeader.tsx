@@ -56,6 +56,20 @@ const SiteHeader = () => {
       <div className="container site-header__inner">
         <a className="site-header__brand" href="#contenu-principal">
           {profile.name}
+          {/* Decorative HERE, unlike the hero. `profile.portrait.alt` is a descriptive
+              alternative because the hero image stands alone and carries the identity by
+              itself. Inside this link the identity is already carried by the name right
+              beside it, so a descriptive alt would make the link announce "Thomas Caron
+              Thomas Caron, souriant, en chemise bleu marine sur fond clair". An empty alt
+              keeps the link's accessible name equal to its visible text. */}
+          <img
+            className="site-header__avatar"
+            src={profile.portrait.src}
+            width={32}
+            height={32}
+            alt=""
+            decoding="async"
+          />
         </a>
 
         <nav className="main-navigation" aria-label="Navigation principale">

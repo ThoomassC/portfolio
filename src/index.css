@@ -1133,6 +1133,9 @@ summary:focus-visible,
 
 .site-header__brand {
   margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
   color: var(--header-text-strong);
@@ -1141,6 +1144,21 @@ summary:focus-visible,
   letter-spacing: -0.01em;
   text-decoration: none;
   white-space: nowrap;
+}
+
+/* The face stays on screen once the hero has scrolled away. Round, not squircled: the
+   shape language of this file applies `corner-shape` to rounded RECTANGLES, and a
+   superellipse laid over a 50% radius stops being a circle. */
+.site-header__avatar {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--header-control-border);
+  /* Same aim point as `.hero-portrait img`: the crop lives in the stylesheet so the
+     source file stays intact and the framing can be tuned without touching the image. */
+  object-fit: cover;
+  object-position: 50% 12%;
 }
 
 .site-header__brand:hover {
@@ -2326,6 +2344,13 @@ html.reveal-enabled [data-reveal]:focus-within {
 @media (max-width: 26rem) {
   .site-header__brand {
     font-size: var(--text-base);
+  }
+
+  /* The header is `flex-wrap: nowrap`, so every pixel here is taken from the brand text.
+     The avatar gives some back rather than pushing the row into an overflow. */
+  .site-header__avatar {
+    width: 1.75rem;
+    height: 1.75rem;
   }
 
   /* WCAG 4.1.2 — ces deux boutons n'ont PAS d'aria-label : leur nom accessible est

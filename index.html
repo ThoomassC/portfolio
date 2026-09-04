@@ -2,20 +2,27 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="Portfolio de Thomas Caron, développeur logiciel full-stack et QA."
     />
-    <meta name="theme-color" content="#e7eff1" />
+    <!-- Doit rester aligné sur THEME_COLORS de src/hooks/useTheme.ts et sur
+         --site-background de src/index.css : c'est le fond de page que le navigateur
+         borde en haut de l'écran, le header étant un îlot flottant. -->
+    <meta name="theme-color" content="#deedf0" />
     <script>
+      // Applique le thème avant le premier rendu pour éviter tout flash.
+      // Priorité : choix explicite mémorisé, sinon préférence du système.
       try {
-        if (window.localStorage.getItem("portfolio-theme") === "dark") {
+        var stored = window.localStorage.getItem("portfolio-theme");
+        var dark =
+          stored === "dark" ||
+          (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) {
           document.documentElement.dataset.theme = "dark";
-          document
-            .querySelector('meta[name="theme-color"]')
-            ?.setAttribute("content", "#081721");
+          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#0f191c");
         }
       } catch {
         // Le thème clair reste le thème par défaut.
@@ -28,9 +35,39 @@
       property="og:description"
       content="Développeur logiciel full-stack et QA, de la conception aux tests automatisés."
     />
-    <meta property="og:image" content="/og.png" />
+    <meta property="og:image" content="https://portfolio-omega-umber-81.vercel.app/og.jpg" />
+    <meta property="og:image:alt" content="Thomas Caron, développeur logiciel full-stack et QA." />
+    <meta property="og:url" content="https://portfolio-omega-umber-81.vercel.app/" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://portfolio-omega-umber-81.vercel.app/" />
     <title>Thomas Caron — Développeur logiciel</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Thomas Caron",
+        "jobTitle": "Développeur logiciel full-stack et QA",
+        "url": "https://portfolio-omega-umber-81.vercel.app/",
+        "image": "https://portfolio-omega-umber-81.vercel.app/og.jpg",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mont-Saint-Aignan",
+          "addressCountry": "FR"
+        },
+        "sameAs": ["https://www.linkedin.com/in/thomas-caron27/", "https://github.com/ThoomassC"],
+        "knowsAbout": [
+          "C#",
+          "Angular",
+          "Java",
+          "Selenium",
+          "Cucumber",
+          "Swift",
+          "TypeScript",
+          "React",
+          "Tests automatisés"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

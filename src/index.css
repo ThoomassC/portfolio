@@ -1,77 +1,695 @@
+/* =============================================================================
+   Portfolio Thomas Caron — feuille de style unique.
+
+   Sommaire
+   1.  Design tokens (espacement, typographie, couleur, verre)
+   2.  Thème sombre
+   3.  Base et réinitialisation
+   4.  Utilitaires (lien d'évitement, texte masqué, focus)
+   5.  Décor : halos lumineux
+   6.  Verre liquide (.liquid-card)
+   7.  En-tête collant et navigation
+   8.  Hero
+   9.  Sections : parcours, compétences, projets, accessibilité, contact
+   10. Pied de page
+   11. Révélation au défilement
+   12. Adaptations responsive
+   13. Préférences utilisateur (contraste, transparence, mouvement)
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+
 :root {
   /* Ajuste cette valeur pour modifier uniquement la taille du nom en page d'accueil. */
-  --hero-name-size: clamp(2.5rem, 6.2vw, 4.8rem);
-  --ink: #102a43;
-  --ink-soft: #35546d;
-  --accent-ink: #005c6d;
-  --glass-edge: rgba(255, 255, 255, 0.82);
-  --site-background: #e7eff1;
-  --bubble-color: #087487;
-  --focus-color: #075d75;
-  --navigation-text: #29485f;
-  --body-copy: #40596e;
-  --lede-copy: #314861;
-  --meta-copy: #435d73;
-  --strong-copy: #173b54;
-  --surface-copy: #173850;
-  --subtle-copy: #527087;
-  --footer-copy: #38556d;
-  --footer-link: #164f62;
-  --divider-color: rgba(26, 70, 96, 0.17);
-  --control-border: rgba(16, 42, 67, 0.25);
-  --soft-surface: rgba(255, 255, 255, 0.34);
-  --soft-surface-hover: rgba(255, 255, 255, 0.62);
-  --panel-surface: rgba(255, 255, 255, 0.48);
-  --panel-surface-hover: rgba(255, 255, 255, 0.75);
-  --chip-surface: rgba(255, 255, 255, 0.54);
-  --mobile-navigation-surface: #f1f6f7;
-  --icon-surface-start: rgba(226, 255, 252, 0.72);
-  --icon-surface-end: rgba(175, 218, 235, 0.52);
-  color: var(--ink);
+  --hero-name-size: clamp(2.75rem, 6.2vw, 4.75rem);
+
+  /* Espacement — grille de 4 px, 8 pas. Aucune valeur d'espacement hors de cette liste. */
+  --space-1: 0.25rem; /* 4  */
+  --space-2: 0.5rem; /* 8  */
+  --space-3: 0.75rem; /* 12 */
+  --space-4: 1rem; /* 16 */
+  --space-5: 1.5rem; /* 24 */
+  --space-6: 2rem; /* 32 */
+  --space-7: 3rem; /* 48 */
+  --space-8: 4rem; /* 64 */
+
+  /* Rythme vertical composé */
+  --section-space: clamp(var(--space-7), 8vw, 7rem);
+  --card-padding: clamp(1.25rem, 2.4vw, var(--space-6));
+  /* Loi de proximité : l'écart entre cartes reste supérieur au padding interne / 1.5. */
+  --grid-gap: clamp(1.25rem, 2.5vw, var(--space-6));
+  --header-height: 4rem;
+  /* Écart entre le haut du viewport et l'îlot flottant du header. */
+  --header-offset: 0.75rem;
+
+  /* Typographie — 6 pas fixes + 3 tailles d'affichage fluides. */
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-md: 1.1875rem; /* 19 */
+  --text-lg: 1.4375rem; /* 23 */
+  --text-xl: 1.75rem; /* 28 */
+  --text-display-sm: clamp(1.5rem, 2.6vw, 2.125rem); /* titres de panneau */
+  --text-display-md: clamp(1.875rem, 3.9vw, 3.25rem); /* titres de section */
+
+  /* Graisses — 4 valeurs, alignées sur ce que system-ui sait réellement rendre. */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------------------
+     THÈME CLAIR (thème par défaut, valeur "light" du sélecteur).
+
+     A HIGH-KEY floor, held on the ink hue at floor chroma. #deedf0 measures OKLab
+     L 0.936, chroma 0.016, hue 211.0 deg — 3.6 deg from `--accent` (214.6 deg), so the
+     page is the same teal as the actions, drained of chroma. Nothing on the page
+     competes with the accent aplat. `--text-body` measures 8.39:1 on this floor, above
+     the 7:1 this site targets.
+
+     The counterpart is measured too: the floor/card gap is 1.080:1, and pure white is
+     only 1.200:1 away from the floor. A card can therefore not separate itself by
+     whitening. In this theme the separation is carried by the DROP SHADOW and by an INK
+     rim — see `--glass-border` and `--glass-shadow` — and the quiet surfaces are ink
+     washes rather than white ones. The text stays dark and the glass stays white: the
+     exact inverse of the dark theme.
+     ------------------------------------------------------------------------ */
+  --site-background: #deedf0;
+
+  /* Couleur de texte — 5 rôles, pas 12 emplacements. Sombres sur fond clair.
+     LE SUPPORT DE RÉFÉRENCE N'EST PAS LE FOND DE PAGE. Les bulles de `.liquid-bubble`
+     sont des DISQUES PLEINS (voir leur règle, § 5), donc le support réel d'une carte est
+     le halo composé sous le remplissage de verre, pas `--site-background` :
+     #deedf0 → halo #84cbdc à 0.9 → #8dcede → --glass-fill blanc 0.40 → #bbe2eb.
+     Le pire cas de lecture ajoute par-dessus un lavis de survol
+     (`--panel-surface-hover`), et c'est LUI qui décide de ces quatre encres.
+     Deux colonnes mesurées : fond de page, puis carte-sur-halo-froid.
+
+     THE THREE TEXT ROLES ARE SEPARATED BY CONSTRUCTION, not resolved independently.
+     Measured ΔE OKLab: 5.2 strong/body, 5.3 body/muted, 10.4 strong/muted. Solving
+     each ink on its own against its own threshold drove all three onto the same
+     luminosity — every role converged on whatever value just cleared the worst wash,
+     and the hierarchy died. A floor of ΔE 5 between neighbouring roles is therefore part
+     of the palette, not a consequence of it. */
+  --text-strong: #193940; /* titres, libellés forts     10.28:1 |  8.92:1 */
+  --text-body: #2b464c; /* paragraphes                 8.39:1 |  7.28:1 */
+  --text-muted: #3e5359; /* métadonnées, légendes       6.76:1 |  5.86:1 — 4.82:1 sur lavis de survol */
+  --text-accent: #0e5968; /* accent typographique        6.60:1 |  5.73:1 — 4.71:1 sur lavis de survol */
+  --text-on-accent: #ffffff; /* texte posé sur un aplat accent                  */
+
+  /* Accent — une seule encre teal, déclinée par usage, et la MÊME dans les deux thèmes
+     (#087487 est la valeur nommée par le propriétaire de la palette). Blanc sur l'aplat :
+     5.44:1 au repos, 6.43:1 au survol, 7.51:1 à l'appui. L'aplat est de LUMINOSITÉ
+     MOYENNE (L 0.515), bien plus clair que l'indigo retiré (L 0.391) : c'est ce qui
+     débloque le double liseré de focus, dont la contrainte était insatisfiable —
+     voir `--focus-outer`. */
+  --accent: #087487;
+  --accent-hover: #00687b;
+  --accent-active: #005d6f;
+  --accent-quiet: rgba(8, 116, 135, 0.1);
+  --accent-quiet-border: rgba(8, 116, 135, 0.42);
+
+  /* ---------------------------------------------------------------------------
+     COLOUR CONTRACT — read this before using any hue anywhere in this file.
+
+     The palette is "Teal & cuivre": a TEAL INK carries the actions, an OXIDISED COPPER
+     carries the decor. The ink sits at 214.6 deg and holds the MONOPOLY on actions and
+     states; the copper sits at 34.0 deg in this theme and 35.1 deg in the dark one —
+     opposition measured at 179.3 deg and 179.5 deg — and carries the decorative and
+     editorial layer only. The ink stays legible as a signal because the field around it
+     is not ink.
+
+     1. `--accent` (teal ink): actions and states, exclusively. Buttons, links, focus,
+        badges, status pills.
+     2. `--accent-secondary` / `--halo-tint-warm` (oxidised copper): decor and editorial
+        only — background bubbles, eyebrows, purely decorative icon tiles. NEVER on a
+        control, NEVER on a status. A warm colour on a button breaks the contract and
+        makes the ink unreadable as a signal.
+     3. Neutrals stay on the ink hue (211 to 219 deg) with floor chroma (C 0.016 for the
+        two grounds) for everything else, so nothing turns dirty and the ink aplat stays
+        the only saturated field on screen. Amber and violet remain reserved for the
+        "En cours" and "À venir" statuses.
+
+     The warm hue is LOCKED near 34 deg by the 180-degree opposition this contract
+     demands, so the only room left is chroma and LUMINOSITY — and the luminosity is not
+     a taste call, it is what keeps decor from impersonating signal. Measured in OKLab:
+     `--accent` sits at L 0.515, `--accent-secondary` at L 0.425 / C 0.076 here and
+     L 0.671 / C 0.075 in the dark theme. The copper is therefore DARKER than the ink in
+     the light theme (gap 0.090 OKLab L) and LIGHTER in the dark one (gap 0.156): the
+     separation is taken on whichever side the theme leaves free. Rule of thumb for any
+     future warm value: keep at least ~0.08 OKLab L BETWEEN it and `--accent`, in either
+     direction, or the decorative layer starts reading as an action.
+
+     A control whose icon is its only visible content (`.social-link`) is a control,
+     not decor: it keeps ink-hued text and a measured contrast (>= 3:1, WCAG 1.4.11 —
+     worst case measured 3.02:1 in this theme and 3.06:1 in the dark one, both on the
+     hover wash laid over the darkest stop of the icon tile; see `--icon-surface-end`,
+     whose alpha is sized by exactly that pair).
+     ------------------------------------------------------------------------ */
+  --accent-secondary: #723e32; /* 7.13:1 on the page bg, 6.19:1 on a card-on-halo, 7.67:1 on the glass fallback */
+
+  /* Verre liquide. Blanc translucide : sur un fond clair il éclaircit, ce qui creuse
+     l'écart avec le texte sombre.
+     Alpha 0.40, and that is as far as this material goes while staying frankly
+     transparent: measured, the fill lifts the card by 1.080:1 against #deedf0, while
+     PURE WHITE is only 1.200:1 away from the same floor. There is no room left to buy by
+     whitening. The lift the floor cannot give is taken over by the ink rim and the
+     shadow below. */
+  --glass-fill: rgba(255, 255, 255, 0.4);
+  --glass-fill-solid: #ebf4f6;
+  --glass-blur: 32px;
+  --glass-saturate: 1.6;
+  /* Ménisque : la bande de bord filtre son arrière-plan autrement que le centre. */
+  --glass-edge-width: 3px;
+  --glass-edge-blur: 2px;
+  --glass-edge-saturate: 2.4;
+  --glass-edge-brightness: 1.08;
+  --glass-rim-width: 1.5px;
+  /* INK rim, not a white one, and the reason is measured. A white hairline cannot draw
+     an edge on a near-white fill at all.
+
+     THE WHITE BEVEL IS NOT A BACKUP. `--glass-specular` does still paint its 1.5px
+     ring, but measured on this floor it does nothing: its brightest stop (white at 0.98)
+     sits at ΔE OKLab 3.9 from the fill it is drawn on, and the THEORETICAL CEILING at
+     alpha 1.0 is ΔE 4.0 — white on a fill of L 0.961 cannot draw an edge, whatever the
+     alpha. The only relay indice when the rim weakens is THE DROP SHADOW
+     (`--glass-shadow`, ΔE 20.6 against the floor). So this border carries the outline
+     essentially alone, and its alpha is sized accordingly.
+
+     Alpha 0.25, on the palette's ink rather than on `--text-strong`. Measured: ΔE OKLab
+     14.7 against the bare floor, 9.0 where the cool bubble passes behind the card and
+     10.1 behind the warm one. Because the bubbles ANIMATE (`halo-breathe` 26-37 s plus
+     the scroll parallax), the weakest of those three is not a static case — the contour
+     thins in MOVING segments as a halo drifts under it. Contrast against the fill:
+     1.740:1 on the bare floor, 1.700:1 on the cool halo — still one clear step above
+     `--border-subtle` (1.340:1 on the opaque card), which stays the purely decorative
+     hairline. */
+  --glass-border: rgba(7, 20, 23, 0.25);
+  /* Liseré directionnel : allumé en haut-gauche, éteint en bas-droite, rappel au coin
+     opposé. Jamais d'arrêt sombre : sur un anneau de 1,5 px il se lirait comme un
+     trait en travers de la carte. La séparation d'avec le fond vient de l'ombre portée. */
+  --glass-specular: linear-gradient(
+    142deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.72) 16%,
+    rgba(255, 255, 255, 0.34) 38%,
+    rgba(255, 255, 255, 0.22) 58%,
+    rgba(255, 255, 255, 0.38) 78%,
+    rgba(255, 255, 255, 0.8) 96%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  --glass-highlight:
+    radial-gradient(
+      115% 80% at 86% -16%,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.14) 44%,
+      transparent 72%
+    ),
+    radial-gradient(90% 70% at 4% 108%, rgba(8, 116, 135, 0.1) 0%, transparent 66%);
+  /* The shadow is what carries the card off the floor, since neither the white fill nor
+     the specular ring can (see `--glass-border`). Measured: the shadow ink composed on
+     the floor sits at ΔE OKLab 20.6 from it — by far the strongest separation indice the
+     light card has. The blur and the offsets live in the `box-shadow` declarations, out
+     of a token's reach, so the whole of that weight comes from the alpha. */
+  --glass-shadow: rgba(4, 15, 19, 0.3);
+
+  /* Halos lumineux d'arrière-plan — APLATS, et c'est assumé. Une version précédente de
+     ce commentaire promettait « un dégradé radial fondu, pas un aplat » et affirmait
+     qu'« un disque opaque interdirait tout verre transparent » : c'est faux, et il faut
+     le savoir avant de valider une couleur. Le mécanisme réel (voir `.liquid-bubble`,
+     § 5) est `background: var(--halo-tint); opacity: var(--halo-opacity)` — des DISQUES
+     PLEINS, sans dégradé, sans cœur éclairci, sans bord fondu. Ce qui protège le texte
+     n'est pas l'effacement de la bulle, c'est le remplissage teinté de la carte.
+
+     CONSÉQUENCE À RETENIR POUR TOUTE MESURE : le support d'une carte n'est ni
+     `--site-background` ni `--glass-fill-solid`, c'est le HALO composé sous le
+     remplissage de verre. Chaîne mesurée en thème clair :
+     #deedf0 → #84cbdc à 0.9 → #8dcede → blanc 0.40 → #bbe2eb.
+     Une palette validée contre `--site-background` seul est validée contre le
+     meilleur cas. */
+  --halo-tint: #84cbdc;
+  /* Warm halo — decorative layer of the colour contract above. Three bubbles out of
+     six carry it, so the ink reads by hue opposition instead of dissolving.
+     Opposition to the accent measured at 179.7 deg against the cool halo.
+     Alpha is shared with the cold bubbles, so PRESENCE is carried by the tint alone, and
+     the two layers are held at PARITY on purpose: measured, the composed cool bubble
+     sits at ΔE OKLab 13.3 against the floor and the warm one at 13.4. Letting either
+     side drift lets the stronger layer visually crush the other, which defeats the very
+     reason the warm layer exists. Contrast against the floor: 1.45:1 cool, 1.44:1
+     warm. */
+  --halo-tint-warm: #f0b3a4;
+  --halo-opacity: 0.9;
+
+  /* Surfaces secondaires */
+  /* Le header est un verre FUMÉ : il assombrit son arrière-plan au lieu de
+     l'éclaircir, donc il ne peut jamais devenir blanc. Comme c'est le même matériau
+     dans les deux thèmes, ses couleurs ne dépendent plus du thème. */
+  /* TEINTE DE LA BARRE — le seul changement de matériau de cette palette, et il est
+     demandé. Jusqu'ici `.site-header` portait `background: transparent` : sa couleur
+     perçue venait UNIQUEMENT du `backdrop-filter`, donc du sol qui défile derrière, et
+     un filtre de luminance ne crée pas de chroma. Mesuré sur le fond de page, le verre
+     nu sort à #464c4d, chroma OKLCH 0.008 — une barre GRISE au milieu d'une page teal.
+
+     Teinter avec `--accent` (#087487, L 0.515) ne marchait pas : plus clair que le verre
+     qu'il recouvre (L 0.410), il ÉCLAIRCISSAIT la barre au lieu de la colorer, et
+     rabotait l'écart avec les libellés clairs. #01515f à 0.55 fait l'inverse : mesuré,
+     la barre passe à #204f57 en clair (L 0.397, C 0.052, h 210.8) et #0b3941 en sombre
+     (L 0.319, C 0.049) — six fois plus chromatique que le verre nu, franchement teal, et
+     TOUJOURS TRANSLUCIDE : l'alpha 0.55 laisse le sol filtré transparaître, donc la
+     barre continue de respirer au défilement au lieu de devenir un aplat.
+
+     Le `backdrop-filter` RESTE sous cette teinte, et le repli opaque du bloc
+     `@supports not (backdrop-filter)` reste lui aussi : voir § 7. */
+  --header-tint: rgba(1, 81, 95, 0.55);
+  /* Aplat de repli du header, sombre dans les DEUX thèmes : ses couleurs de texte
+     étant sorties du système de thème, son fond doit l'être aussi. Avec
+     --glass-fill-solid on mesurerait 1.09:1 pour --header-text-strong sur le repli clair
+     — navigation invisible.
+     SINGLE VALUE, and not a themed pair: the smoked glass is the same material whichever
+     theme is on, so these values are declared here once and the dark block does not
+     redeclare them. #204f57 n'est pas choisi à part : c'est EXACTEMENT la barre teintée
+     mesurée sur le fond de page clair, donc le repli et le verre montrent la même
+     couleur. Measured on #204f57: 4.86:1 for --header-text, 7.05:1 for
+     --header-text-strong, 7.13:1 for --header-text-hover — identical in both themes, by
+     construction. */
+  --header-solid: #204f57;
+  --header-text: #afc1c5;
+  --header-text-strong: #dae5e7;
+  /* Translucides dérivés de --header-text-strong, à garder alignés sur lui.
+
+     LES MESURES QUI SUIVENT SONT DES ESTIMATIONS, pas des relevés exacts. Le header est
+     du verre : ses couleurs effectives dépendent de --header-luminance
+     (`contrast(0.55) brightness(0.4)` en clair), modélisé ici en sRGB non linéaire selon
+     Filter Effects, FLOU EXCLU, puis recouvert de --header-tint. La direction est
+     certaine, la troisième décimale ne l'est pas. Modèle : sol #deedf0 → saturate(1.7)
+     → contrast(0.55) → brightness(0.4) → #464c4d → teinte 0.55 → #204f57.
+
+     SIX SOLS balayés, ceux que la barre peut réellement filtrer en défilant : fond de
+     page clair, halo froid clair, chemise blanche du portrait, fond sombre, halo sombre,
+     carte sombre — plus le repli opaque. La barre teintée reste dans #154c57…#245058 en
+     clair et #0b3941…#0a3e48 en sombre. Un sol PLUS CLAIR donne une barre PLUS CLAIRE,
+     donc la chemise blanche du portrait est le pire cas des deux thèmes.
+     Pires encres sous ce modèle : --header-text 4.76:1, --header-text-strong 6.90:1,
+     --header-text-hover 6.98:1 — les trois au-dessus de 4.5:1.
+
+     --header-control-border : alpha 0.72. C'est le SEUL contour qui identifie
+     `.theme-toggle` et `.menu-toggle` comme des boutons (leur fond ne lève que 1.26:1
+     contre le verre). Mesuré sur les sept sols, le pire cas tient 3.69:1 contre
+     l'intérieur du contrôle et 4.66:1 contre le verre — au-dessus du 3:1 de WCAG
+     1.4.11, et avec plus de marge que la barre grise ne l'autorisait, la teinte ayant
+     assombri le support sous un liseré clair. */
+  --header-control-border: rgba(218, 229, 231, 0.72);
+  --header-control-surface: rgba(218, 229, 231, 0.1);
+  --header-control-surface-hover: rgba(218, 229, 231, 0.2);
+  /* ÉTAT D'APPUI À PORTÉE HEADER, et non `--soft-surface-active` : les couleurs de ce
+     bloc sont délibérément sorties du système de thème parce que le verre fumé est le
+     même matériau dans les deux thèmes, donc consommer un token THÉMÉ pour l'appui
+     rouvrirait cette incohérence.
+     Il ASSOMBRIT, comme un appui doit le faire sur du verre fumé : mesuré sur les sept
+     sols, ΔE OKLab 11.7 à 13.4 repos→appui pour les deux boutons, qui partent d'un fond
+     de contrôle, et 5.3 à 7.9 pour `.section-nav a`, qui part du verre nu ; le libellé
+     MONTE au lieu de tomber — --header-text 6.58:1 à 8.06:1 et --header-text-strong
+     9.55:1 à 11.69:1 sur le lavis d'appui.
+     LIMITE LEVÉE PAR LA TEINTE, et c'est à noter parce que la palette retirée la
+     documentait comme structurelle : le verre sombre y était déjà quasi noir, donc
+     l'assombrir ne produisait plus de cran (ΔE 2.2 mesuré pour `.section-nav a`). La
+     barre teintée n'est plus noire en sombre (#0b3941, L 0.319), l'appui a de nouveau de
+     la course, et ce lien retrouve un retour visible (ΔE 5.3 au pire) sans avoir à
+     rendre au header une dépendance au thème. */
+  --header-control-surface-active: rgba(0, 16, 21, 0.35);
+  /* Encre de survol. Elle doit LEVER par rapport à --header-text sans dépasser
+     --header-text-strong, sinon le survol et l'état fort s'inversent. La sortie retenue
+     est la CHROMA, pas la luminosité : mesuré, #beecf7 se pose à OKLab L 0.914, soit
+     exactement la luminosité de --header-text-strong (ΔL 0.000), mais à C 0.050 contre
+     0.012 — quatre fois plus chromatique. Résolue sur la seule luminosité, cette encre
+     passait sous l'état fort et la hiérarchie s'inversait ; résolue sur la chroma, le
+     survol se lit comme un ALLUMAGE et l'état fort garde son rang.
+     ΔL +0.116 contre --header-text, ΔE OKLab 3.8 contre --header-text-strong.
+     Sur le repli opaque --header-solid : 7.13:1. Sur le verre teinté modélisé : 7.18:1
+     sur le sol nu clair, 6.98:1 au pire sol balayé (chemise blanche) et jusqu'à 9.84:1
+     en sombre — le pire cas tient donc largement 4.5:1 dans les deux thèmes. */
+  --header-text-hover: #beecf7;
+  --header-blur: 24px;
+  /* Transformation de luminance du verre du header. Sans elle, mesuré : les libellés
+     tombent à 1.03:1 en clair et 1.00:1 en sombre quand le portrait défile derrière.
+     En clair, éclaircir ne suffit pas — l'obstacle est la chemise bleu marine sous du
+     texte sombre — d'où l'écrasement du contraste avant le gain de luminosité. */
+  --header-luminance: contrast(0.55) brightness(0.4);
+  /* Quiet surfaces are INK washes in this theme, not white ones. On a card whose opaque
+     fallback is #ebf4f6 there is nothing left to lighten — pure white is 1.200:1 from the
+     floor — so a white fill would give four names to one white sheet and lose every step
+     of the interaction ladder. Ink on the palette's neutral restores it: measured on the
+     opaque card, 1.100:1 at rest, 1.230:1 on hover, 1.310:1 once pressed.
+     Same state-layer pattern as the dark theme, mirrored — there the layer lightens,
+     here it deepens.
+     Text keeps its margin on the deepest wash: --text-body 6.91:1 and --text-strong
+     8.46:1 on it. The worst ground is a card-on-halo (see --halo-tint): there the hover
+     wash puts --text-muted at 4.82:1 and --text-accent at 4.71:1 — that pair is what
+     sizes both inks, not the page floor. */
+  --panel-surface: rgba(11, 24, 28, 0.05);
+  --panel-surface-hover: rgba(11, 24, 28, 0.1);
+  /* `--soft-surface*` were literal duplicates of `--panel-surface*` in both themes:
+     two names, one value, and nothing said which one to reach for. They are aliases
+     now, so a change to the panel surface can no longer drift from the soft one. */
+  --soft-surface: var(--panel-surface);
+  --soft-surface-hover: var(--panel-surface-hover);
+  --soft-surface-active: rgba(11, 24, 28, 0.13);
+  /* Explicit alias, because the palette gives `--chip-surface` and `--panel-surface` the
+     SAME value in this theme: measured ΔE OKLab 0.00 on the opaque card. A chip reads by
+     its SHAPE (pill plus `--border-subtle`), not by its fill, so one name pointing at
+     the other is the honest spelling — a second literal would only pretend to differ.
+     Same pattern as `--soft-surface` just above. NOTE: the dark block now measures ΔE
+     0.00 on the same pair too, but keeps its literal value there; see the note in that
+     block. */
+  --chip-surface: var(--panel-surface);
+  /* Panneau de navigation mobile : un aplat qui doit se lire comme SOULEVÉ au-dessus de
+     la page, dans les deux thèmes. Re-dérivé en levant `--site-background` du même écart
+     OKLab que portait la valeur retirée (ΔL +0.029 en clair, +0.051 en sombre), sur la
+     teinte et le chroma du fond de page. Mesuré ici : ΔE OKLab 3.0 contre la page,
+     --text-body 9.18:1, --text-strong 11.24:1, et --text-accent 5.89:1 sur le lavis de
+     survol que ce panneau porte (`.section-nav--site a:hover`). */
+  --mobile-navigation-surface: #e8f7fa;
+  /* Les deux arrêts viennent de --halo-tint (#84cbdc) : la tuile est du décor, elle
+     appartient donc à la couche halo et non à l'accent. Mesuré contre le repli de carte :
+     1.120:1 à l'arrêt de départ, 1.220:1 à l'arrêt d'arrivée.
+     L'ALPHA D'ARRIVÉE EST DESCENDU DE 0.55 À 0.42, et c'est le seul degré de liberté qui
+     restait. `.social-link` est un contrôle : son encre ET son liseré se mesurent sur les
+     deux arrêts, sur les quatre sols de carte, lavis de survol compris. Le halo de cette
+     palette est nettement plus chromatique que celui qu'il remplace, donc à alpha
+     inchangé la tuile assombrit trop le support : mesuré à 0.55, --control-border tombait
+     à 2.91:1 au pire (arrêt d'arrivée, carte sur halo chaud, lavis de survol posé), sous
+     le 3:1 de WCAG 1.4.11. À 0.42 le pire cas remonte à 3.02:1. Seul l'alpha bouge, la
+     dérivation depuis --halo-tint est préservée. Encre au pire : 5.07:1 au repos,
+     4.18:1 sur le lavis de survol. */
+  --icon-surface-start: rgba(132, 203, 220, 0.24);
+  --icon-surface-end: rgba(132, 203, 220, 0.42);
+  --skip-surface: var(--text-strong);
+  /* Le fond de page, comme en sombre : le lien d'évitement inverse exactement le thème
+     (encre forte en aplat, fond de page en encre). Mesuré 10.28:1 sur --skip-surface. */
+  --skip-text: #deedf0;
+
+  /* Traits */
+  --border-subtle: rgba(7, 20, 23, 0.138); /* purement décoratif — 1.340:1 sur le repli de carte */
+  /* WCAG 1.4.11 se mesure sur le PIRE support, pas sur le fond de page : ce contour vit
+     sur `.button-secondary`, `.contact-links a` et `.social-link`, donc sur un lavis
+     posé sur une carte, elle-même posée sur un halo. Et le pire support n'est pas le
+     lavis de REPOS mais celui d'APPUI (`.button-secondary` au clic), sur le halo FROID
+     qui est le plus clair des deux.
+     Colonnes mesurées : fond de page 4.77:1 | carte-sur-halo-froid 4.14:1 | + lavis de
+     repos 3.76:1 | + lavis de survol 3.40:1 | + lavis d'appui 3.19:1 | repli de carte
+     opaque 5.13:1. Le pire cas tient donc 3.19:1 — au-dessus du seuil, avec une marge
+     de deux dixièmes de point : toute valeur de halo notablement plus sombre ou plus
+     saturée que #84cbdc referme cette marge. */
+  --control-border: #59696d;
+
+  /* Badges d'état : famille du bouton d'action (direction artistique du propriétaire),
+     mais UN CRAN PLUS PROFOND, pour que le bouton plein reste le teal le plus clair et
+     le plus saturé de l'écran — sinon le bouton « Me contacter » et les pastilles
+     « Actuellement » / « Disponible… » forment trois aplats identiques et rien ne dit
+     lequel est cliquable.
+     #005568 : blanc/pastille 8.40:1, ΔE OKLab contre --accent 10.04 (seuil 10 — tenu de
+     très peu), teinte 219.70 deg contre 214.63 deg pour --accent (écart 5.07 deg, seuil
+     6 — famille tenue, mais c'est désormais la contrainte la plus tendue des deux), et
+     7.52:1 contre le repli de carte. */
+  --badge-live-surface: #005568;
+  --badge-live-text: #ffffff;
+  --status-done-surface: var(--badge-live-surface);
+  --status-done-text: var(--badge-live-text);
+  --status-progress-surface: #ffe0af;
+  --status-progress-text: #845d22; /* 4.63:1 */
+  /* « À venir » : violet, pour ne se confondre ni avec l'acquis (encre) ni avec
+     l'en-cours (ambre). 4.63:1. Écarts de teinte OKLCH entre les trois pastilles :
+     140.7 deg (acquis/en cours), 136.0 deg (en cours/à venir), 83.3 deg (acquis/à
+     venir) — mesures exactes, mais N'EN TIREZ AUCUNE CONCLUSION SUR LA LISIBILITÉ.
+     Noter au passage que l'écart acquis/à venir remonte de 31.4 à 83.3 deg : l'acquis
+     est désormais un teal et « à venir » reste un violet, deux teintes franchement
+     séparées. Le seuil de 25 deg du test est tenu avec la meilleure marge des trois
+     paires depuis la palette retirée.
+
+     Un écart de teinte OKLCH ne dit rien de la discriminabilité pour un dichromate.
+     Mesuré en simulation deutéranope (Viénot, Brettel & Mollon 1999, appliquée en sRGB
+     linéaire), l'ambre #ffe0af et le violet #e6d6ff tombent à 1.16:1 l'un contre l'autre
+     — indiscernables. En thème sombre les trois pastilles s'effondrent ensemble :
+     1.06:1, 1.21:1 et 1.14:1 entre elles. L'acquis se détache en clair (10.98:1 et
+     9.50:1 contre les deux autres) parce qu'il est bien plus sombre, pas parce qu'il est
+     d'une autre teinte.
+
+     LE GARDE-FOU RÉEL EST LE LIBELLÉ TEXTUEL, rendu par `src/pages/Home.tsx` (le
+     `<span className="education-status …">{formation.status}</span>` du bloc formations
+     et le `<span className="project-status …">{project.status}</span>` du bloc projets)
+     : « Obtenu », « En cours », « À venir ». La couleur est un renfort, jamais le
+     porteur de l'information. Ne retirez pas ce texte. */
+  --status-upcoming-surface: #e6d6ff;
+  --status-upcoming-text: #6b5591;
+
+  /* Focus — double liseré. C'est une PAIRE, et elle se juge sur l'adjacence réelle des
+     deux bandes : l'anneau INTÉRIEUR touche l'élément (donc l'aplat accent d'un bouton
+     plein), l'anneau EXTÉRIEUR touche la page ou le sol d'une carte. L'anneau extérieur
+     ne borde jamais `--accent` — mesurer cette paire-là mesure une adjacence qui
+     n'existe pas ; la démonstration détaillée vit dans `src/index.css.test.ts`.
+
+     Les trois contraintes réelles, mesurées ici : l'anneau intérieur #f6ffde tient
+     5.26:1 contre l'aplat accent ; les deux anneaux tiennent 20.28:1 l'un contre
+     l'autre ; l'anneau extérieur tient 17.48:1 contre le fond de page, 18.80:1 contre le
+     repli de carte et 15.17:1 au pire sol de carte composé (carte sur halo froid).
+
+     CONTRAINTE REDEVENUE SATISFIABLE, et c'est un gain de cette palette. La précédente
+     documentait ici une impossibilité arithmétique : son accent indigo se situait à
+     Y 0.0571, exactement dans la zone morte où aucun anneau ne peut tenir 3:1 à la fois
+     contre un fond clair et contre l'aplat. `--accent` mesure désormais Y 0.1429 — le
+     seuil de sortie était Y >= 0.1000 — donc un anneau quasi noir redevient possible et
+     les trois contraintes sont tenues par la même paire. */
+  --focus-outer: #000000;
+  --focus-inner: #f6ffde;
+
+  color: var(--text-body);
   color-scheme: light;
   background: var(--site-background);
   font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* -----------------------------------------------------------------------------
+   2. Thème sombre
+   -------------------------------------------------------------------------- */
+
 :root[data-theme="dark"] {
-  --ink: #f3f7fa;
-  --ink-soft: #cbd9e2;
-  --accent-ink: #7ee5ed;
-  --glass-edge: rgba(202, 234, 241, 0.4);
-  --site-background: #081721;
-  --bubble-color: #075160;
-  --focus-color: #8aebf2;
-  --navigation-text: #d1e1e9;
-  --body-copy: #c7d6df;
-  --lede-copy: #dce7ed;
-  --meta-copy: #c3d3dc;
-  --strong-copy: #edf6f8;
-  --surface-copy: #edf7fa;
-  --subtle-copy: #b8ced8;
-  --footer-copy: #bfd1da;
-  --footer-link: #91dfe7;
-  --divider-color: rgba(189, 223, 232, 0.27);
-  --control-border: rgba(199, 229, 236, 0.42);
-  --soft-surface: rgba(238, 249, 251, 0.07);
-  --soft-surface-hover: rgba(238, 249, 251, 0.13);
-  --panel-surface: rgba(238, 249, 251, 0.08);
-  --panel-surface-hover: rgba(238, 249, 251, 0.14);
-  --chip-surface: rgba(238, 249, 251, 0.1);
-  --mobile-navigation-surface: #122732;
-  --icon-surface-start: rgba(35, 116, 127, 0.48);
-  --icon-surface-end: rgba(22, 72, 92, 0.52);
+  /* Fond sombre neutre sur la teinte d'encre : #0f191c mesure OKLab L 0.205, chroma
+     0.016, teinte 218.3 deg — ni noir pur, ni dérive de teinte, et à 3.7 deg de
+     `--accent` (214.6 deg). Le fond du thème sombre reste donc aligné sur l'accent, et
+     le fond clair l'est du même ordre (211.0 deg, soit 3.6 deg) : les deux sols sont le
+     teal des actions, vidé de sa chroma. */
+  --site-background: #0f191c;
+
+  /* Ratios mesurés sur le fond de page. Mêmes ΔE OKLab de séparation des rôles qu'en
+     clair, et pour la même raison (voir le bloc clair) : 5.2 strong/body, 5.1
+     body/muted, 10.3 strong/muted. */
+  --text-strong: #b6dae3; /* 12.01:1 */
+  --text-body: #aac8d0; /* 10.10:1 */
+  /* Relevé sur le pire support : le lavis de survol d'une carte-sur-halo-froid, où cette
+     encre mesure 4.77:1 (6.67:1 sur la carte nue, 5.89:1 avec le lavis de repos). */
+  --text-muted: #9eb7bd; /*  8.47:1 */
+  --text-accent: #78bbca; /*  8.30:1 */
+  --text-on-accent: #ffffff;
+
+  /* L'accent est ici la MÊME encre qu'en thème clair (#087487, OKLab L 0.515) : cette
+     palette n'a qu'un seul teal d'action, et seuls le survol et l'appui se déclinent par
+     thème. Le survol ÉCLAIRCIT, comme il doit sur un fond sombre. Blanc sur l'aplat :
+     5.44:1 au repos, 4.59:1 au survol, 6.52:1 à l'appui — le survol est le pire des
+     trois et reste au-dessus de 4.5:1. Le cran perçu repos/survol est franc :
+     ΔE OKLab 4.0.
+     À noter : la pastille d'état ne peut pas se détacher de la carte dans ce thème
+     (2.20:1 mesuré) ; voir --badge-live-surface plus bas. */
+  --accent: #087487;
+  --accent-hover: #208093;
+  --accent-active: #00677a;
+  --accent-quiet: rgba(8, 116, 135, 0.16);
+  --accent-quiet-border: rgba(8, 116, 135, 0.55);
+
+  /* Decorative / editorial hue — see the colour contract in the light block. Never on
+     a control, never on a status. Opposition to the accent measured at 179.5 deg. Ici le
+     cuivre est PLUS CLAIR que l'encre (L 0.671 contre 0.515, écart 0.156 OKLab L),
+     l'inverse exact du thème clair : la séparation est prise du côté que le thème
+     laisse libre. */
+  --accent-secondary: #bf8576; /* 6.01:1 on the glass fallback, 5.81:1 on the page bg */
+
+  --glass-fill: rgba(0, 4, 6, 0.2);
+  /* PLUS SOMBRE que `--site-background` (L 0.188 contre 0.205), à l'inverse du thème
+     clair où le repli est plus clair que la page. C'est cohérent avec `--glass-fill`, qui
+     est ici un lavis SOMBRE : dans ce thème la carte creuse au lieu de lever. */
+  --glass-fill-solid: #0c1518;
+  --glass-border: rgba(225, 234, 236, 0.22);
+  /* Le liseré spéculaire et le halo de verre reprennent le NEUTRE CLAIR de la palette
+     (#e1eaec), celui-là même que portent --glass-border, --panel-surface, --chip-surface
+     et --border-subtle dans ce bloc : un seul clair pour tout ce qui éclaire une surface
+     sombre. Contrairement au thème clair, ce liseré fait réellement un bord ici — son
+     arrêt le plus lumineux mesure ΔE OKLab 59.9 contre le remplissage sur lequel il est
+     tracé (plafond à alpha 1.0 : ΔE 74.3). */
+  --glass-specular: linear-gradient(
+    142deg,
+    rgba(225, 234, 236, 0.78) 0%,
+    rgba(225, 234, 236, 0.42) 16%,
+    rgba(225, 234, 236, 0.12) 38%,
+    rgba(225, 234, 236, 0.05) 58%,
+    rgba(225, 234, 236, 0.13) 78%,
+    rgba(225, 234, 236, 0.5) 96%,
+    rgba(225, 234, 236, 0.26) 100%
+  );
+  --glass-highlight:
+    radial-gradient(
+      115% 80% at 86% -16%,
+      rgba(225, 234, 236, 0.18) 0%,
+      rgba(225, 234, 236, 0.06) 44%,
+      transparent 72%
+    ),
+    radial-gradient(90% 70% at 4% 108%, rgba(8, 116, 135, 0.14) 0%, transparent 66%);
+  /* Ombre portée quasi inopérante dans ce thème, et il faut le savoir : composée sur le
+     fond de page elle mesure ΔE OKLab 2.2 contre lui — sous le cran de perceptibilité
+     que ce fichier retient. Ce qui détache la carte en sombre est le LISERÉ
+     (--glass-border, ΔE 17.3 sur le fond nu), symétrie exacte du thème clair où c'est
+     l'ombre qui porte et le liseré qui ne peut rien. */
+  --glass-shadow: rgba(4, 15, 19, 0.5);
+
+  /* Les bulles sont des DISQUES PLEINS (voir --halo-tint en thème clair) : le support
+     réel d'un texte de carte est donc le halo composé sous le remplissage de verre.
+     Chaîne mesurée : #0f191c → halo #004452 à 0.8 → #033b47 → --glass-fill
+     rgba(0, 4, 6, 0.2) → #02303a. C'est ce sol, et non le fond de page, qui décide des
+     encres : --text-muted y tombe à 4.77:1 sur le lavis de survol. */
+  --halo-tint: #004452;
+  /* Halo chaud tenu à PARITÉ avec le froid, même règle qu'en thème clair : mesuré, la
+     bulle froide composée sur le fond est à ΔE OKLab 12.8 et la chaude à 12.9. Sans cette
+     parité le pire cas se déplace simplement d'une bulle à l'autre au lieu de disparaître.
+     Chaîne chaude : #0f191c → #49251c → carte #3b1e18, où --text-muted mesure 5.12:1 sur
+     le lavis de survol et --control-border 3.88:1. Teinte tenue à 35.1 deg. */
+  --halo-tint-warm: #58281c;
+  --halo-opacity: 0.8;
+
+  --header-luminance: contrast(0.6) brightness(0.42);
+  /* `--header-solid` n'est plus redéfini ici : c'est désormais une valeur unique, avec
+     ses quatre couleurs de texte, dans le bloc clair. Voir la justification là-bas. */
+  /* Lavis clairs : ici la couche d'état ÉCLAIRCIT, miroir exact du thème clair. Échelle
+     mesurée sur le repli de carte : 1.110:1 au repos, 1.360:1 au survol, 1.540:1 à
+     l'appui — des crans plus francs qu'en clair, parce qu'un clair sur un sol sombre
+     dispose de plus de course. Texte sur le lavis le plus profond : --text-body 6.80:1,
+     --text-strong 8.08:1. */
+  --panel-surface: rgba(225, 234, 236, 0.049);
+  --panel-surface-hover: rgba(225, 234, 236, 0.125);
+  --soft-surface: var(--panel-surface);
+  --soft-surface-hover: var(--panel-surface-hover);
+  --soft-surface-active: rgba(225, 234, 236, 0.164);
+  /* VALEUR LITTÉRALE MAINTENUE, alors qu'elle mesure désormais ΔE OKLab 0.00 contre
+     --panel-surface sur le repli de carte : la palette donne les deux tokens à la même
+     valeur dans ce thème, comme en clair. Le bloc clair en fait un alias ; ici la valeur
+     de palette est gardée telle quelle pour ne pas perdre le token que la palette
+     déclare. Si un jour la puce doit vraiment se distinguer, c'est ici que ça se joue —
+     mais aujourd'hui la puce se lit par sa FORME (pilule plus --border-subtle), pas par
+     son fond. */
+  --chip-surface: rgba(225, 234, 236, 0.049);
+  /* Même dérivation qu'en clair : le fond de page levé du même écart OKLab que portait la
+     valeur retirée (ΔL +0.051). Mesuré : ΔE OKLab 5.1 contre la page, --text-body
+     8.85:1, --text-strong 10.53:1, et --text-accent 5.13:1 sur le lavis de survol. */
+  --mobile-navigation-surface: #1b2528;
+  /* Les deux arrêts portaient l'ancien accent et l'ancien halo : re-dérivés
+     respectivement de --accent (#087487) et de --halo-tint (#004452). Mesuré contre le
+     repli de carte, la tuile lève de 1.200:1 au départ et 1.220:1 à l'arrivée — le
+     dégradé reste ici quasi plat (ΔE OKLab 0.9 entre les deux arrêts composés), les deux
+     arrêts ayant des luminosités voisines.
+     MÊME AJUSTEMENT D'ALPHA QU'EN CLAIR, et pour la même mesure : l'arrêt de départ
+     passe de 0.34 à 0.20. `.social-link` est un contrôle, donc son liseré se mesure sur
+     les deux arrêts, sur les quatre sols de carte, lavis de survol compris ; à 0.34 le
+     teal de l'accent éclaircissait trop la tuile et --control-border tombait à 2.72:1
+     (arrêt de départ, carte sur halo froid, lavis de survol), sous le 3:1 de WCAG
+     1.4.11. À 0.20 le pire cas remonte à 3.06:1. Encre au pire : 5.46:1 au repos et
+     3.95:1 sur le lavis de survol. */
+  --icon-surface-start: rgba(8, 116, 135, 0.2);
+  --icon-surface-end: rgba(0, 68, 82, 0.45);
+  --skip-surface: var(--text-strong);
+  --skip-text: #0f191c; /* 12.01:1 sur --skip-surface */
+
+  --border-subtle: rgba(225, 234, 236, 0.121);
+  /* En thème sombre cette bordure est le SEUL indice qui identifie `.button-secondary`,
+     `.contact-links a` et `.social-link` comme des contrôles : leur fond mesure 1.11:1
+     contre la carte. Pire support mesuré — lavis d'appui sur une carte-sur-halo-froid :
+     3.23:1, au-dessus du 3:1 de WCAG 1.4.11. Colonnes : fond de page 6.42:1 |
+     carte-sur-halo-froid 5.06:1 | + lavis de repos 4.46:1 | + lavis de survol 3.61:1 |
+     + lavis d'appui 3.23:1 | repli de carte opaque 6.64:1. Même marge mince qu'en
+     clair (3.19:1), et pour la même raison : c'est le halo qui la consomme. */
+  --control-border: #8d9ea2;
+
+  /* Même règle qu'en thème clair : la pastille reste dans la famille du bouton, un cran
+     plus profond. Contraintes mesurées sur cette valeur :
+       1. blanc sur pastille  8.40:1  (seuil 4.5:1)  — le libellé est blanc ;
+       2. pastille vs carte   2.20:1  (seuil 3:1)    — INATTEIGNABLE : aucune encre ne
+          tient à la fois 4.5:1 contre le blanc et 3:1 contre une carte sombre. La
+          pastille porte donc sa propre bordure (`border: 1px solid currentColor`,
+          c'est-à-dire blanche), mesurée à 18.48:1 contre le repli de carte ;
+       3. ΔE OKLab contre --accent  10.04  (seuil 10) — tenu de très peu ;
+     teinte 219.70 deg contre 214.63 deg pour --accent, soit 5.07 deg (seuil 6) — famille
+     tenue, mais c'est la contrainte la plus tendue des deux.
+     LA PASTILLE EST DÉSORMAIS UNE VALEUR UNIQUE, identique dans les deux thèmes : la
+     palette ne la décline plus, et l'accent non plus, donc les trois mesures ci-dessus
+     sont les mêmes en clair — seul le rapport à la carte change (7.52:1 en clair, où la
+     pastille est bien plus sombre que le sol).
+     Écartée pour ce cas : une pastille plus CLAIRE que le bouton avec une encre sombre
+     satisfait les contraintes numériquement, mais viole la règle éditoriale du bloc
+     clair — le bouton plein reste l'encre la plus claire et la plus saturée de l'écran.
+     La bordure reste la moins mauvaise sortie. */
+  --badge-live-surface: #005568;
+  --badge-live-text: #ffffff;
+  --status-done-surface: var(--badge-live-surface);
+  --status-done-text: var(--badge-live-text);
+  --status-progress-surface: #422700;
+  --status-progress-text: #b19061; /* 4.62:1 */
+  --status-upcoming-surface: #2f1e48;
+  --status-upcoming-text: #9886bb; /* 4.62:1 */
+
+  /* Inverse du thème clair : ici c'est l'anneau extérieur qui est clair, et les trois
+     contraintes du double liseré sont tenues. Mesuré, dans l'ordre des bandes en partant
+     de l'élément : l'anneau intérieur #000000 tient 3.86:1 contre l'aplat accent, les
+     deux anneaux tiennent 20.28:1 l'un contre l'autre, et l'anneau extérieur tient
+     17.24:1 contre le fond de page, 17.85:1 contre le repli de carte et 13.59:1 au pire
+     sol de carte composé. La paire la plus tendue du thème est l'anneau intérieur contre
+     l'accent, à 3.86:1. */
+  --focus-outer: #f6ffde;
+  --focus-inner: #000000;
+
   color-scheme: dark;
+}
+
+/* -----------------------------------------------------------------------------
+   3. Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
   min-width: 320px;
   scroll-behavior: smooth;
-  scroll-padding-top: 1.5rem;
+  /* L'en-tête est collant : sans cette réserve les titres arrivent sous la barre. */
+  scroll-padding-top: calc(var(--header-height) + var(--header-offset) + var(--space-4));
   background: var(--site-background);
 }
 
@@ -80,15 +698,14 @@ body {
   min-height: 100vh;
   margin: 0;
   background: var(--site-background);
+  color: var(--text-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-img {
+img,
+svg {
   max-width: 100%;
 }
 
@@ -101,27 +718,40 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-:focus-visible {
-  outline: 3px solid var(--focus-color);
-  outline-offset: 4px;
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
 }
 
-.skip-link {
-  position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
-  z-index: 10;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  background: #102a43;
-  color: #fff;
-  font-weight: 700;
-  text-decoration: none;
-  transform: translateY(-180%);
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-strong);
+  font-weight: var(--weight-bold);
+  text-wrap: balance;
 }
 
-.skip-link:focus {
-  transform: translateY(0);
+h1 {
+  max-width: 14ch;
+  margin-bottom: var(--space-4);
+  font-size: var(--hero-name-size);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+}
+
+.container {
+  width: min(100% - var(--space-5), 75rem);
+  margin-inline: auto;
+}
+
+.section-shell {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--section-space);
 }
 
 .portfolio-page {
@@ -131,6 +761,91 @@ a {
   background: var(--site-background);
 }
 
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  /* Editorial layer, not a control: the warm hue of the colour contract. */
+  color: var(--accent-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/*
+ * Each role stays in one piece. Rendered at 390 px, "Full-stack" split on its own
+ * hyphen into "FULL- / STACK" on the very first line of the page: a line break at a
+ * hyphen is the browser's default and no `hyphens` value turns it off. The wrap is
+ * still allowed between roles, on the separators, so no role can overflow the card.
+ */
+.eyebrow-roles > span {
+  white-space: nowrap;
+}
+
+/* -----------------------------------------------------------------------------
+   4. Utilitaires
+   -------------------------------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
+}
+
+/* Focus visible restreint aux éléments réellement actionnables : <main tabindex="-1">
+   ne doit jamais recevoir d'anneau (il cerclerait la page entière). */
+a[href]:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:not([tabindex^="-"]):focus-visible {
+  outline: 2px solid var(--focus-inner);
+  outline-offset: 2px;
+  /* Double liseré : l'un des deux tons contraste toujours avec le fond local. */
+  box-shadow:
+    0 0 0 2px var(--focus-inner),
+    0 0 0 5px var(--focus-outer),
+    var(--elevation, 0 0 rgba(0, 0, 0, 0));
+}
+
+[tabindex^="-"]:focus,
+[tabindex^="-"]:focus-visible {
+  outline: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 40;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--skip-surface);
+  color: var(--skip-text);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  transform: translateY(-180%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* -----------------------------------------------------------------------------
+   5. Décor : halos lumineux diffus
+   Positions en pourcentage de la hauteur de page : plus de décalage magique en rem
+   qui se déplace dès que le contenu change.
+   -------------------------------------------------------------------------- */
+
 .liquid-bubble {
   position: absolute;
   z-index: 0;
@@ -138,171 +853,1396 @@ a {
   aspect-ratio: 1;
   border: 0;
   border-radius: 50%;
-  background: var(--bubble-color);
+  /* Disques pleins : ni dégradé, ni cœur éclairci, ni bord fondu. Le dégradé radial
+     précédent mélangeait le centre à du blanc et s'éteignait vers le transparent, si
+     bien que les bulles n'étaient jamais des cercles complets. C'est le remplissage
+     teinté des cartes, et non l'effacement des bulles, qui protège le texte. */
+  background: var(--halo-tint);
+  opacity: var(--halo-opacity);
   box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   pointer-events: none;
 }
 
+/* Three bubbles out of six are warm. This is the decorative half of the colour
+   contract (see the light `:root` block): the teal of the actions only reads as a
+   signal if the field around it is not teal too. Decor only — never a control. */
+.liquid-bubble-two,
+.liquid-bubble-four,
+.liquid-bubble-six {
+  background: var(--halo-tint-warm);
+}
+
 .liquid-bubble-one {
-  top: 9rem;
-  left: min(-15rem, -14vw);
-  width: min(33vw, 28rem);
+  top: 3%;
+  left: -14vw;
+  width: min(34vw, 26rem);
 }
 
 .liquid-bubble-two {
-  top: 4rem;
-  right: min(-13rem, -12vw);
-  width: min(31vw, 26rem);
+  top: 1%;
+  right: -12vw;
+  width: min(30vw, 24rem);
 }
 
 .liquid-bubble-three {
-  top: 28rem;
-  right: 6vw;
-  width: min(14vw, 12rem);
+  top: 21%;
+  right: 3vw;
+  width: min(16vw, 13rem);
 }
 
 .liquid-bubble-four {
-  top: 105rem;
-  left: min(-12rem, -11vw);
-  width: min(26vw, 21rem);
+  top: 44%;
+  left: -12vw;
+  width: min(28vw, 22rem);
 }
 
 .liquid-bubble-five {
-  right: min(-8rem, -7vw);
-  bottom: 72rem;
-  width: min(22vw, 18rem);
+  top: 66%;
+  right: -9vw;
+  width: min(24vw, 19rem);
 }
 
 .liquid-bubble-six {
-  bottom: 12rem;
-  left: min(-7rem, -6vw);
-  width: min(20vw, 16rem);
+  bottom: 4%;
+  left: -8vw;
+  width: min(22vw, 17rem);
 }
 
-.section-shell {
+/* Mouvement des halos.
+   Sans cela le décor défile à la vitesse exacte des cartes : rien ne change derrière
+   le verre, et le matériau paraît figé — un verre ne se lit comme du verre que si son
+   arrière-plan bouge par rapport à lui.
+
+   Deux animations superposées, sur des propriétés DISJOINTES pour ne pas se marcher
+   dessus : la dérive lente joue sur `scale`/`rotate` (pilotée par le temps, donc active
+   même à l'arrêt), la parallaxe joue sur `translate` (pilotée par le défilement). Les
+   propriétés de transformation individuelles évitent le conflit qu'auraient deux
+   animations d'un même `transform`.
+
+   La parallaxe est derrière @supports : sans scroll-driven animations (Firefox), il
+   reste la dérive, ce qui est une dégradation acceptable. */
+
+@keyframes halo-breathe {
+  from {
+    scale: 1;
+    rotate: 0deg;
+  }
+  to {
+    scale: 1.14;
+    rotate: 7deg;
+  }
+}
+
+@keyframes halo-parallax {
+  from {
+    translate: 0 var(--halo-travel-from, 14vh);
+  }
+  to {
+    translate: 0 var(--halo-travel-to, -22vh);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .liquid-bubble {
+    animation: halo-breathe 26s ease-in-out infinite alternate;
+  }
+
+  /* Durées premières entre elles : les halos ne se resynchronisent jamais. */
+  .liquid-bubble-two {
+    animation-duration: 31s;
+    animation-delay: -7s;
+  }
+
+  .liquid-bubble-three {
+    animation-duration: 19s;
+    animation-delay: -12s;
+  }
+
+  .liquid-bubble-four {
+    animation-duration: 37s;
+    animation-delay: -4s;
+  }
+
+  .liquid-bubble-five {
+    animation-duration: 23s;
+    animation-delay: -16s;
+  }
+
+  .liquid-bubble-six {
+    animation-duration: 29s;
+    animation-delay: -9s;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .liquid-bubble {
+      /* Amplitudes croissantes = impression de profondeur : les halos « proches »
+         se déplacent plus que les halos « lointains ». */
+      --halo-travel-from: 10vh;
+      --halo-travel-to: -18vh;
+      animation:
+        halo-breathe 26s ease-in-out infinite alternate,
+        halo-parallax linear;
+      animation-timeline: auto, scroll(root block);
+    }
+
+    .liquid-bubble-two {
+      --halo-travel-from: 16vh;
+      --halo-travel-to: -30vh;
+    }
+
+    .liquid-bubble-three {
+      --halo-travel-from: 24vh;
+      --halo-travel-to: -46vh;
+    }
+
+    .liquid-bubble-four {
+      --halo-travel-from: 12vh;
+      --halo-travel-to: -22vh;
+    }
+
+    .liquid-bubble-five {
+      --halo-travel-from: 20vh;
+      --halo-travel-to: -36vh;
+    }
+
+    .liquid-bubble-six {
+      --halo-travel-from: 14vh;
+      --halo-travel-to: -26vh;
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   6. Verre liquide
+   -------------------------------------------------------------------------- */
+
+.liquid-card {
+  --liquid-radius: var(--radius-lg);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--liquid-radius);
+  corner-shape: superellipse(1.45);
+  /* Verre franchement transparent : le contraste tient parce que les halos derrière
+     sont diffus, pas parce que le remplissage masque le fond. */
+  background: var(--glass-fill);
+  box-shadow:
+    0 1.5rem 3rem -0.75rem var(--glass-shadow),
+    0 0.0625rem 0 rgba(255, 255, 255, 0.22) inset,
+    0 -0.0625rem 0 rgba(0, 0, 0, 0.18) inset;
+  /* Traitement du BORD : peu de flou, forte saturation, léger gain de luminosité.
+     Le centre est recouvert par ::before, il ne reste donc visible que sur la bande
+     périphérique — c'est le ménisque. */
+  backdrop-filter: blur(var(--glass-edge-blur)) saturate(var(--glass-edge-saturate))
+    brightness(var(--glass-edge-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-edge-blur)) saturate(var(--glass-edge-saturate))
+    brightness(var(--glass-edge-brightness));
+}
+
+/* Cœur du verre : rentré de la largeur du ménisque, il porte le flou de lecture et les
+   reflets diffus. Le contraste du texte se joue ici, pas sur la bande de bord.
+   `z-index: -1` le place au-dessus du fond de la carte et sous son contenu — un masque
+   est impossible sur cette couche, car un backdrop-filter annule le masque (vérifié :
+   Chromium 151 perd complètement le masque quand les deux coexistent). */
+.liquid-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: var(--glass-edge-width);
+  border-radius: calc(var(--liquid-radius) - var(--glass-edge-width));
+  corner-shape: inherit;
+  background: var(--glass-highlight);
+  content: "";
+  pointer-events: none;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+/* Liseré spéculaire : un anneau fin (masque en `exclude`), sans backdrop-filter. */
+.liquid-card::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: var(--glass-rim-width);
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: var(--glass-specular);
+  content: "";
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.liquid-card > * {
   position: relative;
   z-index: 1;
 }
 
-.container {
-  width: min(100% - 2.5rem, 75rem);
-  margin-inline: auto;
+/* Sans backdrop-filter, un verre à alpha 0.14 laisserait le texte à même le halo :
+   le remplissage doit alors devenir opaque. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .liquid-card {
+    background: var(--glass-fill-solid);
+  }
+
+  .liquid-card::before {
+    background: var(--glass-highlight), var(--glass-fill-solid);
+  }
 }
 
-.section-shell {
-  padding-block: clamp(3.5rem, 8vw, 7.5rem);
+/* -----------------------------------------------------------------------------
+   7. En-tête collant et navigation
+   -------------------------------------------------------------------------- */
+
+/* Îlot flottant : le header est un panneau de verre détaché des bords, aligné sur la
+   largeur des cartes. Une barre pleine largeur terminée par un filet d'un pixel était
+   le seul élément du site à ne pas parler le langage de formes des cartes. */
+.site-header {
+  position: sticky;
+  top: var(--header-offset);
+  z-index: 20;
+  width: min(100% - var(--space-5), 76rem);
+  margin: var(--header-offset) auto 0;
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: 1.75rem;
+  corner-shape: superellipse(1.45);
+  /* Verre pur : aucun remplissage. Le matériau vient du liseré spéculaire, de la
+     réfraction du bord et d'une transformation de luminance — pas d'un aplat.
+     La luminance n'est pas cosmétique : sans elle, mesuré, les libellés tombent à
+     1.00:1 quand le portrait blanc défile derrière. Les matériaux d'Apple font de
+     même (vibrancy), et iOS expose « Réduire la transparence » pour la même raison. */
+  /* The bar is TINTED now. Left on `transparent`, its colour came only from the
+     luminance transform of whatever scrolled behind, so it read grey whatever the
+     palette said. Tinting with `--accent` was tried and lightened the bar instead of
+     colouring it; `#01515f` at 0.55 lands it on #204f57 in light and #0c3a42 in dark —
+     chroma OKLCH 0.052 against 0.020 before — while staying translucent, so the bar
+     still breathes as the page scrolls instead of becoming a flat panel. The
+     `@supports not` fallback below and the two `prefers-*` blocks still override it. */
+  background: var(--header-tint);
+  box-shadow:
+    0 1rem 2.5rem -0.75rem var(--glass-shadow),
+    0 0.125rem 0.5rem -0.25rem var(--glass-shadow);
+  backdrop-filter: blur(var(--header-blur)) saturate(1.7) var(--header-luminance, brightness(1));
+  -webkit-backdrop-filter: blur(var(--header-blur)) saturate(1.7)
+    var(--header-luminance, brightness(1));
+}
+
+/* Liseré spéculaire : anneau fin en dégradé directionnel, allumé en haut-gauche,
+   rappel au coin opposé. C'est lui qui donne au header son épaisseur de verre. */
+.site-header::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: var(--glass-specular);
+  content: "";
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Reflet diffus dans le coin haut-gauche, hors de la zone de lecture. */
+.site-header::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  corner-shape: inherit;
+  background: radial-gradient(
+    130% 220% at 6% -60%,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    transparent 66%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header {
+    background: var(--header-solid);
+  }
+}
+
+.site-header__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: var(--header-height);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.site-header__brand {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  color: var(--header-text-strong);
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* The face stays on screen once the hero has scrolled away. Round, not squircled: the
+   shape language of this file applies `corner-shape` to rounded RECTANGLES, and a
+   superellipse laid over a 50% radius stops being a circle. */
+.site-header__avatar {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--header-control-border);
+  /* Same aim point as `.hero-portrait img`: the crop lives in the stylesheet so the
+     source file stays intact and the framing can be tuned without touching the image. */
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+
+.site-header__brand:hover {
+  color: var(--header-text-hover);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+}
+
+.site-header__brand:active {
+  color: var(--accent-active);
 }
 
 .main-navigation {
-  position: relative;
-  z-index: 5;
-  padding-top: clamp(1rem, 3vw, 2rem);
-}
-
-.navigation-shell {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.menu-toggle,
-.theme-toggle {
-  min-width: 44px;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 0.65rem 0.9rem;
-  border: 0;
-  border-radius: 0.9rem;
-  background: #087487;
-  color: #fff;
-  font: inherit;
-  font-weight: 850;
-  cursor: pointer;
-}
-
-.menu-toggle {
-  display: none;
-}
-
-.theme-toggle {
-  display: inline-flex;
-  flex: 0 0 auto;
-  border: 1px solid var(--control-border);
-  background: var(--soft-surface);
-  color: var(--navigation-text);
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent-ink);
-  background: var(--soft-surface-hover);
-}
-
-.theme-toggle[aria-pressed="true"] {
-  border-color: #087487;
-  background: #087487;
-  color: #fff;
-}
-
-.hero {
-  position: relative;
-  z-index: 1;
-  min-height: calc(100vh - clamp(1rem, 3vw, 2rem) - 2.75rem);
-  min-height: calc(100svh - clamp(1rem, 3vw, 2rem) - 2.75rem);
-  display: grid;
-  align-items: center;
-  padding: clamp(2rem, 4vw, 4rem) 0;
+  min-width: 0;
 }
 
 .section-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.35rem 0.7rem;
-  margin-bottom: clamp(2rem, 6vw, 5rem);
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
 }
 
 .section-nav--site {
-  margin: 0 0 0 auto;
-  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .section-nav a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  padding: 0.55rem 0.75rem;
-  border-radius: 0.75rem;
-  color: var(--navigation-text);
-  font-size: 1rem;
-  font-weight: 800;
+  padding: var(--space-2) var(--space-3);
+  /* Même rayon que .theme-toggle : la barre d'en-tête doit avoir un seul vocabulaire
+     d'arrondi, pas deux. Pilule, comme .button. */
+  border-radius: var(--radius-pill);
+  color: var(--header-text);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
   text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
 .section-nav a:hover {
-  color: var(--accent-ink);
+  background: var(--header-control-surface-hover);
+  color: var(--header-text-hover);
   text-decoration: underline;
   text-decoration-thickness: 2px;
-  text-underline-offset: 0.28rem;
+  text-underline-offset: 0.28em;
+}
+
+/* Ce lien n'a AUCUN `transform` : son fond d'appui est son seul retour d'interaction.
+   D'où le token à portée header et non `--soft-surface-active`, qui est thémé. */
+.section-nav a:active {
+  background: var(--header-control-surface-active);
 }
 
 .section-nav a[aria-current="location"] {
-  background: #087487;
-  color: #fff;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-weight: var(--weight-semibold);
   text-decoration: none;
-  box-shadow: 0 0.45rem 1rem rgba(0, 89, 106, 0.2);
 }
+
+.section-nav a[aria-current="location"]:hover {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.menu-toggle,
+.theme-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--header-control-border);
+  border-radius: var(--radius-pill);
+  background: var(--header-control-surface);
+  color: var(--header-text-strong);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.menu-toggle:hover,
+.theme-toggle:hover {
+  border-color: var(--header-text-hover);
+  background: var(--header-control-surface-hover);
+  color: var(--header-text-hover);
+}
+
+.menu-toggle:active,
+.theme-toggle:active {
+  background: var(--header-control-surface-active);
+  transform: translateY(1px);
+}
+
+.theme-toggle[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.theme-toggle[aria-pressed="true"]:hover {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
+
+.theme-toggle[aria-pressed="true"]:active {
+  border-color: var(--accent-active);
+  background: var(--accent-active);
+}
+
+/* -----------------------------------------------------------------------------
+   8. Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - var(--header-height) - var(--header-offset));
+  min-height: calc(100svh - var(--header-height) - var(--header-offset));
+  display: grid;
+  align-items: center;
+  padding-block: var(--space-7);
+}
+
+.hero-card {
+  --liquid-radius: clamp(1.5rem, 4vw, 3rem);
+  max-width: 75rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3vw, var(--space-7)) clamp(1.5rem, 6vw, 5rem);
+}
+
+/* Le hero passe en deux colonnes : le contenu occupait 52rem dans une carte de 75rem,
+   laissant 30 % de vide à droite sur tous les écrans. */
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 20rem);
+  align-items: center;
+  gap: clamp(var(--space-5), 4vw, var(--space-8));
+}
+
+/* Le portrait est affiché tel quel, sans voile ni fondu : aucune retouche CSS sur
+   l'image. Le liseré à la couleur d'accent détache la photo — et surtout son fond de
+   studio clair — du verre de la carte, sur lequel elle se fondait sinon. */
+.hero-portrait {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  border-radius: 1.25rem;
+  corner-shape: superellipse(1.45);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.hero-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  /* Le cadrage se fait ici, pas dans le fichier : le portrait d'origine reste intact
+     et le point de visée peut être ajusté sans retoucher l'image. */
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+
+.hero-content {
+  max-width: 52rem;
+}
+
+.hero-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  /* Badge d'état, donc même famille verte que « Actuellement » et « Obtenu ». Le fond
+     est OPAQUE à dessein : un aplat translucide de la même teinte que son texte devient
+     illisible dès qu'un halo de cette teinte passe derrière (mesuré à 1.51:1). */
+  background: var(--badge-live-surface);
+  color: var(--badge-live-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+}
+
+.hero-availability::before {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.hero-current-role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  color: var(--text-strong);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+}
+
+/* Badge d'état « en cours / actif ». Vert, comme « Obtenu » et « En ligne » : une
+   seule famille verte pour tous les badges de ce type. L'aplat accent teal reste
+   réservé aux actions, le vert dit l'état. */
+.hero-current-role strong,
+.accessibility-status span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  background: var(--badge-live-surface);
+  color: var(--badge-live-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hero-lede {
+  max-width: 43rem;
+  margin-bottom: var(--space-5);
+  color: var(--text-body);
+  font-size: clamp(var(--text-md), 1.6vw, var(--text-lg));
+  font-weight: var(--weight-regular);
+  line-height: 1.55;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.hero-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-6) 0 0;
+  padding: var(--space-5) 0 0;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  list-style: none;
+}
+
+.hero-details li::before {
+  margin-right: var(--space-2);
+  color: var(--text-accent);
+  content: "•";
+}
+
+/* -----------------------------------------------------------------------------
+   9. Composants transverses
+   -------------------------------------------------------------------------- */
+
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid transparent;
+  /* Pill, not the 1rem radius this used to carry: a 1rem corner on a 48px control read
+     as a rounded rectangle rather than a button, and it disagreed with the controls that
+     were already pills (`.contact-links a`, `.hero-availability`). One rounding
+     vocabulary for everything you can press. */
+  border-radius: var(--radius-pill);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
+}
+
+/* Les deux ombres de ce bouton portent une encre RE-DÉRIVÉE de --accent : teinte reprise
+   de l'accent (271.2 deg mesuré) et écart de luminosité OKLab conservé tel quel
+   (ΔL -0.083 sous l'accent, exactement l'écart que portait la valeur teal retirée). C'est
+   cet écart, et non la luminosité absolue, qu'il fallait garder : à luminosité figée
+   l'ombre serait devenue PLUS CLAIRE que le bouton qu'elle porte, l'accent de cette
+   palette étant plus sombre que le précédent — une ombre plus claire que son émetteur se
+   lit comme un halo. Distances, rayons, alphas et nombre d'ombres sont inchangés. */
+.button-primary {
+  --elevation: 0 0.5rem 1.25rem rgba(34, 44, 86, 0.24);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: var(--elevation);
+}
+
+.button-primary:hover {
+  background: var(--accent-hover);
+}
+
+.button-primary:active {
+  --elevation: 0 0.125rem 0.375rem rgba(34, 44, 86, 0.28);
+  background: var(--accent-active);
+  box-shadow: var(--elevation);
+  transform: translateY(1px);
+}
+
+.button-secondary {
+  border-color: var(--control-border);
+  background: var(--soft-surface);
+  color: var(--text-strong);
+}
+
+.button-secondary:hover {
+  border-color: var(--text-accent);
+  background: var(--soft-surface-hover);
+}
+
+.button-secondary:active {
+  background: var(--soft-surface-active);
+  transform: translateY(1px);
+}
+
+.squircle {
+  border-radius: 34%;
+  corner-shape: superellipse(1.6);
+}
+
+/* Géométrie et matériau communs. La COULEUR D'ENCRE est volontairement absente de ce
+   groupe : les trois premières tuiles sont du décor, `.social-link` est un contrôle, et
+   la règle d'emploi de la couleur les sépare (voir le contrat dans `:root`). */
+.timeline-icon,
+.education-icon,
+.contact-icon,
+.passion-icon,
+.social-link {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--border-subtle);
+  background: linear-gradient(135deg, var(--icon-surface-start), var(--icon-surface-end));
+  /* Même re-dérivation que les ombres de `.button-primary` : teinte de --accent
+     (272.4 deg mesuré), écart de luminosité OKLab conservé (ΔL -0.074). Le liseré
+     intérieur reste un blanc pur, il ne dépend d'aucun accent. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0.375rem 0.875rem rgba(37, 46, 89, 0.14);
+}
+
+/* Decor only: these four tiles sit next to a heading whose text already carries the
+   meaning — they are `aria-hidden` in the markup — so their ink takes the warm editorial
+   hue. `.passion-icon` belongs here and NOT with `.social-link`: it names nothing, the
+   passion's own <h3> does. An accent tile there would claim an action that does not
+   exist. */
+.timeline-icon,
+.education-icon,
+.contact-icon,
+.passion-icon {
+  color: var(--accent-secondary);
+}
+
+/* Contrôle, pas décor : son icône est le seul contenu visible du lien (le libellé est
+   en `.visually-hidden`), donc son encre PORTE DU SENS. Elle reste teal — la couleur
+   des actions — et doit tenir un contraste mesuré ≥ 3:1 (WCAG 1.4.11), au repos comme
+   au survol ; sa bordure aussi. C'est pour cela qu'elle est sortie du groupe d'encre
+   décorative ci-dessus : une encre chaude ici casserait le contrat de couleur. */
+.social-link {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-color: var(--control-border);
+  color: var(--text-accent);
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
+}
+
+.social-link:hover {
+  border-color: var(--text-accent);
+  /* Le fond de survol était un dégradé cyan clair CODÉ EN DUR, sans variante de thème :
+     en sombre, l'encre du lien (--text-accent, un cyan clair) tombait à 1.17:1 mesuré
+     sur ce fond clair, et l'icône — seul contenu visible du lien — disparaissait au
+     survol. Le survol est maintenant un FILM de survol tokenisé posé sur le matériau de
+     repos : il suit le thème, et l'écart repos/survol reste perceptible sans jamais
+     inverser le sens de la luminance. */
+  background:
+    linear-gradient(135deg, var(--soft-surface-hover), var(--soft-surface-hover)),
+    linear-gradient(135deg, var(--icon-surface-start), var(--icon-surface-end));
+}
+
+.social-link:active {
+  transform: translateY(1px);
+}
+
+/* Chips neutres : stack technique et regroupements de compétences. */
+.skill-group ul,
+.experience-stack,
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-group li,
+.experience-stack li,
+.project-stack li {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  color: var(--text-strong);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+
+.experience-stack:empty,
+.project-stack:empty,
+.project-links:empty {
+  display: none;
+}
+
+.education-status,
+.project-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.education-status--completed,
+.project-status--completed {
+  background: var(--status-done-surface);
+  color: var(--status-done-text);
+}
+
+.education-status--in-progress,
+.project-status--in-progress {
+  background: var(--status-progress-surface);
+  color: var(--status-progress-text);
+}
+
+.education-status--upcoming,
+.project-status--upcoming {
+  background: var(--status-upcoming-surface);
+  color: var(--status-upcoming-text);
+}
+
+/* -----------------------------------------------------------------------------
+   9b. Sections
+   -------------------------------------------------------------------------- */
+
+.section-heading {
+  max-width: 45rem;
+  margin-bottom: clamp(var(--space-6), 5vw, var(--space-8));
+}
+
+/* Au-delà de 62rem, le titre et son chapô se répartissent sur toute la largeur : sinon
+   la moitié droite du conteneur reste vide six sections de suite. La variante compacte
+   de la carte contact est exclue, elle vit dans une grille qui lui est propre. */
+@media (min-width: 62rem) {
+  .section-heading:not(.section-heading-compact) {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    column-gap: var(--space-7);
+    align-items: end;
+  }
+
+  .section-heading:not(.section-heading-compact) .eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .section-heading:not(.section-heading-compact) h2 {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .section-heading:not(.section-heading-compact) > p:last-child {
+    grid-column: 2;
+    max-width: 34rem;
+    margin-bottom: 0;
+    padding-bottom: 0.35rem;
+  }
+}
+
+.section-heading h2 {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-display-md);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.section-heading > p:last-child {
+  margin-bottom: 0;
+  color: var(--text-body);
+  font-size: var(--text-md);
+  line-height: 1.6;
+}
+
+.journey-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.8fr);
+  align-items: start;
+  gap: clamp(var(--space-6), 4vw, var(--space-8));
+}
+
+.timeline {
+  display: grid;
+  gap: var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-item {
+  --liquid-radius: var(--radius-lg);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  padding: var(--card-padding);
+}
+
+.date-range,
+.project-date {
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--text-accent);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Les deux <time> d'une plage restent en ligne : c'est leur conteneur qui est un bloc.
+   Sans cela, chaque date passe à la ligne et le tiret se retrouve orphelin. */
+.date-range {
+  margin: 0 0 var(--space-1);
+}
+
+.date-range time {
+  display: inline;
+}
+
+.timeline h3,
+.project-card h3,
+.passion-card h3,
+.skill-group h3 {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+}
+
+.timeline p,
+.project-card p,
+.passion-card p {
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.timeline p:last-child,
+.project-card p:last-child,
+.passion-card p:last-child {
+  margin-bottom: 0;
+}
+
+.timeline .company {
+  margin-bottom: var(--space-3);
+  color: var(--text-strong);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.mission-list {
+  display: grid;
+  gap: var(--space-4);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mission-list > li {
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mission-list h4 {
+  margin: 0 0 var(--space-1);
+  color: var(--text-strong);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+}
+
+.mission-list p {
+  margin-bottom: 0;
+}
+
+.education {
+  --liquid-radius: var(--radius-lg);
+  padding: var(--card-padding);
+}
+
+.education-icon {
+  margin-bottom: var(--space-6);
+}
+
+.education h3 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.school-name {
+  margin-bottom: var(--space-5);
+  color: var(--text-body);
+  font-weight: var(--weight-medium);
+}
+
+.education ul {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.education li {
+  display: grid;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.education strong {
+  color: var(--text-strong);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+}
+
+.formation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.formation-level {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.skill-group,
+.project-card {
+  --liquid-radius: var(--radius-lg);
+  padding: var(--card-padding);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.project-card {
+  min-height: 100%;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.project-meta .project-date {
+  margin-bottom: 0;
+}
+
+/* Un seul patron de lien sortant DANS une carte : souligné, encre d'accent, flèche
+   d'ouverture. `.passion-links` le partage plutôt que de le recopier — et porte son
+   propre nom plutôt que d'emprunter celui des projets, pour qu'un futur changement de
+   l'un des deux n'ait pas à démêler à qui la règle appartenait. */
+.project-links,
+.passion-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-links a,
+.passion-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 160ms ease;
+}
+
+.project-links a:hover,
+.passion-links a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.project-links a:active,
+.passion-links a:active {
+  color: var(--accent-active);
+}
+
+.accessibility-card {
+  --liquid-radius: clamp(1.5rem, 4vw, 2.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(var(--space-6), 5vw, var(--space-8));
+  padding: clamp(1.5rem, 4vw, var(--space-7));
+}
+
+.accessibility-introduction {
+  align-self: center;
+}
+
+.accessibility-introduction h3 {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-display-sm);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.accessibility-introduction > p:last-child {
+  margin-bottom: 0;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.accessibility-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.accessibility-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.accessibility-list li {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--panel-surface);
+}
+
+.accessibility-list strong {
+  color: var(--text-strong);
+  font-weight: var(--weight-semibold);
+}
+
+.accessibility-list span,
+.accessibility-limit {
+  color: var(--text-body);
+  line-height: 1.55;
+}
+
+.accessibility-limit {
+  margin: var(--space-5) 0;
+}
+
+.accessibility-limit strong {
+  color: var(--text-strong);
+  font-weight: var(--weight-semibold);
+}
+
+.accessibility-contact {
+  width: fit-content;
+}
+
+/* Passions — même grille à deux colonnes que `.projects-grid`, mais sur une LISTE :
+   quatre pratiques comparables se comptent, et le rôle `list` donne cet effectif aux
+   lecteurs d'écran, ce qu'une suite d'`<article>` ne fait pas. La puce est retirée à
+   l'affichage seulement ; `aria-label` sur la liste lui garde son nom. */
+.passions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Géométrie de `.timeline-item` : tuile d'icône puis bloc de texte. Le `min-height`
+   égalise les deux cartes d'une même rangée, comme sur `.project-card`. */
+.passion-card {
+  --liquid-radius: var(--radius-lg);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-4);
+  min-height: 100%;
+  padding: var(--card-padding);
+}
+
+.contact-section {
+  padding-bottom: var(--section-space);
+}
+
+.contact-card {
+  --liquid-radius: clamp(1.5rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(var(--space-6), 5vw, var(--space-8));
+  padding: clamp(1.5rem, 4vw, var(--space-7));
+}
+
+.section-heading-compact {
+  align-self: center;
+  margin: 0;
+}
+
+.contact-links {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  font-style: normal;
+}
+
+.contact-links a {
+  min-height: 4.5rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  /* Padding horizontal plus large que le vertical : sur une pastille, la courbe
+     empiète sur les angles, donc l'icône et la flèche ont besoin de recul latéral. */
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-pill);
+  background: var(--panel-surface);
+  color: var(--text-strong);
+  font-weight: var(--weight-semibold);
+  /* Indice visuel de lien : le soulignement est porté par l'ancre. */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 120ms ease;
+}
+
+.contact-links a:hover {
+  border-color: var(--text-accent);
+  background: var(--panel-surface-hover);
+  text-decoration-thickness: 2px;
+}
+
+.contact-links a:active {
+  transform: translateY(1px);
+}
+
+/* inline-block : la décoration de l'ancre ne traverse pas une boîte inline atomique,
+   donc l'intitulé reste non souligné et seule la valeur porte le trait. */
+.contact-links small {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contact-arrow {
+  color: var(--text-accent);
+}
+
+/* Réserve la place du message de confirmation pour éviter un saut de mise en page. */
+.contact-card [aria-live] {
+  display: block;
+  min-height: 1.5rem;
+  margin-top: var(--space-1);
+  color: var(--text-accent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.contact-socials {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* -----------------------------------------------------------------------------
+   10. Pied de page
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  padding: var(--space-5) 0 max(var(--space-5), env(safe-area-inset-bottom));
+  background: var(--site-background);
+  color: var(--text-muted);
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.footer-content p {
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+}
+
+.footer-content a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-accent);
+  font-weight: var(--weight-semibold);
+  text-underline-offset: 0.2em;
+}
+
+.footer-content a:active {
+  color: var(--accent-active);
+}
+
+/* -----------------------------------------------------------------------------
+   11. Révélation au défilement
+   -------------------------------------------------------------------------- */
 
 html.reveal-enabled [data-reveal] {
   opacity: 0;
-  transform: translate3d(0, 1.6rem, 0);
+  transform: translate3d(0, 1.5rem, 0);
   transition:
-    opacity 640ms ease,
-    transform 790ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 620ms ease,
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -314,11 +2254,24 @@ html.reveal-enabled [data-reveal="scale"] {
   transform: translate3d(0, 1rem, 0) scale(0.985);
 }
 
-html.reveal-enabled [data-reveal].is-visible {
+/* Animer l'opacité d'un porteur de backdrop-filter fait scintiller WebKit :
+   les cartes de verre se révèlent donc par transform seule. */
+html.reveal-enabled .liquid-card[data-reveal] {
   opacity: 1;
-  transform: none;
+  transform: translate3d(0, 1.25rem, 0);
+  transition: transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
+html.reveal-enabled .liquid-card[data-reveal="down"] {
+  transform: translate3d(0, -0.75rem, 0);
+}
+
+html.reveal-enabled .liquid-card[data-reveal="scale"] {
+  transform: translate3d(0, 0.75rem, 0) scale(0.99);
+}
+
+html.reveal-enabled [data-reveal].is-visible,
 html.reveal-enabled [data-reveal]:focus-within {
   opacity: 1;
   transform: none;
@@ -336,696 +2289,9 @@ html.reveal-enabled [data-reveal]:focus-within {
   --reveal-delay: 210ms;
 }
 
-.liquid-card {
-  --liquid-radius: 1.6rem;
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.88);
-  border-radius: var(--liquid-radius);
-  corner-shape: superellipse(1.45);
-  background: transparent;
-  box-shadow:
-    0 2.4rem 5.8rem rgba(16, 62, 83, 0.19),
-    0 0.48rem 1.35rem rgba(255, 255, 255, 0.86) inset,
-    0 -0.18rem 0.42rem rgba(10, 78, 93, 0.16) inset,
-    0.14rem 0 0.32rem rgba(255, 255, 255, 0.68) inset,
-    -0.14rem 0 0.32rem rgba(2, 94, 113, 0.12) inset;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.liquid-card::before,
-.liquid-card::after {
-  position: absolute;
-  z-index: 0;
-  content: "";
-  pointer-events: none;
-}
-
-.liquid-card::before {
-  inset: 1px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: calc(var(--liquid-radius) - 1px);
-  corner-shape: superellipse(1.45);
-  background: transparent;
-  box-shadow:
-    0 0.22rem 0.62rem rgba(255, 255, 255, 0.3) inset,
-    0 -0.08rem 0.22rem rgba(0, 82, 101, 0.08) inset;
-}
-
-.liquid-card::after {
-  inset: 0.38rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: calc(var(--liquid-radius) - 0.38rem);
-  corner-shape: superellipse(1.45);
-  background: transparent;
-  box-shadow:
-    0 0.12rem 0.26rem rgba(255, 255, 255, 0.46),
-    0 0.24rem 0.8rem rgba(255, 255, 255, 0.2) inset;
-  opacity: 0.82;
-}
-
-.liquid-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .liquid-card {
-    background: transparent;
-  }
-}
-
-.hero-card {
-  --liquid-radius: clamp(1.75rem, 5vw, 4rem);
-  max-width: 75rem;
-  margin-inline: auto;
-  padding: clamp(1.4rem, 3vw, 2.5rem) clamp(1.4rem, 7vw, 7rem)
-    clamp(1.75rem, 4vw, 3.5rem);
-  border-radius: var(--liquid-radius);
-}
-
-.hero-content {
-  max-width: 52rem;
-}
-
-.eyebrow {
-  margin: 0 0 1rem;
-  color: var(--accent-ink);
-  font-size: clamp(0.88rem, 1.25vw, 1.03rem);
-  font-weight: 900;
-  letter-spacing: 0.13em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-h1,
-h2,
-h3,
-p {
-  margin-top: 0;
-}
-
-h1,
-h2,
-h3 {
-  color: var(--ink);
-  text-wrap: balance;
-}
-
-h1 {
-  max-width: 12ch;
-  margin-bottom: 1rem;
-  font-size: var(--hero-name-size);
-  letter-spacing: -0.075em;
-  line-height: 0.91;
-}
-
-.hero-current-role {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem 0.75rem;
-  margin-bottom: 1.15rem;
-  color: var(--strong-copy);
-  font-size: 1rem;
-  font-weight: 750;
-}
-
-.hero-current-role strong {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0.32rem 0.68rem;
-  border-radius: 999px;
-  background: #087487;
-  color: #fff;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.hero-lede {
-  max-width: 43rem;
-  margin-bottom: 1.5rem;
-  color: var(--lede-copy);
-  font-size: clamp(1.15rem, 2.3vw, 1.48rem);
-  line-height: 1.6;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.button {
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.1rem;
-  border: 1px solid transparent;
-  border-radius: 1rem;
-  font-weight: 800;
-  line-height: 1.35;
-  text-align: center;
-  text-decoration: none;
-  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-}
-
-.button-primary {
-  background: linear-gradient(135deg, #087487, #00596a);
-  color: #fff;
-  box-shadow: 0 0.7rem 1.5rem rgba(11, 94, 112, 0.22);
-}
-
-.button-primary:hover {
-  background: linear-gradient(135deg, #005d70, #004c5c);
-}
-
-.button-secondary {
-  border-color: var(--control-border);
-  background: var(--soft-surface);
-  color: var(--surface-copy);
-}
-
-.button-secondary:hover {
-  border-color: var(--accent-ink);
-  background: var(--soft-surface-hover);
-}
-
-.hero-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem 1.5rem;
-  margin: 2rem 0 0;
-  padding: 1.3rem 0 0;
-  border-top: 1px solid var(--divider-color);
-  color: var(--meta-copy);
-  font-size: 0.94rem;
-  font-weight: 650;
-  list-style: none;
-}
-
-.hero-details li::before {
-  content: "•";
-  margin-right: 0.5rem;
-  color: var(--accent-ink);
-}
-
-.section-heading {
-  max-width: 45rem;
-  margin-bottom: clamp(2rem, 5vw, 4rem);
-}
-
-.section-heading h2 {
-  margin-bottom: 1rem;
-  font-size: clamp(2rem, 4.6vw, 3.8rem);
-  letter-spacing: -0.052em;
-  line-height: 1.02;
-}
-
-.section-heading > p:last-child {
-  margin-bottom: 0;
-  color: var(--body-copy);
-  font-size: 1.08rem;
-  line-height: 1.65;
-}
-
-.journey-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.8fr);
-  align-items: start;
-  gap: clamp(1.5rem, 4vw, 4rem);
-}
-
-.timeline {
-  display: grid;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.timeline-item {
-  --liquid-radius: 1.75rem;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1.1rem;
-  padding: 1.45rem;
-  border-radius: var(--liquid-radius);
-}
-
-.squircle {
-  border-radius: 32%;
-  corner-shape: superellipse(1.55);
-}
-
-.timeline-icon,
-.education-icon,
-.contact-icon,
-.social-link {
-  flex: 0 0 auto;
-  display: inline-grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  background: linear-gradient(
-    135deg,
-    var(--icon-surface-start),
-    var(--icon-surface-end)
-  );
-  color: var(--accent-ink);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0.45rem 1rem rgba(24, 95, 119, 0.14);
-}
-
-.timeline time,
-.project-date {
-  display: block;
-  margin-bottom: 0.4rem;
-  color: var(--accent-ink);
-  font-size: 0.86rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.timeline h3,
-.project-card h3,
-.skill-group h3 {
-  margin-bottom: 0.35rem;
-  font-size: 1.13rem;
-  line-height: 1.3;
-}
-
-.timeline p,
-.project-card p {
-  color: var(--body-copy);
-  line-height: 1.58;
-}
-
-.timeline p:last-child,
-.project-card p:last-child {
-  margin-bottom: 0;
-}
-
-.timeline .company {
-  margin-bottom: 0.85rem;
-  color: var(--strong-copy);
-  font-size: 0.92rem;
-  font-weight: 800;
-}
-
-.mission-list {
-  display: grid;
-  gap: 1rem;
-  margin: 1.35rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.mission-list li {
-  padding: 1rem 0 0;
-  border-top: 1px solid var(--divider-color);
-}
-
-.mission-list h4 {
-  margin: 0 0 0.35rem;
-  color: var(--strong-copy);
-  font-size: 1rem;
-  line-height: 1.35;
-}
-
-.mission-list p {
-  margin-bottom: 0;
-}
-
-.education {
-  --liquid-radius: 2rem;
-  padding: 1.8rem;
-  border-radius: var(--liquid-radius);
-}
-
-.education-icon {
-  margin-bottom: 2.2rem;
-}
-
-.education h2 {
-  margin-bottom: 0.6rem;
-  font-size: clamp(1.6rem, 3vw, 2.35rem);
-  letter-spacing: -0.045em;
-  line-height: 1.08;
-}
-
-.school-name {
-  margin-bottom: 1.6rem;
-  color: var(--body-copy);
-  font-weight: 700;
-}
-
-.education ul {
-  display: grid;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.education li {
-  display: grid;
-  gap: 0.55rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--divider-color);
-}
-
-.education strong {
-  color: var(--strong-copy);
-  font-size: 1rem;
-  line-height: 1.38;
-}
-
-.formation-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.formation-level {
-  color: var(--meta-copy);
-  font-size: 0.9rem;
-  font-weight: 750;
-}
-
-.education-status {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.75rem;
-  padding: 0.28rem 0.55rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.03em;
-  line-height: 1;
-}
-
-.education-status--completed {
-  background: #d9f3e7;
-  color: #075b40;
-}
-
-.education-status--in-progress {
-  background: #fff0ca;
-  color: #765000;
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.skill-group,
-.project-card {
-  --liquid-radius: 1.6rem;
-  padding: clamp(1.35rem, 3vw, 2rem);
-  border-radius: var(--liquid-radius);
-}
-
-.skill-group ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 1.2rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.skill-group li {
-  padding: 0.42rem 0.7rem;
-  border: 1px solid var(--divider-color);
-  border-radius: 999px;
-  background: var(--chip-surface);
-  color: var(--strong-copy);
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.project-card {
-  min-height: 100%;
-}
-
-.project-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.65rem;
-  margin-bottom: 0.7rem;
-}
-
-.project-meta .project-date {
-  margin-bottom: 0;
-}
-
-.project-status {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.75rem;
-  padding: 0.28rem 0.58rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.project-status--completed {
-  background: #d9f3e7;
-  color: #075b40;
-}
-
-.project-status--in-progress {
-  background: #fff0ca;
-  color: #765000;
-}
-
-.accessibility-card {
-  --liquid-radius: clamp(1.75rem, 5vw, 3rem);
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  padding: clamp(1.5rem, 5vw, 4rem);
-  border-radius: var(--liquid-radius);
-}
-
-.accessibility-introduction {
-  align-self: center;
-}
-
-.accessibility-introduction h3 {
-  margin-bottom: 0.9rem;
-  font-size: clamp(1.45rem, 3vw, 2.25rem);
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-}
-
-.accessibility-introduction > p:last-child {
-  margin-bottom: 0;
-  color: var(--body-copy);
-  line-height: 1.65;
-}
-
-.accessibility-status {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem 0.75rem;
-  margin-bottom: 1.2rem;
-  color: var(--meta-copy);
-  font-size: 0.9rem;
-  font-weight: 750;
-}
-
-.accessibility-status span {
-  padding: 0.34rem 0.62rem;
-  border-radius: 999px;
-  background: #087487;
-  color: #fff;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.accessibility-list {
-  display: grid;
-  gap: 0.7rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.accessibility-list li {
-  display: grid;
-  gap: 0.22rem;
-  padding: 0.95rem 1rem;
-  border: 1px solid var(--divider-color);
-  border-radius: 1.1rem;
-  background: var(--panel-surface);
-}
-
-.accessibility-list strong {
-  color: var(--strong-copy);
-}
-
-.accessibility-list span,
-.accessibility-limit {
-  color: var(--body-copy);
-  line-height: 1.55;
-}
-
-.accessibility-limit {
-  margin: 1.2rem 0;
-}
-
-.accessibility-limit strong {
-  color: var(--strong-copy);
-}
-
-.accessibility-contact {
-  width: fit-content;
-}
-
-.contact-section {
-  padding-bottom: clamp(3.5rem, 8vw, 7.5rem);
-}
-
-.contact-card {
-  --liquid-radius: clamp(1.75rem, 5vw, 3.5rem);
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(2rem, 5vw, 5rem);
-  padding: clamp(1.5rem, 5vw, 4rem);
-  border-radius: var(--liquid-radius);
-}
-
-.section-heading-compact {
-  align-self: center;
-  margin: 0;
-}
-
-.contact-links {
-  display: grid;
-  gap: 0.7rem;
-  margin: 0;
-  font-style: normal;
-}
-
-.contact-links a {
-  min-height: 4.5rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0.95rem;
-  padding: 0.75rem;
-  border: 1px solid var(--divider-color);
-  border-radius: 1.25rem;
-  background: var(--panel-surface);
-  color: var(--surface-copy);
-  font-weight: 800;
-  text-decoration: none;
-  transition: background-color 160ms ease, border-color 160ms ease;
-}
-
-.contact-links a:hover {
-  border-color: rgba(12, 101, 118, 0.5);
-  background: var(--panel-surface-hover);
-}
-
-.contact-links small {
-  display: block;
-  margin-bottom: 0.18rem;
-  color: var(--subtle-copy);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.contact-arrow {
-  color: var(--accent-ink);
-}
-
-.contact-socials {
-  grid-column: 2;
-  display: flex;
-  gap: 0.65rem;
-  margin-top: -0.9rem;
-}
-
-.social-link {
-  width: 2.8rem;
-  height: 2.8rem;
-  text-decoration: none;
-  transition: background-color 160ms ease, box-shadow 160ms ease;
-}
-
-.social-link:hover {
-  background: linear-gradient(135deg, #bdecea, #9fcbdc);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0.55rem 1.25rem rgba(24, 95, 119, 0.23);
-}
-
-.site-footer {
-  padding: 1.5rem 0 max(1.5rem, env(safe-area-inset-bottom));
-  background: var(--site-background);
-  color: var(--footer-copy);
-}
-
-.footer-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.75rem 1.5rem;
-  font-size: 0.88rem;
-}
-
-.footer-content p {
-  margin: 0;
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.25rem;
-}
-
-.footer-content a {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  color: var(--footer-link);
-  font-weight: 800;
-  text-underline-offset: 0.2rem;
-}
+/* -----------------------------------------------------------------------------
+   12. Responsive
+   -------------------------------------------------------------------------- */
 
 @media (max-width: 52rem) {
   .journey-layout,
@@ -1037,77 +2303,121 @@ h1 {
   .contact-socials {
     grid-column: 1;
     justify-content: center;
-    margin-top: 0;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 50rem) {
-  .container {
-    width: min(100% - 1.5rem, 75rem);
-  }
+/* -----------------------------------------------------------------------------
+   Repli de la navigation en menu compact.
 
-  .main-navigation {
-    padding-top: 1rem;
-  }
+   Ce point de rupture est SÉPARÉ de celui de la mise en page (50rem) à dessein : la
+   navigation manque de place bien avant que le hero ait besoin de passer sur une
+   colonne. Les fusionner obligerait à choisir entre un hero cassé jusqu'à 1040 px et
+   une navigation à deux rangées.
 
-  .navigation-shell {
-    justify-content: space-between;
-  }
-
+   Mesuré sur le build réel : avec six entrées la barre exige 1028 px de viewport pour
+   tenir sur une seule rangée (marque 193,2 px, navigation 622,7 px, bouton de thème
+   154,9 px, plus les gouttières). En dessous elle se repliait sur deux rangées et
+   l'îlot collant passait de 64 à 92 px — 28 px de hauteur perdus à chaque défilement,
+   sur toute la plage d'une fenêtre non maximisée. 65rem (1040 px) place le seuil juste
+   au-dessus de ce besoin.
+   -------------------------------------------------------------------------- */
+@media (max-width: 65rem) {
   .menu-toggle {
     display: inline-flex;
   }
 
-  .liquid-bubble-three {
-    display: none;
-  }
-
   .section-nav--site {
     position: absolute;
-    top: calc(100% + 0.65rem);
+    top: calc(100% + var(--space-2));
     right: 0;
-    z-index: 10;
-    width: min(100%, 20rem);
+    z-index: 30;
+    width: min(100vw - var(--space-5), 20rem);
     display: none;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.2rem;
+    gap: var(--space-1);
     margin-left: 0;
-    margin-bottom: 0;
-    padding: 0.6rem;
-    border: 1px solid rgba(16, 42, 67, 0.14);
-    border-radius: 1.2rem;
+    padding: var(--space-2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
     background: var(--mobile-navigation-surface);
-    box-shadow: 0 1rem 2.5rem rgba(16, 62, 83, 0.2);
+    box-shadow: 0 1rem 2.5rem var(--glass-shadow);
   }
 
   .section-nav--site.is-open {
     display: flex;
   }
 
+  /* Le panneau déroulant n'est pas du verre fumé : il a son propre fond opaque, qui
+     suit le thème. Ses liens doivent donc revenir aux couleurs du thème, sinon du texte
+     clair se retrouve sur un panneau clair. */
   .section-nav--site a {
     width: 100%;
     justify-content: flex-start;
+    color: var(--text-body);
+  }
+
+  .section-nav--site a:hover {
+    background: var(--soft-surface-hover);
+    color: var(--text-accent);
+  }
+
+  .section-nav--site a:active {
+    background: var(--soft-surface-active);
+  }
+
+  .section-nav--site a[aria-current="location"] {
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+}
+
+@media (max-width: 50rem) {
+  /* Une colonne obligatoire : la colonne de portrait réclamait 14rem au minimum, ce
+     qui écrasait la colonne de texte à quelques dizaines de pixels et coupait chaque
+     mot. Le portrait passe au-dessus, recadré en bandeau pour ne pas repousser le CTA
+     hors de l'écran. */
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .hero-portrait {
+    order: -1;
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .hero-portrait img {
+    aspect-ratio: 3 / 2;
+    max-height: 34vh;
+    object-position: 50% 18%;
+  }
+
+  :root {
+    --header-height: 3.5rem;
+  }
+
+  .container {
+    width: min(100% - var(--space-4), 75rem);
+  }
+
+  .liquid-bubble-three {
+    display: none;
   }
 
   .hero {
-    padding: 1.25rem 0 2.75rem;
-  }
-
-  .section-nav {
-    justify-content: flex-start;
-    margin-bottom: 2rem;
-  }
-
-  .section-nav--site {
-    margin: 0;
-    justify-content: flex-start;
+    min-height: 0;
+    padding-block: var(--space-6) var(--space-7);
   }
 
   .hero-card {
-    --liquid-radius: 2rem;
-    padding: 1.4rem;
-    border-radius: var(--liquid-radius);
+    --liquid-radius: var(--radius-lg);
+    padding: var(--space-5);
   }
 
   .hero-actions {
@@ -1120,11 +2430,12 @@ h1 {
 
   .hero-details {
     display: grid;
-    gap: 0.65rem;
+    gap: var(--space-2);
   }
 
   .skills-grid,
-  .projects-grid {
+  .projects-grid,
+  .passions-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1132,14 +2443,18 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .timeline-icon {
-    width: 2.7rem;
-    height: 2.7rem;
+  /* `.passion-card` GARDE ses deux colonnes, contrairement à `.timeline-item` : la
+     timeline empile parce que son bloc de texte est long (dates, stack, sous-missions)
+     et qu'une colonne de 3rem l'étranglait. Une passion tient en deux lignes ; mesuré à
+     320 px, la colonne de texte garde encore ~190 px. */
+  .timeline-icon,
+  .passion-icon {
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .contact-links a {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    font-size: 0.92rem;
+    font-size: var(--text-sm);
     overflow-wrap: anywhere;
   }
 
@@ -1148,32 +2463,156 @@ h1 {
   }
 }
 
-:root[data-theme="dark"] .liquid-card {
-  border-color: rgba(207, 235, 241, 0.38);
-  box-shadow:
-    0 2.4rem 5.8rem rgba(0, 0, 0, 0.42),
-    0 0.48rem 1.35rem rgba(190, 230, 238, 0.13) inset,
-    0 -0.18rem 0.42rem rgba(0, 0, 0, 0.34) inset,
-    0.14rem 0 0.32rem rgba(218, 242, 246, 0.16) inset,
-    -0.14rem 0 0.32rem rgba(0, 0, 0, 0.24) inset;
+/* The portrait costs the header row 24.5px of min-content width, and the row is
+   `flex-wrap: nowrap`: past a point it is the avatar — `flex: 0 0 auto` — that leaves its
+   link's box instead of shrinking. Measured in WebKit on the real stylesheet: between
+   417px and 521px the photo overflowed its link by 22px and ran 6px INTO the Menu button,
+   the pill's outline crossing the face. Compacting the two labels earlier buys the room
+   back: with icon-only buttons the row needs 367px, so it fits from 417px down. */
+@media (max-width: 33rem) {
+  /* WCAG 4.1.2 — ces deux boutons n'ont PAS d'aria-label : leur nom accessible est
+     leur texte visible, par choix d'architecture (SiteHeader.tsx). Un `display: none`
+     retirait ce texte de l'arbre d'accessibilité et, sous 416 px, un lecteur d'écran
+     annonçait « bouton, bouton » (mesuré : nom vide à 390 px et à 320 px).
+     On reprend donc le patron `.visually-hidden` : le libellé sort de l'affichage mais
+     reste dans le calcul du nom. Les cibles restent ≥ 24×24 px (WCAG 2.5.8). */
+  .menu-toggle span,
+  .theme-toggle span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    padding: 0;
+    margin: -1px;
+  }
 }
 
-:root[data-theme="dark"] .liquid-card::before {
-  border-color: rgba(216, 239, 244, 0.18);
-  box-shadow:
-    0 0.22rem 0.62rem rgba(212, 239, 244, 0.12) inset,
-    0 -0.08rem 0.22rem rgba(0, 0, 0, 0.2) inset;
+@media (max-width: 26rem) {
+  .site-header__brand {
+    font-size: var(--text-base);
+  }
+
+  /* The header is `flex-wrap: nowrap`, so every pixel here is taken from the brand text.
+     The avatar gives some back rather than pushing the row into an overflow. */
+  .site-header__avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }
 
-:root[data-theme="dark"] .liquid-card::after {
-  border-color: rgba(214, 239, 244, 0.14);
-  box-shadow:
-    0 0.12rem 0.26rem rgba(213, 239, 244, 0.13),
-    0 0.24rem 0.8rem rgba(203, 235, 242, 0.08) inset;
+/* Below 345px even the compact row cannot hold the portrait: measured, it left its link
+   by 16.5px, came within 0.5px of the Menu button, and the focus ring — drawn on the
+   link's box — cut vertically through the face, leaving half the photo outside the very
+   indicator that designates it. The image is decorative, so dropping it is the honest
+   move rather than shaving four values to buy 3.5px of margin. */
+@media (max-width: 22rem) {
+  .site-header__avatar {
+    display: none;
+  }
 }
 
-:root[data-theme="dark"] .social-link:hover {
-  background: linear-gradient(135deg, #0e7583, #0a5365);
+/* -----------------------------------------------------------------------------
+   13. Préférences utilisateur
+   -------------------------------------------------------------------------- */
+
+/* APLATISSEMENT DES SURFACES TRANSLUCIDES — commun aux deux modes qui ont pour objet
+   même de rendre les surfaces opaques. Aucun des tokens ci-dessous n'était neutralisé,
+   ni ici ni dans `prefers-contrast: more` : les cartes devenaient opaques mais les
+   lavis, les puces et les tuiles d'icône restaient des couches alpha, donc leur couleur
+   effective continuait de dépendre de ce qui passait derrière. Autrement dit, les deux
+   modes ne tenaient leur promesse qu'à moitié.
+
+   Chaque valeur est la COMPOSITION MESURÉE du token translucide sur `--glass-fill-solid`
+   du thème correspondant (#ebf4f6 en clair, #0c1518 en sombre), c'est-à-dire le support
+   que `.liquid-card` prend dans ces deux modes. Rien n'est deviné, et rien ne change
+   d'apparence : seule la dépendance à l'arrière-plan disparaît.
+
+   Les deux modes partagent ce bloc à dessein : dupliquer ces valeurs dans deux requêtes
+   média est le moyen le plus sûr de les laisser dériver.
+
+   `--soft-surface`, `--soft-surface-hover` et (en clair) `--chip-surface` sont des alias
+   de `--panel-surface*` : ils suivent automatiquement et ne sont pas redéclarés.
+   Pires paires mesurées après aplatissement — clair : --control-border 3.92:1 sur
+   `--soft-surface-active`, 4.19:1 sur `--panel-surface-hover` ; sombre : --control-border
+   4.31:1 sur `--soft-surface-active`, 4.85:1 sur `--panel-surface-hover`. Aucune encre de
+   texte ne descend sous 4.5:1 dans l'un ou l'autre mode. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root {
+    --panel-surface: #e0e9eb; /* encre 0.05 sur #ebf4f6 */
+    --panel-surface-hover: #d5dee0; /* encre 0.10 */
+    --soft-surface-active: #ced7da; /* encre 0.13 */
+    --icon-surface-start: #d2eaf0; /* halo 0.24 */
+    --icon-surface-end: #c0e3eb; /* halo 0.42 */
+  }
+
+  :root[data-theme="dark"] {
+    --panel-surface: #161f22; /* encre claire 0.049 sur #0c1518 */
+    --panel-surface-hover: #273032; /* 0.125 */
+    --soft-surface-active: #2f383b; /* 0.164 */
+    --chip-surface: #161f22; /* 0.049 — pas un alias en sombre, mais même valeur */
+    --icon-surface-start: #0b282e; /* accent 0.20 */
+    --icon-surface-end: #072a32; /* halo 0.45 */
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-card {
+    background: var(--glass-fill-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header {
+    background: var(--header-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .liquid-bubble {
+    display: none;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Langage de formes : le squircle appliqué à tous les éléments arrondis, pas
+   seulement aux cartes. `corner-shape` n'existe que sur Chromium 139+ ; ailleurs la
+   déclaration est ignorée et le `border-radius` d'origine s'applique tel quel.
+   -------------------------------------------------------------------------- */
+@supports (corner-shape: superellipse(1.45)) {
+  .site-header__brand,
+  .skill-group li,
+  .experience-stack li,
+  .project-stack li,
+  .education-status,
+  .project-status,
+  .hero-current-role strong,
+  .accessibility-status span,
+  .hero-availability,
+  .accessibility-list li,
+  .section-nav--site,
+  .skip-link {
+    corner-shape: superellipse(1.45);
+  }
+
+  /* Les pastilles réellement circulaires gardent une superellipse plus douce, sinon
+     un rayon de 999px cumulé à une superellipse marquée produit un losange arrondi.
+     Les boutons et les contrôles du header portent désormais --radius-pill : ils
+     relèvent donc de cette règle et non de la superellipse marquée ci-dessus. */
+  .button,
+  .theme-toggle,
+  .menu-toggle,
+  .section-nav a,
+  .education-status,
+  .project-status,
+  .hero-current-role strong,
+  .accessibility-status span,
+  .hero-availability,
+  .contact-links a {
+    corner-shape: superellipse(1.2);
+  }
 }
 
 @media (prefers-contrast: more) {
@@ -1181,15 +2620,33 @@ h1 {
     display: none;
   }
 
+  /* `--glass-fill-solid`, et non `--site-background` : les deux modes doivent converger
+     sur le même support, sinon l'utilisateur qui demande explicitement plus de contraste
+     en obtient moins que celui qui demande moins de transparence, sur le même contenu.
+     Mesuré en clair, où le repli de carte (#ebf4f6, Y 0.890) est plus clair que la
+     page (#deedf0, Y 0.824) : --text-body 9.03:1 contre 8.39:1 sur la page,
+     --text-muted 7.27:1 contre 6.76:1, et la bordure --text-strong 11.06:1
+     contre 10.28:1. En SOMBRE le repli est plus sombre que la page (voir
+     --glass-fill-solid dans le bloc sombre), donc le gain va dans le même sens pour la
+     raison inverse : --text-body 10.46:1 contre 10.10:1, --text-muted 8.77:1
+     contre 8.47:1. */
   .liquid-card {
-    border-color: var(--ink);
-    background: var(--site-background);
+    border-color: var(--text-strong);
+    background: var(--glass-fill-solid);
     box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .liquid-card::before,
   .liquid-card::after {
     display: none;
+  }
+
+  .site-header {
+    background: var(--header-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }
 
@@ -1198,9 +2655,28 @@ h1 {
     display: none;
   }
 
+  /* Chromium ne désactive PAS `backdrop-filter` en couleurs forcées : mesuré, le header
+     gardait `blur(24px) saturate(1.7) contrast(0.55) brightness(0.4)`, ce qui assombrit
+     le `Canvas` forcé en une dalle gris foncé — les liens de navigation tombaient à
+     1.71:1 en clair. Les glyphes s'en sortent grâce au backplate de Chromium, mais les
+     icônes n'en bénéficient pas, et un moteur sans backplate (contraste élevé de
+     Firefox) perdrait le texte. Même classe de bug que celle déjà traitée par
+     --header-solid pour les trois autres modes de repli, oubliée ici. */
+  .site-header {
+    background: Canvas;
+    border: 1px solid CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .liquid-card,
   .section-nav--site {
     border: 1px solid CanvasText;
+  }
+
+  .liquid-card::before,
+  .liquid-card::after {
+    display: none;
   }
 }
 
@@ -1209,11 +2685,15 @@ h1 {
     scroll-behavior: auto;
   }
 
+  /* On coupe le mouvement, pas les transitions de couleur au survol. */
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    transition-property:
+      color, background-color, border-color, box-shadow, outline-color, text-decoration-color,
+      text-decoration-thickness !important;
+    transition-duration: 160ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
@@ -1221,6 +2701,5 @@ h1 {
   html.reveal-enabled [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
-    transition: none !important;
   }
 }

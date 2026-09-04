@@ -2300,42 +2300,24 @@ html.reveal-enabled [data-reveal]:focus-within {
   }
 }
 
-@media (max-width: 50rem) {
-  /* Une colonne obligatoire : la colonne de portrait réclamait 14rem au minimum, ce
-     qui écrasait la colonne de texte à quelques dizaines de pixels et coupait chaque
-     mot. Le portrait passe au-dessus, recadré en bandeau pour ne pas repousser le CTA
-     hors de l'écran. */
-  .hero-layout {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
-  }
+/* -----------------------------------------------------------------------------
+   Repli de la navigation en menu compact.
 
-  .hero-portrait {
-    order: -1;
-    max-width: 22rem;
-    margin-inline: auto;
-  }
+   Ce point de rupture est SÉPARÉ de celui de la mise en page (50rem) à dessein : la
+   navigation manque de place bien avant que le hero ait besoin de passer sur une
+   colonne. Les fusionner obligerait à choisir entre un hero cassé jusqu'à 1040 px et
+   une navigation à deux rangées.
 
-  .hero-portrait img {
-    aspect-ratio: 3 / 2;
-    max-height: 34vh;
-    object-position: 50% 18%;
-  }
-
-  :root {
-    --header-height: 3.5rem;
-  }
-
-  .container {
-    width: min(100% - var(--space-4), 75rem);
-  }
-
+   Mesuré sur le build réel : avec six entrées la barre exige 1028 px de viewport pour
+   tenir sur une seule rangée (marque 193,2 px, navigation 622,7 px, bouton de thème
+   154,9 px, plus les gouttières). En dessous elle se repliait sur deux rangées et
+   l'îlot collant passait de 64 à 92 px — 28 px de hauteur perdus à chaque défilement,
+   sur toute la plage d'une fenêtre non maximisée. 65rem (1040 px) place le seuil juste
+   au-dessus de ce besoin.
+   -------------------------------------------------------------------------- */
+@media (max-width: 65rem) {
   .menu-toggle {
     display: inline-flex;
-  }
-
-  .liquid-bubble-three {
-    display: none;
   }
 
   .section-nav--site {
@@ -2381,6 +2363,41 @@ html.reveal-enabled [data-reveal]:focus-within {
   .section-nav--site a[aria-current="location"] {
     background: var(--accent);
     color: var(--text-on-accent);
+  }
+}
+
+@media (max-width: 50rem) {
+  /* Une colonne obligatoire : la colonne de portrait réclamait 14rem au minimum, ce
+     qui écrasait la colonne de texte à quelques dizaines de pixels et coupait chaque
+     mot. Le portrait passe au-dessus, recadré en bandeau pour ne pas repousser le CTA
+     hors de l'écran. */
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .hero-portrait {
+    order: -1;
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .hero-portrait img {
+    aspect-ratio: 3 / 2;
+    max-height: 34vh;
+    object-position: 50% 18%;
+  }
+
+  :root {
+    --header-height: 3.5rem;
+  }
+
+  .container {
+    width: min(100% - var(--space-4), 75rem);
+  }
+
+  .liquid-bubble-three {
+    display: none;
   }
 
   .hero {

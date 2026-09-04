@@ -1082,3 +1082,26 @@ describe("polarité du fond de page", () => {
     ).toBeLessThan(MID_GREY_LUMINANCE);
   });
 });
+
+describe("insécabilité des rôles du chapeau", () => {
+  /**
+   * Le pendant CSS du test de balisage de `app.test.tsx`. Les deux sont
+   * nécessaires et aucun ne suffit : les `<span>` sans la règle laissent la
+   * coupure revenir, la règle sans les `<span>` ne s'applique à rien.
+   */
+  it("devrait empêcher la coupure à l'intérieur d'un rôle", () => {
+    expect(declarationValue(ruleBody(stylesheet, ".eyebrow-roles > span"), "white-space")).toBe(
+      "nowrap"
+    );
+  });
+
+  /**
+   * `white-space: nowrap` sur le chapeau ENTIER déborderait la carte sous 400 px :
+   * la ligne complète mesure trente-huit caractères capitalisés et espacés de
+   * 0.12em. La coupure doit rester possible entre les rôles, donc le sélecteur
+   * doit désigner les enfants et jamais l'élément lui-même.
+   */
+  it("devrait laisser le chapeau lui-même se replier", () => {
+    expect(() => declarationValue(ruleBody(stylesheet, ".eyebrow"), "white-space")).toThrow();
+  });
+});

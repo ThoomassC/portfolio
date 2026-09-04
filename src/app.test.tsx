@@ -152,6 +152,34 @@ describe("hero", () => {
       within(getHero()).getByText(/Disponible à partir d’octobre 2027 — CDI/i)
     ).toBeInTheDocument();
   });
+
+  /**
+   * Rendu à 390 px, la ligne de rôles se coupait sur le trait d'union de
+   * « Full-stack » : « FULL- / STACK » sur la toute première ligne de la page.
+   * jsdom ne calcule pas de mise en page, donc la coupure elle-même est
+   * invérifiable ici — ce test garde la seule chose qui la rend impossible : que
+   * chaque rôle soit un élément à lui, sur lequel `.eyebrow-roles > span` peut
+   * poser `white-space: nowrap`. Écrit en une seule chaîne, il n'y a plus rien à
+   * styler.
+   */
+  it("devrait porter chaque rôle du chapeau dans son propre élément", () => {
+    render(<App />);
+
+    const eyebrow = getHero().querySelector(".eyebrow-roles");
+
+    // `throw` plutôt qu'un `expect` : lui seul restreint le type pour la suite du
+    // test, et l'échec reste aussi lisible qu'une assertion.
+    if (eyebrow === null) {
+      throw new Error("chapeau de rôles introuvable dans le hero");
+    }
+
+    expect(Array.from(eyebrow.querySelectorAll("span"), (role) => role.textContent)).toEqual([
+      "Développeur logiciel",
+      "Full-stack",
+      "QA",
+    ]);
+    expect(eyebrow).toHaveTextContent("Développeur logiciel · Full-stack · QA");
+  });
 });
 
 describe("mentions retirées", () => {

@@ -772,6 +772,16 @@ h1 {
   text-transform: uppercase;
 }
 
+/*
+ * Each role stays in one piece. Rendered at 390 px, "Full-stack" split on its own
+ * hyphen into "FULL- / STACK" on the very first line of the page: a line break at a
+ * hyphen is the browser's default and no `hyphens` value turns it off. The wrap is
+ * still allowed between roles, on the separators, so no role can overflow the card.
+ */
+.eyebrow-roles > span {
+  white-space: nowrap;
+}
+
 /* -----------------------------------------------------------------------------
    4. Utilitaires
    -------------------------------------------------------------------------- */

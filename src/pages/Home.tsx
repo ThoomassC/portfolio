@@ -49,7 +49,10 @@ const Home = () => {
           <div className="hero-card liquid-card" data-reveal="scale">
             <div className="hero-layout">
               <div className="hero-content">
-                <p className="eyebrow">Développeur logiciel · Full-stack · QA</p>
+                <p className="eyebrow eyebrow-roles">
+                  <span>Développeur logiciel</span> · <span>Full-stack</span> ·{" "}
+                  <span>QA</span>
+                </p>
                 <h1 id="titre-principal">{profile.name}</h1>
                 <p className="hero-current-role">
                   <strong>Actuellement</strong>

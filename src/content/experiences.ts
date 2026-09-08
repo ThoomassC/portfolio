@@ -12,7 +12,7 @@ export const experiences: readonly Experience[] = [
       end: { label: "Septembre 2027", dateTime: "2027-09" },
     },
     description:
-      "Quatre missions successives couvrant la maintenance applicative, le développement mobile, l’automatisation des tests, puis l’infrastructure et le développement d’une plateforme de transport de colis.",
+      "Cinq missions successives couvrant la maintenance applicative, le développement mobile, l’automatisation des tests, l’infrastructure et le développement d’une plateforme de transport de colis, puis le développement d’une plateforme de radiologie médicale.",
     icon: IconBriefcase,
     stack: [],
     missions: [
@@ -49,11 +49,21 @@ export const experiences: readonly Experience[] = [
         title: "Infrastructure et développement — plateforme de transport de colis",
         range: {
           start: { label: "Août 2026", dateTime: "2026-08" },
-          // Mission en cours : pas de borne de fin.
+          end: { label: "Septembre 2026", dateTime: "2026-09" },
         },
         description:
           "Conception de l’infrastructure d’une application de transport de colis et développement de la plateforme, du provisionnement jusqu’aux écrans.",
         stack: ["Terraform", "Ansible", "Spring Boot", "React", "PostgreSQL", "Claude Code"],
+      },
+      {
+        title: "Développement et TMA — plateforme de radiologie médicale",
+        range: {
+          start: { label: "Septembre 2026", dateTime: "2026-09" },
+          // Mission en cours : pas de borne de fin.
+        },
+        description:
+          "Participation au développement d’une plateforme de radiologie médicale et maintenance applicative (TMA).",
+        stack: [],
       },
     ],
   },

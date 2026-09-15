@@ -8,9 +8,10 @@ Single-page en React 19 et TypeScript, avec un thème clair/sombre et une attent
 
 ## Choix techniques
 
-Site statique volontairement sobre en dépendances : **React 19**, **Vite** et
-**@tabler/icons-react** en production, rien d'autre. Pas de framework CSS, pas de routeur —
-la page est unique et navigue par ancres, donc un routeur n'apporterait qu'un poids inutile.
+Site statique volontairement sobre en dépendances : **React 19**, **Vite**,
+**@tabler/icons-react** et le socle partagé **@thomascaron/ui** en production. Pas de framework
+CSS, pas de routeur — la page est unique et navigue par ancres, donc un routeur n'apporterait
+qu'un poids inutile.
 
 La typographie s'appuie sur `system-ui` plutôt que sur une police téléchargée : c'est un
 choix assumé, qui évite 100 Ko de police et un décalage de rendu au chargement.

@@ -1676,6 +1676,23 @@ summary:focus-visible,
   line-height: 1.5;
 }
 
+/* `ChipList` rend une vraie `Tag` dans chaque entrée. Les anciennes règles de
+   compatibilité ciblent le `<li>` lui-même ; on neutralise donc son habillage
+   pour que la pilule partagée reste l'unique surface visible. */
+.skill-group ul > li,
+.experience-stack > li,
+.project-stack > li {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: normal;
+  line-height: inherit;
+}
+
 .experience-stack:empty,
 .project-stack:empty,
 .project-links:empty {

@@ -217,7 +217,7 @@ describe("passions", () => {
     render(<App />);
 
     const section = screen.getByRole("region", {
-      name: /ce que je fais du reste de mon temps/i,
+      name: /au-delà du code/i,
     });
 
     expect(section).toHaveAttribute("id", "passions");

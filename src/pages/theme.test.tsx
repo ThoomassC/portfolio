@@ -4,22 +4,14 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it } from "vitest";
 import App from "../App";
 import { MID_GREY_LUMINANCE, relativeLuminance } from "../test/color";
-import {
-  installThemeColorMeta,
-  removeThemeColorMeta,
-  themeColorContent,
-} from "../test/dom";
-import {
-  emitMediaChange,
-  setPrefersColorScheme,
-  setPrefersReducedMotion,
-} from "../test/setup";
+import { installThemeColorMeta, removeThemeColorMeta, themeColorContent } from "../test/dom";
+import { emitMediaChange, setPrefersColorScheme, setPrefersReducedMotion } from "../test/setup";
 
 const STORAGE_KEY = "portfolio-theme";
 const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 
 function getThemeToggle(): HTMLElement {
-  return screen.getByRole("button", { name: /thème sombre/i });
+  return screen.getByRole("switch", { name: /thème sombre/i });
 }
 
 function currentTheme(): string | undefined {
@@ -101,7 +93,7 @@ describe("thème", () => {
       render(
         <StrictMode>
           <App />
-        </StrictMode>,
+        </StrictMode>
       );
 
       expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
@@ -109,7 +101,7 @@ describe("thème", () => {
     });
   });
 
-  describe("bouton de bascule", () => {
+  describe("switch de thème", () => {
     it("devrait inverser le thème et mémoriser le choix au clic", async () => {
       const user = userEvent.setup();
       setPrefersColorScheme("light");
@@ -135,30 +127,30 @@ describe("thème", () => {
       expect(window.localStorage.getItem(STORAGE_KEY)).toBe("light");
     });
 
-    it("devrait refléter l'état du thème dans aria-pressed", async () => {
+    it("devrait refléter l'état du thème dans aria-checked", async () => {
       const user = userEvent.setup();
       setPrefersColorScheme("light");
       setPrefersReducedMotion(true);
       render(<App />);
       const toggle = getThemeToggle();
 
-      expect(toggle).toHaveAttribute("aria-pressed", "false");
+      expect(toggle).toHaveAttribute("aria-checked", "false");
 
       await user.click(toggle);
 
-      expect(toggle).toHaveAttribute("aria-pressed", "true");
+      expect(toggle).toHaveAttribute("aria-checked", "true");
     });
 
-    it("devrait annoncer aria-pressed à true au montage quand le thème sombre est déjà actif", () => {
+    it("devrait annoncer aria-checked à true au montage quand le thème sombre est déjà actif", () => {
       setPrefersColorScheme("dark");
       setPrefersReducedMotion(true);
 
       render(<App />);
 
-      expect(getThemeToggle()).toHaveAttribute("aria-pressed", "true");
+      expect(getThemeToggle()).toHaveAttribute("aria-checked", "true");
     });
 
-    it("devrait tirer son nom accessible de son texte visible, sans aria-label", () => {
+    it("devrait tirer son nom accessible de son libellé, sans aria-label", () => {
       setPrefersColorScheme("light");
       setPrefersReducedMotion(true);
       render(<App />);
@@ -177,8 +169,30 @@ describe("thème", () => {
 
       await user.click(getThemeToggle());
 
-      // Patron « toggle button » : l'état passe par aria-pressed, pas par le libellé.
+      // Le switch annonce son état via aria-checked et garde un libellé stable.
       expect(getThemeToggle()).toHaveTextContent(/thème sombre/i);
+    });
+
+    it("devrait basculer avec Espace et Entrée, en annonçant et mémorisant le thème", async () => {
+      const user = userEvent.setup();
+      setPrefersColorScheme("light");
+      setPrefersReducedMotion(true);
+      render(<App />);
+      const toggle = getThemeToggle();
+      toggle.focus();
+
+      await user.keyboard(" ");
+
+      expect(toggle).toHaveAttribute("aria-checked", "true");
+      expect(currentTheme()).toBe("dark");
+      expect(window.localStorage.getItem(STORAGE_KEY)).toBe("dark");
+
+      await user.keyboard("{Enter}");
+
+      expect(toggle).toHaveAttribute("aria-checked", "false");
+      expect(currentTheme()).toBe("light");
+      expect(window.localStorage.getItem(STORAGE_KEY)).toBe("light");
+      expect(toggle).toHaveFocus();
     });
   });
 
@@ -225,9 +239,7 @@ describe("thème", () => {
 
       render(<App />);
 
-      expect(relativeLuminance(themeColorContent())).toBeLessThan(
-        MID_GREY_LUMINANCE,
-      );
+      expect(relativeLuminance(themeColorContent())).toBeLessThan(MID_GREY_LUMINANCE);
     });
 
     it("devrait annoncer une couleur claire dès le montage en thème clair", () => {
@@ -237,9 +249,7 @@ describe("thème", () => {
 
       render(<App />);
 
-      expect(relativeLuminance(themeColorContent())).toBeGreaterThan(
-        MID_GREY_LUMINANCE,
-      );
+      expect(relativeLuminance(themeColorContent())).toBeGreaterThan(MID_GREY_LUMINANCE);
     });
 
     it("devrait suivre le thème au clic sur le bouton", async () => {
@@ -251,9 +261,7 @@ describe("thème", () => {
 
       await user.click(getThemeToggle());
 
-      expect(relativeLuminance(themeColorContent())).toBeLessThan(
-        MID_GREY_LUMINANCE,
-      );
+      expect(relativeLuminance(themeColorContent())).toBeLessThan(MID_GREY_LUMINANCE);
     });
   });
 });

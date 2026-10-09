@@ -7,6 +7,7 @@ export const profile = {
   mapsUrl: "https://www.google.com/maps?q=Mont-Saint-Aignan",
   linkedInUrl: "https://www.linkedin.com/in/thomas-caron27/",
   gitHubUrl: "https://github.com/ThoomassC",
+  availability: "Disponible à partir d’octobre 2027 — CDI",
   portrait: {
     src: "/assets/portrait-thomas-caron.jpg",
     width: 900,
@@ -18,6 +19,12 @@ export const profile = {
         ferait annoncer « Thomas Caron Thomas Caron, souriant, en chemise… ». Une même
         image peut recevoir des alternatives différentes selon son contexte. */
     alt: "Thomas Caron, souriant, en chemise bleu marine sur fond clair.",
+    cutout: {
+      src: "/assets/portrait-thomas-caron-cutout-v2.webp",
+      width: 1086,
+      height: 1448,
+      alt: "Thomas Caron, souriant, en chemise bleu marine.",
+    },
   },
   cv: {
     href: "/assets/CV-Thomas-Caron-Developpeur-Full-Stack-QA.pdf",

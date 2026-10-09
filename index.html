@@ -3,15 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/assets/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="Portfolio de Thomas Caron, développeur logiciel full-stack et QA."
     />
-    <!-- Doit rester aligné sur THEME_COLORS de src/hooks/useTheme.ts et sur
-         --site-background de src/index.css : c'est le fond de page que le navigateur
-         borde en haut de l'écran, le header étant un îlot flottant. -->
-    <meta name="theme-color" content="#deedf0" />
+    <!-- Aligné sur THEME_COLORS de src/hooks/useTheme.ts et sur le fond de page CSS. -->
+    <meta name="theme-color" content="#f7f4ea" />
+    <link
+      rel="preload"
+      href="/assets/fonts/anton-latin.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <script>
       // Applique le thème avant le premier rendu pour éviter tout flash.
       // Priorité : choix explicite mémorisé, sinon préférence du système.
@@ -22,7 +28,13 @@
           (stored !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
         if (dark) {
           document.documentElement.dataset.theme = "dark";
-          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#0f191c");
+          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#192139");
+          document
+            .querySelector('link[rel="icon"][type="image/svg+xml"]')
+            ?.setAttribute("href", "/assets/favicon-dark.svg");
+          document
+            .querySelector('link[rel="icon"][type="image/x-icon"]')
+            ?.setAttribute("href", "/assets/favicon-dark.ico");
         }
       } catch {
         // Le thème clair reste le thème par défaut.

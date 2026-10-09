@@ -1,11 +1,11 @@
 import type { NavigationItem } from "./types";
 
 export const navigationItems: readonly NavigationItem[] = [
+  { id: "projets", label: "Projets" },
   { id: "parcours", label: "Parcours" },
   { id: "competences", label: "Compétences" },
-  { id: "projets", label: "Projets" },
-  { id: "accessibilite", label: "Accessibilité" },
   { id: "passions", label: "Passions" },
+  { id: "accessibilite", label: "Accessibilité" },
   { id: "contact", label: "Contact" },
 ];
 

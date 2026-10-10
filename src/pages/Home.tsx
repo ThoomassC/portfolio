@@ -17,6 +17,7 @@ import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
 import { formations } from "../content/formations";
 import { passions } from "../content/passions";
+import { navigationItems } from "../content/navigation";
 import { profile } from "../content/profile";
 import { projects } from "../content/projects";
 import { skillGroups } from "../content/skills";
@@ -35,23 +36,29 @@ const DateRangeText = ({ range }: { readonly range: DateRange }) => (
   </span>
 );
 const SectionHeading = ({
-  number,
-  label,
+  sectionId,
   id,
   children,
 }: {
-  readonly number: string;
-  readonly label: string;
+  readonly sectionId: string;
   readonly id: string;
   readonly children: ReactNode;
-}) => (
-  <div className="section-heading" data-reveal="up">
-    <p className="section-index">
-      <span>{number} /</span> {label}
-    </p>
-    <h2 id={id}>{children}</h2>
-  </div>
-);
+}) => {
+  const index = navigationItems.findIndex((item) => item.id === sectionId);
+  const navigationItem = navigationItems[index];
+
+  return (
+    <div className="section-heading" data-reveal="up">
+      <h2 id={id}>
+        <span className="section-index">
+          <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{" "}
+          {navigationItem.label}
+        </span>{" "}
+        <span className="section-heading__title">{children}</span>
+      </h2>
+    </div>
+  );
+};
 const badgeVariantByStatus = {
   completed: "positive",
   "in-progress": "info",
@@ -132,9 +139,6 @@ const Home = () => {
 
       <section className="about-section section-dark" id="apropos" aria-labelledby="titre-apropos">
         <div className="container">
-          <p className="section-index" data-reveal="up">
-            <span>01 /</span> Faisons connaissance
-          </p>
           <h2 className="display-title" id="titre-apropos" data-reveal="up">
             À PROPOS
           </h2>
@@ -176,21 +180,18 @@ const Home = () => {
           </div>
           <div className="about-facts" data-reveal="up">
             <div>
-              <span>01</span>
               <p>
                 Développement
                 <br /> <strong>Web & mobile</strong>
               </p>
             </div>
             <div>
-              <span>02</span>
               <p>
                 Assurance qualité
                 <br /> <strong>Tests & automatisation</strong>
               </p>
             </div>
             <div>
-              <span>03</span>
               <p>
                 Formation actuelle
                 <br /> <strong>Architecture logicielle · Bac +5</strong>
@@ -207,7 +208,7 @@ const Home = () => {
       >
         <div className="container">
           <div className="section-topline">
-            <SectionHeading number="02" label="Sélection de projets" id="titre-projets">
+            <SectionHeading sectionId="projets" id="titre-projets">
               DU CODE
               <br /> <span>DU CONCRET</span>
             </SectionHeading>
@@ -217,13 +218,11 @@ const Home = () => {
             </p>
           </div>
           <div className="projects-grid">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <article className="project-card" data-reveal="up" key={project.id}>
                 <ProjectVisual id={project.id} />
                 <div className="project-meta">
-                  <span className="project-number">
-                    0{index + 1} / {project.date}
-                  </span>
+                  <span className="project-number">{project.date}</span>
                   <Badge
                     rootClassName="status-badge-root"
                     className={`project-status status-badge status-badge--${project.statusType}`}
@@ -272,7 +271,7 @@ const Home = () => {
       >
         <div className="container">
           <div className="section-topline">
-            <SectionHeading number="03" label="Expérience & formation" id="titre-parcours">
+            <SectionHeading sectionId="parcours" id="titre-parcours">
               UN PARCOURS
               <br /> <span>PLUSIEURS TERRAINS</span>
             </SectionHeading>
@@ -352,19 +351,18 @@ const Home = () => {
         aria-labelledby="titre-competences"
       >
         <div className="container">
-          <SectionHeading number="04" label="Compétences" id="titre-competences">
+          <SectionHeading sectionId="competences" id="titre-competences">
             LES BONS OUTILS
             <br /> <span>POUR BIEN CONSTRUIRE</span>
           </SectionHeading>
           <div className="skills-grid">
-            {skillGroups.map((group, index) => (
+            {skillGroups.map((group) => (
               <section
                 className="skill-group"
                 aria-labelledby={`skill-${group.id}`}
                 data-reveal="up"
                 key={group.id}
               >
-                <span className="skill-number">0{index + 1}</span>
                 <div>
                   <h3 id={`skill-${group.id}`}>{group.title}</h3>
                   <StackChips label={`Compétences ${group.title}`} items={group.items} />
@@ -386,7 +384,7 @@ const Home = () => {
       >
         <div className="container">
           <div className="section-topline">
-            <SectionHeading number="05" label="Hors du travail" id="titre-passions">
+            <SectionHeading sectionId="passions" id="titre-passions">
               AU-DELÀ
               <br /> <span>DU CODE</span>
             </SectionHeading>
@@ -433,14 +431,11 @@ const Home = () => {
         aria-labelledby="titre-accessibilite"
       >
         <div className="container accessibility-layout">
-          <div data-reveal="up">
-            <p className="section-index">
-              <span>06 /</span> Accessibilité
-            </p>
-            <h2 id="titre-accessibilite">
+          <div>
+            <SectionHeading sectionId="accessibilite" id="titre-accessibilite">
               LE WEB,
               <br /> POUR TOUS
-            </h2>
+            </SectionHeading>
             <p>
               Ce site vise un niveau de conformité aussi élevé que possible au RGAA 4.1.2 et fait
               l’objet d’améliorations continues.
@@ -490,19 +485,13 @@ const Home = () => {
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <div className="contact-intro" data-reveal="up">
-            <p className="section-index">
-              <span>07 /</span> Et si on échangeait ?
-            </p>
-            <p>
-              Une opportunité, une idée ou simplement
-              <br /> l’envie de faire connaissance.
-            </p>
-          </div>
-          <h2 id="titre-contact" data-reveal="up">
-            PARLONS<span>-EN</span>
+          <SectionHeading sectionId="contact" id="titre-contact">
+            <span className="contact-title-text">PARLONS-EN</span>
             <IconArrowUpRight stroke={1} aria-hidden="true" />
-          </h2>
+          </SectionHeading>
+          <p className="contact-intro" data-reveal="up">
+            Une opportunité, une idée ou simplement l’envie de faire connaissance.
+          </p>
           <address className="contact-links" data-reveal="up">
             <a className="contact-email" href={`mailto:${profile.email}`}>
               <IconMail size={23} aria-hidden="true" />

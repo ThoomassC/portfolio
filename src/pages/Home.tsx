@@ -79,7 +79,9 @@ const Home = () => {
             </p>
             <p className="hero-next-roles">
               <span className="hero-next-roles__label">Objectif : </span>
-              Responsable portefeuille projets · Management · Chefferie de projet
+              <span className="hero-next-role">Responsable portefeuille projets</span> ·{" "}
+              <span className="hero-next-role">Management</span> ·{" "}
+              <span className="hero-next-role">Chefferie de projet</span>
             </p>
           </div>
           <div className="hero-current-role" data-reveal="up">
@@ -113,20 +115,6 @@ const Home = () => {
               Basé à Rouen, France.
               <br /> Mobile Paris · remote partiel
             </p>
-            <ul className="hero-socials" aria-label="Profils en ligne">
-              <li>
-                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  GitHub <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-            </ul>
           </div>
           <a className="hero-scroll" href="#apropos">
             <span>Faire connaissance</span>
@@ -134,6 +122,20 @@ const Home = () => {
           </a>
         </div>
         <div className="hero-footer">
+          <ul className="hero-socials" aria-label="Profils en ligne">
+            <li>
+              <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+                GitHub <IconArrowUpRight size={14} aria-hidden="true" />
+                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+              </a>
+            </li>
+            <li>
+              <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+                LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
+                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+              </a>
+            </li>
+          </ul>
           <p className="hero-availability">{profile.availability}</p>
           <span className="hero-edition" aria-hidden="true">
             PORTFOLIO — ÉDITION 2026

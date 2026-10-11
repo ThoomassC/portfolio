@@ -72,38 +72,40 @@ const Home = () => {
       <section className="hero" aria-labelledby="titre-principal">
         <div className="hero-orbit hero-orbit--one" aria-hidden="true" />
         <div className="hero-orbit hero-orbit--two" aria-hidden="true" />
-        <div className="hero-intro" data-reveal="up">
-          <p className="eyebrow eyebrow-roles">
-            <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
-          </p>
-          <p>
-            De l’idée au produit.
-            <br /> Du code à la qualité.
-          </p>
+        <div className="hero-topline">
+          <div className="hero-intro" data-reveal="up">
+            <p className="eyebrow eyebrow-roles">
+              <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
+            </p>
+            <p className="hero-next-roles">
+              <span className="hero-next-roles__label">Objectif : </span>
+              Responsable portefeuille projets · Management · Chefferie de projet
+            </p>
+          </div>
+          <div className="hero-current-role" data-reveal="up">
+            <span className="hero-current-label">
+              <span className="status-dot" aria-hidden="true" />
+              Actuellement
+            </span>
+            <p>
+              <strong>Développeur Full Stack chez Blue Soft</strong>
+            </p>
+          </div>
         </div>
-        <div className="hero-current-role" data-reveal="up">
-          <span className="status-dot" aria-hidden="true" />
-          <p>
-            Actuellement
-            <br />{" "}
-            <strong>
-              Développeur Full Stack
-              <br /> chez Blue Soft
-            </strong>
-          </p>
-        </div>
-        <h1 id="titre-principal" className="hero-name">
-          {profile.name}
-        </h1>
-        <div className="hero-portrait">
-          <img
-            src={profile.portrait.cutout.src}
-            width={profile.portrait.cutout.width}
-            height={profile.portrait.cutout.height}
-            alt={profile.portrait.cutout.alt}
-            fetchPriority="high"
-            decoding="async"
-          />
+        <div className="hero-identity">
+          <h1 id="titre-principal" className="hero-name">
+            {profile.name}
+          </h1>
+          <div className="hero-portrait">
+            <img
+              src={profile.portrait.cutout.src}
+              width={profile.portrait.cutout.width}
+              height={profile.portrait.cutout.height}
+              alt={profile.portrait.cutout.alt}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
         </div>
         <div className="hero-bottom">
           <div className="hero-location">
@@ -131,10 +133,12 @@ const Home = () => {
             <IconArrowDown aria-hidden="true" size={42} stroke={1.3} />
           </a>
         </div>
-        <span className="hero-edition" aria-hidden="true">
-          PORTFOLIO — ÉDITION 2026
-        </span>
-        <p className="hero-availability">{profile.availability}</p>
+        <div className="hero-footer">
+          <p className="hero-availability">{profile.availability}</p>
+          <span className="hero-edition" aria-hidden="true">
+            PORTFOLIO — ÉDITION 2026
+          </span>
+        </div>
       </section>
 
       <section className="about-section section-dark" id="apropos" aria-labelledby="titre-apropos">

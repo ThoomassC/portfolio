@@ -86,6 +86,11 @@ La commande `deploy:recette` vérifie la branche, l'absence de modifications non
 committées et l'égalité du commit courant avec `origin/recette`. Elle cible explicitement
 le projet Vercel de recette, indépendamment du lien local `.vercel`.
 
+L’aperçu des liens utilise `public/assets/og-portrait-cobalt-v1.jpg` (1200 × 630).
+Les métadonnées HTML prennent leur domaine dans `VITE_SITE_URL` : `.env` pour la
+production et `.env.recette` pour la recette. Le build de recette sélectionne
+automatiquement le mode Vite `recette`. Ces fichiers ne contiennent aucun secret.
+
 **La fusion vers `develop`/`main`, la création de la release et le déploiement en production
 attendent toujours le go explicite de Thomas.** La branche `main` pilote la production Vercel.
 

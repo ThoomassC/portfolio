@@ -7,7 +7,7 @@ if (branch !== "recette") {
   process.exit(1);
 }
 
-const result = spawnSync("npm", ["run", "build"], { stdio: "inherit" });
+const result = spawnSync("npm", ["run", "build", "--", "--mode", "recette"], { stdio: "inherit" });
 if (result.error) {
   console.error(result.error.message);
 }

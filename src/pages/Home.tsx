@@ -78,7 +78,7 @@ const Home = () => {
               <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
             </p>
             <p className="hero-next-roles">
-              <span className="hero-next-roles__label">Objectif : </span>
+              <span className="hero-next-roles__label">Objectifs : </span>
               <span className="hero-next-role">Responsable portefeuille projets</span> ·{" "}
               <span className="hero-next-role">Management</span> ·{" "}
               <span className="hero-next-role">Chefferie de projet</span>

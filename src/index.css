@@ -540,6 +540,8 @@ ol {
   padding-inline: var(--hero-inline-space);
 }
 .hero-intro {
+  position: relative;
+  top: -1rem;
   max-width: 26rem;
 }
 .eyebrow {
@@ -570,7 +572,7 @@ ol {
   flex-direction: column;
   align-items: flex-end;
   justify-self: end;
-  gap: 0.45rem;
+  gap: 0.625rem;
   max-width: 100%;
   font-size: 0.8125rem;
 }
@@ -2028,6 +2030,9 @@ ol {
   .hero {
     padding-top: 80px;
   }
+  .hero-intro {
+    top: -0.25rem;
+  }
   .hero-topline {
     gap: 0.35rem;
   }
@@ -2060,6 +2065,7 @@ ol {
   .hero-intro {
     grid-column: 2;
     grid-row: 1;
+    top: 0;
     padding-right: var(--hero-inline-space);
     max-width: none;
   }

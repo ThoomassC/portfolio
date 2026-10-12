@@ -72,38 +72,42 @@ const Home = () => {
       <section className="hero" aria-labelledby="titre-principal">
         <div className="hero-orbit hero-orbit--one" aria-hidden="true" />
         <div className="hero-orbit hero-orbit--two" aria-hidden="true" />
-        <div className="hero-intro" data-reveal="up">
-          <p className="eyebrow eyebrow-roles">
-            <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
-          </p>
-          <p>
-            De l’idée au produit.
-            <br /> Du code à la qualité.
-          </p>
+        <div className="hero-topline">
+          <div className="hero-intro" data-reveal="up">
+            <p className="eyebrow eyebrow-roles">
+              <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
+            </p>
+            <p className="hero-next-roles">
+              <span className="hero-next-roles__label">Objectifs : </span>
+              <span className="hero-next-role">Responsable portefeuille projets</span> ·{" "}
+              <span className="hero-next-role">Management</span> ·{" "}
+              <span className="hero-next-role">Chefferie de projet</span>
+            </p>
+          </div>
+          <div className="hero-current-role" data-reveal="up">
+            <span className="hero-current-label">
+              <span className="status-dot" aria-hidden="true" />
+              Actuellement
+            </span>
+            <p>
+              <strong>Développeur Full Stack chez Blue Soft</strong>
+            </p>
+          </div>
         </div>
-        <div className="hero-current-role" data-reveal="up">
-          <span className="status-dot" aria-hidden="true" />
-          <p>
-            Actuellement
-            <br />{" "}
-            <strong>
-              Développeur Full Stack
-              <br /> chez Blue Soft
-            </strong>
-          </p>
-        </div>
-        <h1 id="titre-principal" className="hero-name">
-          {profile.name}
-        </h1>
-        <div className="hero-portrait">
-          <img
-            src={profile.portrait.cutout.src}
-            width={profile.portrait.cutout.width}
-            height={profile.portrait.cutout.height}
-            alt={profile.portrait.cutout.alt}
-            fetchPriority="high"
-            decoding="async"
-          />
+        <div className="hero-identity">
+          <h1 id="titre-principal" className="hero-name">
+            {profile.name}
+          </h1>
+          <div className="hero-portrait">
+            <img
+              src={profile.portrait.cutout.src}
+              width={profile.portrait.cutout.width}
+              height={profile.portrait.cutout.height}
+              alt={profile.portrait.cutout.alt}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </div>
         </div>
         <div className="hero-bottom">
           <div className="hero-location">
@@ -111,30 +115,32 @@ const Home = () => {
               Basé à Rouen, France.
               <br /> Mobile Paris · remote partiel
             </p>
-            <ul className="hero-socials" aria-label="Profils en ligne">
-              <li>
-                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  GitHub <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-            </ul>
           </div>
           <a className="hero-scroll" href="#apropos">
             <span>Faire connaissance</span>
             <IconArrowDown aria-hidden="true" size={42} stroke={1.3} />
           </a>
         </div>
-        <span className="hero-edition" aria-hidden="true">
-          PORTFOLIO — ÉDITION 2026
-        </span>
-        <p className="hero-availability">{profile.availability}</p>
+        <div className="hero-footer">
+          <ul className="hero-socials" aria-label="Profils en ligne">
+            <li>
+              <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+                GitHub <IconArrowUpRight size={14} aria-hidden="true" />
+                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+              </a>
+            </li>
+            <li>
+              <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+                LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
+                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+              </a>
+            </li>
+          </ul>
+          <p className="hero-availability">{profile.availability}</p>
+          <span className="hero-edition" aria-hidden="true">
+            PORTFOLIO — ÉDITION 2026
+          </span>
+        </div>
       </section>
 
       <section className="about-section section-dark" id="apropos" aria-labelledby="titre-apropos">

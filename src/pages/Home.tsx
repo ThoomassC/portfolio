@@ -76,12 +76,7 @@ const Home = () => {
               <p className="eyebrow-roles">
                 <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
               </p>
-              <p className="hero-next-roles">
-                Objectifs : responsable portefeuille projets · management · chefferie de projet
-              </p>
-            </div>
-            <div className="hero-current">
-              <p>
+              <p className="hero-current">
                 <span className="status-dot" aria-hidden="true" />
                 Actuellement développeur full stack chez Blue Soft
               </p>

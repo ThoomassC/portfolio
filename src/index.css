@@ -468,8 +468,6 @@ ol {
 }
 .hero-details {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1.5rem 3rem;
   max-width: 46rem;
   margin-top: 2.5rem;
   font-size: 0.875rem;
@@ -490,10 +488,8 @@ ol {
 .eyebrow-roles > span {
   white-space: nowrap;
 }
-.hero-next-roles {
-  margin-top: 0.4rem;
-}
-.hero-current p:first-child {
+.hero-current {
+  margin-top: 0.5rem;
   color: var(--text-strong);
 }
 .status-dot {

@@ -2,7 +2,7 @@ import type { Formation } from "./types";
 
 export const formations: readonly Formation[] = [
   {
-    title: "Mastère Spécialisé",
+    title: "Mastère Spécialisé® Manager de Portefeuille de Projets – Transition Numérique",
     level: "Bac +6",
     status: "À venir",
     statusType: "upcoming",

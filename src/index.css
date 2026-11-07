@@ -480,10 +480,12 @@ ol {
 }
 .eyebrow-roles {
   color: var(--text-strong);
-  font-weight: 500;
+  font-family: var(--display-font);
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  font-size: 1.25rem;
+  line-height: 1.2;
 }
 .eyebrow-roles > span {
   white-space: nowrap;
@@ -514,7 +516,7 @@ ol {
   border-top: 1px solid var(--line);
   font-size: 0.8125rem;
 }
-.hero-availability {
+.hero-next-step {
   color: var(--text-strong);
   margin-right: auto;
 }
@@ -939,8 +941,10 @@ ol {
   line-height: 1.2;
   text-transform: uppercase;
 }
-.contact-statement + .section-eyebrow {
+.contact-next-step {
+  max-width: 40rem;
   margin-top: 1rem;
+  color: var(--text-body);
 }
 .contact-rows {
   display: grid;
@@ -1146,7 +1150,7 @@ ol {
     gap: 0 1.25rem;
     margin-top: 1.5rem;
   }
-  .hero-availability {
+  .hero-next-step {
     flex-basis: 100%;
   }
   .about-layout,

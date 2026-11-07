@@ -157,12 +157,21 @@ describe("hero", () => {
     ).toMatch(/linkedin\.com/i);
   });
 
-  it("devrait annoncer la disponibilité", () => {
+  it("devrait annoncer le projet de Mastère Spécialisé au CESI", () => {
     render(<App />);
 
     expect(
-      within(getHero()).getByText(/Disponible à partir d’octobre 2027 — CDI/i)
+      within(getHero()).getByText(
+        /Mastère Spécialisé® Manager de Portefeuille de Projets – Transition Numérique/
+      )
     ).toBeInTheDocument();
+  });
+
+  it("devrait ne plus annoncer de disponibilité en CDI ni de mobilité à Paris", () => {
+    render(<App />);
+
+    expect(screen.queryByText(/Disponible à partir d’octobre 2027/i)).toBeNull();
+    expect(within(getHero()).queryByText(/mobile Paris/i)).toBeNull();
   });
 
   /**

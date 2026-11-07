@@ -88,11 +88,11 @@ const Home = () => {
                 <span className="status-dot" aria-hidden="true" />
                 Actuellement développeur full stack chez Blue Soft
               </p>
-              <p>Basé à Rouen, France · mobile Paris · remote partiel</p>
+              <p>Basé à Rouen, France · remote partiel</p>
             </div>
           </div>
           <div className="hero-footer">
-            <p className="hero-availability">{profile.availability}</p>
+            <p className="hero-next-step">{profile.nextStep}</p>
             <ul className="hero-socials" aria-label="Profils en ligne">
               <li>
                 <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
@@ -435,8 +435,8 @@ const Home = () => {
             Une opportunité, une idée
             <br /> ou l’envie de faire connaissance ?
           </p>
-          <p className="section-eyebrow" data-reveal="up">
-            {profile.availability}
+          <p className="contact-next-step" data-reveal="up">
+            {profile.nextStep}
           </p>
           <address className="contact-rows" data-reveal="up">
             <a href={`mailto:${profile.email}`}>

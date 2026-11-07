@@ -7,7 +7,9 @@ export const profile = {
   mapsUrl: "https://www.google.com/maps?q=Mont-Saint-Aignan",
   linkedInUrl: "https://www.linkedin.com/in/thomas-caron27/",
   gitHubUrl: "https://github.com/ThoomassC",
-  availability: "Disponible à partir d’octobre 2027 — CDI",
+  /** Intitulé officiel du Bac +6 visé au CESI, à reprendre tel quel. */
+  nextStep:
+    "Je souhaite poursuivre en Mastère Spécialisé® Manager de Portefeuille de Projets – Transition Numérique au CESI (Bac +6).",
   portrait: {
     src: "/assets/portrait-thomas-caron.jpg",
     width: 900,

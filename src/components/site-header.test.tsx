@@ -158,3 +158,20 @@ describe("menu mobile de l'en-tête", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 });
+
+describe("liens directs de l'en-tête", () => {
+  it("devrait proposer l'e-mail et le CV, sans répéter GitHub ni LinkedIn de la carte d'accueil", () => {
+    render(<App />);
+    const links = within(screen.getByRole("list", { name: /liens directs/i }));
+
+    expect(links.getByRole("link", { name: /e-mail/i })).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`
+    );
+    expect(links.getByRole("link", { name: /^cv/i })).toHaveAttribute(
+      "download",
+      profile.cv.fileName
+    );
+    expect(links.queryByRole("link", { name: /github|linkedin/i })).toBeNull();
+  });
+});

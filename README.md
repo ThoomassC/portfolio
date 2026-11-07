@@ -7,10 +7,10 @@ page sombre et cinématographique, nom géant posé sur un portrait en noir et b
 titres condensés, listes à filets fins, grain de film, navigation verticale qui suit
 la section lue et apparitions au défilement.
 
-Le thème sombre est la référence : fond `#0A0A0A`, texte `#FAFAFA`, corps `#A3A3A3`,
-filets `#262626`. Le thème clair en est l'inverse monochrome (`#F5F5F4`, `#0A0A0A`,
-`#3F3F46`). Le thème suit la préférence du système, puis le choix mémorisé. La mise
-en couleur sera retravaillée élément par élément.
+En attendant la mise en couleur élément par élément, le noir est remplacé par le marine
+de la v2 : thème clair `#F5F5F4` avec texte et actions `#232F52`, thème sombre bleu nuit
+`#192139` avec texte `#FAFAFA` et corps `#A3A3A3`. Le thème suit la préférence du
+système, puis le choix mémorisé.
 
 Le parcours, les missions, les formations, les compétences, les projets, les passions
 et les coordonnées restent centralisés dans `src/content`.

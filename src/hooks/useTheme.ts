@@ -15,7 +15,7 @@ const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
  */
 const THEME_COLORS: Record<Theme, string> = {
   light: "#f5f5f4",
-  dark: "#0a0a0a",
+  dark: "#192139",
 };
 
 /** Assets communs au header et aux onglets du navigateur, sans police externe. */

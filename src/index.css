@@ -16,24 +16,24 @@
   --surface: #fafaf9;
   --hero-surface: #ededeb;
   --soft-surface: #e7e5e4;
-  --text-strong: #0a0a0a;
+  --text-strong: #232f52;
   --text-body: #3f3f46;
   --text-muted: #57534e;
   --line: #d6d3d1;
   --control-border: #78716c;
-  --inverse-surface: #0a0a0a;
+  --inverse-surface: #232f52;
   --inverse-text: #fafafa;
   --inverse-muted: #a3a3a3;
   --inverse-line: #404040;
   --inverse-control-border: #8a8a8a;
-  --inverse-soft-surface: #1a1a1a;
-  --accent: #0a0a0a;
+  --inverse-soft-surface: #2c395b;
+  --accent: #232f52;
   --accent-ink: #fafafa;
   --inverse-accent: #fafafa;
-  --inverse-accent-ink: #0a0a0a;
-  --contact-surface: #0a0a0a;
+  --inverse-accent-ink: #232f52;
+  --contact-surface: #232f52;
   --contact-ink: #fafafa;
-  --focus: #0a0a0a;
+  --focus: #232f52;
   --chip-surface: #e7e5e4;
   --grain-opacity: 0.05;
   --positive-surface: #dcfce7;
@@ -60,29 +60,29 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --site-background: #0a0a0a;
-  --surface: #111111;
-  --hero-surface: #0a0a0a;
-  --soft-surface: #1a1a1a;
+  --site-background: #192139;
+  --surface: #1d2640;
+  --hero-surface: #192139;
+  --soft-surface: #2c395b;
   --text-strong: #fafafa;
   --text-body: #a3a3a3;
   --text-muted: #8f8f8f;
-  --line: #262626;
+  --line: #2c395b;
   --control-border: #737373;
   --inverse-surface: #fafafa;
-  --inverse-text: #0a0a0a;
+  --inverse-text: #192139;
   --inverse-muted: #404040;
   --inverse-line: #d4d4d4;
   --inverse-control-border: #737373;
   --inverse-soft-surface: #e5e5e5;
   --accent: #fafafa;
-  --accent-ink: #0a0a0a;
-  --inverse-accent: #0a0a0a;
+  --accent-ink: #192139;
+  --inverse-accent: #192139;
   --inverse-accent-ink: #fafafa;
   --contact-surface: #fafafa;
-  --contact-ink: #0a0a0a;
+  --contact-ink: #192139;
   --focus: #fafafa;
-  --chip-surface: #1a1a1a;
+  --chip-surface: #2c395b;
   --grain-opacity: 0.07;
   --positive-surface: #13251a;
   --positive-ink: #a7e3b5;
@@ -296,7 +296,7 @@ ol {
 .theme-toggle {
   --theme-toggle-width: 60px;
   --theme-toggle-thumb-size: 26px;
-  --theme-toggle-inset: 3px;
+  --theme-toggle-inset: 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1200,7 +1200,7 @@ ol {
 }
 @media (prefers-contrast: more) {
   :root {
-    --text-body: #0a0a0a;
+    --text-body: #232f52;
     --text-muted: #3f3f46;
     --line: #78716c;
     --grain-opacity: 0;

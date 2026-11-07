@@ -20,8 +20,8 @@ const THEME_COLORS: Record<Theme, string> = {
 
 /** Assets communs au header et aux onglets du navigateur, sans police externe. */
 export const THEME_ICONS: Record<Theme, { svg: string; ico: string }> = {
-  light: { svg: "/assets/favicon.svg", ico: "/assets/favicon.ico" },
-  dark: { svg: "/assets/favicon-dark.svg", ico: "/assets/favicon-dark.ico" },
+  light: { svg: "/assets/favicon-v2.svg", ico: "/assets/favicon-v2.ico" },
+  dark: { svg: "/assets/favicon-v2-dark.svg", ico: "/assets/favicon-v2-dark.ico" },
 };
 
 function isTheme(value: string | null): value is Theme {

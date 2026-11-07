@@ -100,7 +100,7 @@ const SiteHeader = () => {
           aria-controls="navigation-principale"
           onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
         >
-          <span>Menu</span>
+          <span className="visually-hidden">Menu</span>
           {isMenuOpen ? (
             <IconX aria-hidden="true" size={21} />
           ) : (

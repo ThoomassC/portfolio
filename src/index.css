@@ -504,9 +504,9 @@ ol {
   display: none;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  min-height: 44px;
-  padding: 0 0.65rem;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   color: inherit;
   background: var(--soft-surface);
   border: 1px solid var(--control-border);
@@ -523,8 +523,9 @@ ol {
   overflow: clip;
   display: grid;
   grid-template-rows: auto minmax(min(6rem, 14dvh), 1fr) auto auto;
-  height: calc(100vh - var(--page-inset));
-  height: calc(100dvh - var(--page-inset));
+  /* Même retrait en bas que sur les côtés : la carte flotte dans le premier écran. */
+  height: calc(100vh - 2 * var(--page-inset));
+  height: calc(100dvh - 2 * var(--page-inset));
   min-height: min-content;
   padding-top: clamp(6.5rem, 15dvh, 9.125rem);
   border-radius: var(--radius-section);
@@ -852,6 +853,9 @@ ol {
   letter-spacing: 0.035em;
 }
 .project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
   margin-top: 0.5rem;
 }
 .projects-note {
@@ -1098,6 +1102,308 @@ ol {
   position: absolute;
   bottom: 26%;
   right: 31%;
+}
+
+/* Projets perso : mêmes jetons que les compositions existantes, un objet par projet. */
+.visual-word {
+  position: absolute;
+  z-index: 5;
+  bottom: 24px;
+  left: 28px;
+  font-family: var(--display-font);
+  font-size: clamp(2rem, 4.8vw, 4.5rem);
+  line-height: 1.05;
+}
+.visual-word span {
+  display: block;
+  font-family: var(--body-font);
+  font-size: 0.625rem;
+  letter-spacing: 0;
+  margin-top: 8px;
+}
+.visual-symbol {
+  position: absolute;
+  bottom: 22px;
+  right: 24px;
+}
+.project-visual--astrologie {
+  background: var(--soft-surface);
+  color: var(--text-strong);
+}
+.zodiac-wheel {
+  position: absolute;
+  right: 8%;
+  top: 14%;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--control-border);
+  background: repeating-conic-gradient(
+    from -15deg,
+    var(--line) 0deg 1deg,
+    transparent 1deg 30deg
+  );
+  display: grid;
+  place-items: center;
+  transition: transform 900ms;
+}
+.project-card:hover .zodiac-wheel {
+  transform: rotate(30deg);
+}
+.zodiac-wheel__inner {
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 10px 12px 0 var(--accent-halo);
+  display: grid;
+  place-items: center;
+}
+.zodiac-wheel__inner > svg {
+  width: 55%;
+  height: 55%;
+}
+.project-visual--astronomie {
+  background: var(--inverse-surface);
+  color: var(--inverse-text);
+}
+.project-visual--astronomie .visual-symbol {
+  color: var(--inverse-muted);
+}
+.orbit-system {
+  position: absolute;
+  right: -6%;
+  top: 8%;
+  width: 62%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+.orbit-system__sun {
+  position: absolute;
+  width: 18%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--inverse-accent);
+  box-shadow: 0 0 30px var(--inverse-accent);
+}
+.orbit-system__ring {
+  position: absolute;
+  border: 1px solid var(--inverse-line);
+  border-radius: 50%;
+  transition: transform 900ms;
+}
+.orbit-system__ring--1 {
+  width: 42%;
+  height: 42%;
+}
+.orbit-system__ring--2 {
+  width: 68%;
+  height: 68%;
+  transform: rotate(40deg);
+}
+.orbit-system__ring--3 {
+  width: 96%;
+  height: 96%;
+  transform: rotate(-70deg);
+}
+.project-card:hover .orbit-system__ring--1 {
+  transform: rotate(90deg);
+}
+.project-card:hover .orbit-system__ring--2 {
+  transform: rotate(100deg);
+}
+.project-card:hover .orbit-system__ring--3 {
+  transform: rotate(-30deg);
+}
+.orbit-system__ring > i {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--inverse-text);
+}
+.orbit-system__ring--3 > i {
+  width: 14px;
+  height: 14px;
+  top: -7px;
+  background: var(--inverse-muted);
+}
+.project-visual--oral {
+  background: var(--hero-surface);
+  color: var(--text-strong);
+}
+.slide-stack {
+  position: absolute;
+  right: 9%;
+  top: 16%;
+  width: 46%;
+  aspect-ratio: 16 / 10;
+}
+.slide-stack > span {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-inner);
+  background: var(--soft-surface);
+  box-shadow: 0 10px 24px var(--shadow);
+  transition: transform 450ms;
+}
+.slide-stack > span:nth-child(1) {
+  transform: translate(14%, -12%) rotate(8deg);
+}
+.slide-stack > span:nth-child(2) {
+  transform: translate(7%, -6%) rotate(4deg);
+}
+.project-card:hover .slide-stack > span:nth-child(1) {
+  transform: translate(20%, -16%) rotate(12deg);
+}
+.slide-stack__front {
+  background: var(--surface) !important;
+  padding: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 8%;
+  transform: rotate(-3deg);
+}
+.slide-stack__front > b {
+  font-family: var(--display-font);
+  font-weight: 400;
+  font-size: clamp(8px, 1.1vw, 14px);
+  color: var(--accent);
+}
+.slide-stack__front > i {
+  height: 6%;
+  border-radius: var(--radius-pill);
+  background: var(--soft-surface);
+}
+.slide-stack__front > i:last-child {
+  width: 60%;
+}
+.project-visual--opale {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.opale-swatches {
+  position: absolute;
+  top: 22%;
+  right: 8%;
+  display: flex;
+}
+.opale-swatches > span {
+  width: clamp(36px, 6vw, 72px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--accent-ink);
+  margin-left: -14px;
+  transition: transform 450ms;
+}
+.opale-swatches > span:nth-child(1) {
+  background: var(--site-background);
+}
+.opale-swatches > span:nth-child(2) {
+  background: var(--hero-surface);
+}
+.opale-swatches > span:nth-child(3) {
+  background: var(--line);
+}
+.opale-swatches > span:nth-child(4) {
+  background: var(--inverse-surface);
+}
+.project-card:hover .opale-swatches > span:nth-child(odd) {
+  transform: translateY(-8px);
+}
+.project-visual--board {
+  background: var(--inverse-surface);
+  color: var(--inverse-text);
+}
+.project-visual--board .visual-symbol {
+  color: var(--inverse-muted);
+}
+.board-columns {
+  position: absolute;
+  inset: 20% 10% 28% 10%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8%;
+  transform: rotate(-4deg);
+  transition: transform 450ms;
+}
+.project-card:hover .board-columns {
+  transform: rotate(0);
+}
+.board-columns > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10%;
+}
+.board-columns b {
+  height: 6px;
+  width: 60%;
+  border-radius: var(--radius-pill);
+  background: var(--inverse-accent);
+}
+.board-columns i {
+  height: 22%;
+  border-radius: 8px;
+  background: var(--inverse-soft-surface);
+  border: 1px solid var(--inverse-line);
+}
+.board-live {
+  position: absolute;
+  bottom: 26px;
+  left: 28px;
+  font-size: 0.625rem;
+  letter-spacing: 0.07em;
+  color: var(--inverse-accent);
+}
+.project-visual--travels {
+  background: var(--soft-surface);
+  color: var(--text-strong);
+}
+.travels-map {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--visual-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--visual-grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.travels-route {
+  position: absolute;
+  inset: 18% 6% 30% 6%;
+  width: 88%;
+  height: 52%;
+  overflow: visible;
+}
+.travels-route path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  vector-effect: non-scaling-stroke;
+}
+.travels-pin {
+  position: absolute;
+  color: var(--accent);
+  transition: transform 450ms;
+}
+.travels-pin--1 {
+  left: 4%;
+  top: 30%;
+}
+.travels-pin--2 {
+  left: 53%;
+  top: 34%;
+}
+.travels-pin--3 {
+  right: 3%;
+  top: 30%;
+}
+.project-card:hover .travels-pin {
+  transform: translateY(-6px);
 }
 
 /* Les badges Opale gardent leur composant, avec des surfaces opaques mesurables. */
@@ -1704,8 +2010,6 @@ ol {
   }
   .menu-toggle {
     border: 0;
-    padding-inline: 0.35rem;
-    font-size: 0.6875rem;
   }
   .theme-toggle {
     --theme-toggle-width: 68px;
@@ -1852,6 +2156,24 @@ ol {
   }
   .budget-word {
     font-size: 3rem;
+  }
+  .visual-word {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+  .orbit-system {
+    width: 54%;
+    right: -16%;
+    top: 10%;
+  }
+  .zodiac-wheel {
+    width: 36%;
+    top: 10%;
+    right: 6%;
+  }
+  .slide-stack {
+    width: 38%;
+    top: 12%;
+    right: 6%;
   }
   .api-window code {
     font-size: 11px;

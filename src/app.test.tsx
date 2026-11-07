@@ -228,9 +228,7 @@ describe("passions", () => {
   it("devrait rendre la section avec son titre accessible", () => {
     render(<App />);
 
-    const section = screen.getByRole("region", {
-      name: /au-delà du code/i,
-    });
+    const section = screen.getByRole("region", { name: /^passions$/i });
 
     expect(section).toHaveAttribute("id", "passions");
   });
@@ -405,19 +403,6 @@ describe("projets personnels", () => {
       expect(lien).toHaveAttribute("rel", "noopener noreferrer");
       expect(lien).toHaveAccessibleName(/nouvelle fenêtre/i);
     }
-  });
-
-  it("devrait donner à chaque projet sa propre composition visuelle", () => {
-    render(<App />);
-
-    const cartes = Array.from(getProjectsSection().querySelectorAll("article"));
-    const variantes = cartes.map((carte) => {
-      const visuel = carte.querySelector(".project-visual");
-      return Array.from(visuel?.classList ?? []).find((nom) => nom.startsWith("project-visual--"));
-    });
-
-    expect(variantes.every(Boolean)).toBe(true);
-    expect(new Set(variantes).size).toBe(cartes.length);
   });
 
   it("ne devrait jamais lier astrologie.vercel.app, qui appartient à un tiers", () => {

@@ -1,18 +1,6 @@
 import type { ReactNode } from "react";
-import {
-  IconArrowDown,
-  IconArrowDownRight,
-  IconArrowUpRight,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconDownload,
-  IconMail,
-  IconMapPin,
-  IconPhone,
-  IconPlus,
-} from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUpRight, IconDownload } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
-import ProjectVisual from "../components/ProjectVisual";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
 import { formations } from "../content/formations";
@@ -28,6 +16,7 @@ const DateRangeText = ({ range }: { readonly range: DateRange }) => (
   <span className="date-range">
     <time dateTime={range.start.dateTime}>{range.start.label}</time>
     <span aria-hidden="true"> — </span>
+    <span className="visually-hidden"> à </span>
     {range.end ? (
       <time dateTime={range.end.dateTime}>{range.end.label}</time>
     ) : (
@@ -35,30 +24,30 @@ const DateRangeText = ({ range }: { readonly range: DateRange }) => (
     )}
   </span>
 );
+
+/**
+ * Surtitre discret puis grand titre condensé. Le titre de niveau 2 porte le libellé
+ * de la navigation, pour que chaque entrée du menu retrouve sa section par son nom.
+ */
 const SectionHeading = ({
   sectionId,
-  id,
+  eyebrow,
   children,
 }: {
   readonly sectionId: string;
-  readonly id: string;
-  readonly children: ReactNode;
+  readonly eyebrow: string;
+  readonly children?: ReactNode;
 }) => {
-  const index = navigationItems.findIndex((item) => item.id === sectionId);
-  const navigationItem = navigationItems[index];
+  const navigationItem = navigationItems.find((item) => item.id === sectionId);
 
   return (
     <div className="section-heading" data-reveal="up">
-      <h2 id={id}>
-        <span className="section-index">
-          <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{" "}
-          {navigationItem.label}
-        </span>{" "}
-        <span className="section-heading__title">{children}</span>
-      </h2>
+      <p className="section-eyebrow">{eyebrow}</p>
+      <h2 id={`titre-${sectionId}`}>{children ?? navigationItem?.label}</h2>
     </div>
   );
 };
+
 const badgeVariantByStatus = {
   completed: "positive",
   "in-progress": "info",
@@ -70,96 +59,79 @@ const Home = () => {
   return (
     <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
       <section className="hero" aria-labelledby="titre-principal">
-        <div className="hero-orbit hero-orbit--one" aria-hidden="true" />
-        <div className="hero-orbit hero-orbit--two" aria-hidden="true" />
-        <div className="hero-topline">
-          <div className="hero-intro" data-reveal="up">
-            <p className="eyebrow eyebrow-roles">
-              <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
-            </p>
-            <p className="hero-next-roles">
-              <span className="hero-next-roles__label">Objectifs : </span>
-              <span className="hero-next-role">Responsable portefeuille projets</span> ·{" "}
-              <span className="hero-next-role">Management</span> ·{" "}
-              <span className="hero-next-role">Chefferie de projet</span>
-            </p>
-          </div>
-          <div className="hero-current-role" data-reveal="up">
-            <span className="hero-current-label">
-              <span className="status-dot" aria-hidden="true" />
-              Actuellement
-            </span>
-            <p>
-              <strong>Développeur Full Stack chez Blue Soft</strong>
-            </p>
-          </div>
+        <div className="hero-portrait">
+          <img
+            src={profile.portrait.cutout.src}
+            width={profile.portrait.cutout.width}
+            height={profile.portrait.cutout.height}
+            alt={profile.portrait.cutout.alt}
+            fetchPriority="high"
+            decoding="async"
+          />
         </div>
-        <div className="hero-identity">
+        <div className="hero-content">
           <h1 id="titre-principal" className="hero-name">
-            {profile.name}
+            <span>Thomas</span> <span>Caron</span>{" "}
+            <span className="hero-name__role">Développeur</span>
           </h1>
-          <div className="hero-portrait">
-            <img
-              src={profile.portrait.cutout.src}
-              width={profile.portrait.cutout.width}
-              height={profile.portrait.cutout.height}
-              alt={profile.portrait.cutout.alt}
-              fetchPriority="high"
-              decoding="async"
-            />
+          <div className="hero-details">
+            <div className="hero-intro">
+              <p className="eyebrow-roles">
+                <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
+              </p>
+              <p className="hero-next-roles">
+                Objectifs : responsable portefeuille projets · management · chefferie de projet
+              </p>
+            </div>
+            <div className="hero-current">
+              <p>
+                <span className="status-dot" aria-hidden="true" />
+                Actuellement développeur full stack chez Blue Soft
+              </p>
+              <p>Basé à Rouen, France · mobile Paris · remote partiel</p>
+            </div>
           </div>
-        </div>
-        <div className="hero-bottom">
-          <div className="hero-location">
-            <p>
-              Basé à Rouen, France.
-              <br /> Mobile Paris · remote partiel
-            </p>
+          <div className="hero-footer">
+            <p className="hero-availability">{profile.availability}</p>
+            <ul className="hero-socials" aria-label="Profils en ligne">
+              <li>
+                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+                  GitHub <IconArrowUpRight size={14} aria-hidden="true" />
+                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+                </a>
+              </li>
+              <li>
+                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+                  LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
+                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
+                </a>
+              </li>
+            </ul>
+            <a className="hero-scroll" href="#apropos">
+              Faire connaissance
+              <IconArrowDown aria-hidden="true" size={16} />
+            </a>
           </div>
-          <a className="hero-scroll" href="#apropos">
-            <span>Faire connaissance</span>
-            <IconArrowDown aria-hidden="true" size={42} stroke={1.3} />
-          </a>
-        </div>
-        <div className="hero-footer">
-          <ul className="hero-socials" aria-label="Profils en ligne">
-            <li>
-              <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                GitHub <IconArrowUpRight size={14} aria-hidden="true" />
-                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-              </a>
-            </li>
-            <li>
-              <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
-                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-              </a>
-            </li>
-          </ul>
-          <p className="hero-availability">{profile.availability}</p>
-          <span className="hero-edition" aria-hidden="true">
-            PORTFOLIO — ÉDITION 2026
-          </span>
         </div>
       </section>
 
-      <section className="about-section section-dark" id="apropos" aria-labelledby="titre-apropos">
+      <section
+        className="page-section about-section section-dark"
+        id="apropos"
+        aria-labelledby="titre-apropos"
+      >
         <div className="container">
-          <h2 className="display-title" id="titre-apropos" data-reveal="up">
-            À PROPOS
+          <h2 className="visually-hidden" id="titre-apropos">
+            À propos
           </h2>
+          <p className="about-statement" data-reveal="up">
+            “Je construis des applications, <mark>et la confiance</mark> qui va avec.”
+          </p>
+          <p className="section-eyebrow about-signature" data-reveal="up">
+            Alternant chez Blue Soft · étudiant au CESI
+          </p>
           <div className="about-layout">
-            <IconArrowDownRight
-              className="about-arrow"
-              size={180}
-              stroke={0.8}
-              aria-hidden="true"
-            />
             <div className="about-copy" data-reveal="up">
-              <p className="about-lede">
-                Je construis des applications.
-                <br /> <span>Et la confiance qui va avec.</span>
-              </p>
               <p>
                 Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
                 tests automatisés Java avec Selenium et Cucumber. J’aime comprendre le besoin,
@@ -170,131 +142,88 @@ const Home = () => {
                 full-stack, architecture et assurance qualité.
               </p>
               <div className="about-actions">
-                <a
-                  className="button button-light"
-                  href={profile.cv.href}
-                  download={profile.cv.fileName}
-                >
+                <a className="button" href={profile.cv.href} download={profile.cv.fileName}>
                   <IconDownload size={18} aria-hidden="true" />
                   {profile.cv.label}
                 </a>
                 <a className="text-link" href="#contact">
-                  Me contacter <IconArrowUpRight size={19} aria-hidden="true" />
+                  Me contacter <IconArrowUpRight size={18} aria-hidden="true" />
                 </a>
               </div>
             </div>
-          </div>
-          <div className="about-facts" data-reveal="up">
-            <div>
-              <p>
-                Développement
-                <br /> <strong>Web & mobile</strong>
-              </p>
-            </div>
-            <div>
-              <p>
-                Assurance qualité
-                <br /> <strong>Tests & automatisation</strong>
-              </p>
-            </div>
-            <div>
-              <p>
-                Formation actuelle
-                <br /> <strong>Architecture logicielle · Bac +5</strong>
+            <div className="about-figure" data-reveal="up">
+              <img
+                src={profile.portrait.src}
+                width={profile.portrait.width}
+                height={profile.portrait.height}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+              <p className="about-figure__caption" aria-hidden="true">
+                Rouen · France
               </p>
             </div>
           </div>
+          <dl className="about-facts" data-reveal="up">
+            <div>
+              <dt>Développement</dt>
+              <dd>Web & mobile</dd>
+            </div>
+            <div>
+              <dt>Assurance qualité</dt>
+              <dd>Tests & automatisation</dd>
+            </div>
+            <div>
+              <dt>Formation actuelle</dt>
+              <dd>Architecture logicielle · Bac +5</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
       <section
-        className="section-shell projects-section"
-        id="projets"
-        aria-labelledby="titre-projets"
+        className="page-section skills-section section-dark"
+        id="competences"
+        aria-labelledby="titre-competences"
       >
         <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="projets" id="titre-projets">
-              DU CODE
-              <br /> <span>DU CONCRET</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Des idées transformées en applications. Un terrain pour construire, expérimenter et
-              apprendre.
-            </p>
-          </div>
-          <div className="projects-grid">
-            {projects.map((project) => (
-              <article className="project-card" data-reveal="up" key={project.id}>
-                <ProjectVisual id={project.id} />
-                <div className="project-meta">
-                  <span className="project-number">{project.date}</span>
-                  <Badge
-                    rootClassName="status-badge-root"
-                    className={`project-status status-badge status-badge--${project.statusType}`}
-                    variant={badgeVariantByStatus[project.statusType]}
-                  >
-                    {project.status}
-                  </Badge>
-                </div>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <StackChips
-                  label={`Technologies du projet ${project.title}`}
-                  items={project.stack}
-                />
-                {project.links.length > 0 && (
-                  <div className="project-links">
-                    {project.links.map((link) => (
-                      <a
-                        className="text-link"
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link.label}
-                        <IconArrowUpRight size={18} aria-hidden="true" />
-                        <span className="visually-hidden">
-                          {" "}
-                          — {project.title} (nouvelle fenêtre)
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </article>
+          <SectionHeading sectionId="competences" eyebrow="Expertise" />
+          <div className="skills-groups">
+            {skillGroups.map((group) => (
+              <div className="skill-group" data-reveal="up" key={group.id}>
+                <h3 className="row-label" id={`skill-${group.id}`}>
+                  {group.title}
+                </h3>
+                <ul className="skill-list" aria-label={`Compétences ${group.title}`}>
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
-          <p className="projects-note">Compositions visuelles illustrant les projets.</p>
         </div>
       </section>
 
       <section
-        className="section-shell journey-section"
+        className="page-section journey-section"
         id="parcours"
         aria-labelledby="titre-parcours"
       >
         <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="parcours" id="titre-parcours">
-              UN PARCOURS
-              <br /> <span>PLUSIEURS TERRAINS</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Du développement d’outils de production à l’automatisation de tests, j’interviens à
-              chaque étape qui rend une application utile et fiable.
-            </p>
-          </div>
+          <SectionHeading sectionId="parcours" eyebrow="Carrière" />
           <ol className="timeline" aria-label="Expériences professionnelles">
             {experiences.map((experience) => (
               <li className="timeline-item" data-reveal="up" key={experience.company}>
-                <div className="experience-company">
-                  <p className="company">{experience.company}</p>
-                  <DateRangeText range={experience.range} />
-                </div>
-                <div className="experience-content">
+                <div className="timeline-item__head">
                   <h3>{experience.title}</h3>
+                  <p className="company">{experience.company}</p>
+                </div>
+                <p className="timeline-item__date">
+                  <DateRangeText range={experience.range} />
+                </p>
+                <div className="timeline-item__body">
                   <p>{experience.description}</p>
                   <StackChips
                     label={`Technologies utilisées chez ${experience.company}`}
@@ -307,8 +236,10 @@ const Home = () => {
                     >
                       {experience.missions.map((mission) => (
                         <li key={mission.title}>
-                          <DateRangeText range={mission.range} />
                           <h4>{mission.title}</h4>
+                          <p className="mission-date">
+                            <DateRangeText range={mission.range} />
+                          </p>
                           <p>{mission.description}</p>
                           <StackChips
                             label={`Technologies de la mission ${mission.title}`}
@@ -322,21 +253,17 @@ const Home = () => {
               </li>
             ))}
           </ol>
-          <aside className="education" aria-labelledby="titre-formations" data-reveal="up">
-            <div>
-              <p className="section-index">Formation / École CESI</p>
-              <h3 id="titre-formations">
-                Apprendre pour
-                <br /> mieux construire
-              </h3>
-            </div>
-            <ul>
+
+          <div className="education" data-reveal="up">
+            <p className="section-eyebrow">Formation · École CESI</p>
+            <h3 className="education-title" id="titre-formations">
+              Apprendre pour mieux construire
+            </h3>
+            <ul className="education-list">
               {formations.map((formation) => (
                 <li key={formation.title}>
-                  <div>
-                    <span className="formation-level">{formation.level}</span>
-                    <strong>{formation.title}</strong>
-                  </div>
+                  <span className="formation-level">{formation.level}</span>
+                  <strong>{formation.title}</strong>
                   <Badge
                     rootClassName="status-badge-root"
                     className={`status-badge status-badge--${formation.statusType}`}
@@ -347,68 +274,79 @@ const Home = () => {
                 </li>
               ))}
             </ul>
-          </aside>
+          </div>
         </div>
       </section>
 
       <section
-        className="section-shell skills-section section-dark"
-        id="competences"
-        aria-labelledby="titre-competences"
+        className="page-section projects-section"
+        id="projets"
+        aria-labelledby="titre-projets"
       >
         <div className="container">
-          <SectionHeading sectionId="competences" id="titre-competences">
-            LES BONS OUTILS
-            <br /> <span>POUR BIEN CONSTRUIRE</span>
-          </SectionHeading>
-          <div className="skills-grid">
-            {skillGroups.map((group) => (
-              <section
-                className="skill-group"
-                aria-labelledby={`skill-${group.id}`}
-                data-reveal="up"
-                key={group.id}
-              >
-                <div>
-                  <h3 id={`skill-${group.id}`}>{group.title}</h3>
-                  <StackChips label={`Compétences ${group.title}`} items={group.items} />
+          <SectionHeading sectionId="projets" eyebrow="Projets personnels" />
+          <div className="row-list">
+            {projects.map((project) => (
+              <article className="project-row" data-reveal="up" key={project.id}>
+                <div className="project-row__main">
+                  <h3>{project.title}</h3>
+                  <p className="row-meta">
+                    <Badge
+                      rootClassName="status-badge-root"
+                      className={`status-badge status-badge--${project.statusType}`}
+                      variant={badgeVariantByStatus[project.statusType]}
+                    >
+                      {project.status}
+                    </Badge>
+                  </p>
+                  <p className="project-row__description">{project.description}</p>
+                  <StackChips
+                    label={`Technologies du projet ${project.title}`}
+                    items={project.stack}
+                  />
+                  {project.links.length > 0 && (
+                    <div className="project-links">
+                      {project.links.map((link) => (
+                        <a
+                          className="text-link"
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {link.label}
+                          <IconArrowUpRight size={16} aria-hidden="true" />
+                          <span className="visually-hidden">
+                            {" "}
+                            — {project.title} (nouvelle fenêtre)
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <IconPlus size={24} stroke={1.2} aria-hidden="true" />
-              </section>
+                <p className="row-year">{project.date}</p>
+              </article>
             ))}
           </div>
-          <p className="skills-note" data-reveal="up">
-            Une stack évolue. La curiosité reste.
-          </p>
         </div>
       </section>
 
       <section
-        className="section-shell passions-section"
+        className="page-section passions-section"
         id="passions"
         aria-labelledby="titre-passions"
       >
         <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="passions" id="titre-passions">
-              AU-DELÀ
-              <br /> <span>DU CODE</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Ce que je fais du reste de mon temps. Des pratiques tenues dans la durée, chacune avec
-              son objectif.
-            </p>
-          </div>
-          <ul className="passions-grid" aria-label="Pratiques personnelles">
-            {passions.map((passion) => {
-              const PassionIcon = passion.icon;
-              return (
-                <li className="passion-card" data-reveal="up" key={passion.id}>
-                  <PassionIcon size={36} stroke={1.2} aria-hidden="true" />
+          <SectionHeading sectionId="passions" eyebrow="Au-delà du code" />
+          <ul className="row-list" aria-label="Pratiques personnelles">
+            {passions.map((passion, index) => (
+              <li className="passion-row" data-reveal="up" key={passion.id}>
+                <div>
                   <h3>{passion.title}</h3>
                   <p>{passion.description}</p>
                   {passion.links.length > 0 && (
-                    <div className="passion-links">
+                    <div className="project-links">
                       {passion.links.map((link) => (
                         <a
                           className="text-link"
@@ -418,120 +356,124 @@ const Home = () => {
                           rel="noopener noreferrer"
                         >
                           {link.label}
-                          <IconArrowUpRight size={17} aria-hidden="true" />
+                          <IconArrowUpRight size={16} aria-hidden="true" />
                           <span className="visually-hidden"> (nouvelle fenêtre)</span>
                         </a>
                       ))}
                     </div>
                   )}
-                </li>
-              );
-            })}
+                </div>
+                <span className="row-year" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
 
       <section
-        className="section-shell accessibility-section"
+        className="page-section accessibility-section"
         id="accessibilite"
         aria-labelledby="titre-accessibilite"
       >
-        <div className="container accessibility-layout">
-          <div>
-            <SectionHeading sectionId="accessibilite" id="titre-accessibilite">
-              LE WEB,
-              <br /> POUR TOUS
-            </SectionHeading>
-            <p>
-              Ce site vise un niveau de conformité aussi élevé que possible au RGAA 4.1.2 et fait
-              l’objet d’améliorations continues.
-            </p>
-            <span className="accessibility-status">
-              <span className="status-dot" aria-hidden="true" />
-              Améliorations continues
-            </span>
-          </div>
-          <div data-reveal="up">
-            <ul className="accessibility-list">
-              <li>
-                <strong>Navigation</strong>
-                <span>Lien d’évitement, titres structurés et utilisation au clavier.</span>
-              </li>
-              <li>
-                <strong>Lecture</strong>
-                <span>
-                  Contrastes renforcés, textes redimensionnables et thème sombre optionnel.
-                </span>
-              </li>
-              <li>
-                <strong>Confort</strong>
-                <span>
-                  Mise en page responsive et préférence de réduction des mouvements respectée.
-                </span>
-              </li>
-            </ul>
-            <p className="accessibility-limit">
-              <strong>Limite connue :</strong> le CV PDF téléchargeable est en cours de remise en
-              accessibilité.
-            </p>
-            <a
-              className="text-link"
-              href={`mailto:${profile.email}?subject=Signalement%20accessibilit%C3%A9%20du%20portfolio`}
-            >
-              Signaler un problème d’accessibilité
-              <IconArrowUpRight size={17} aria-hidden="true" />
-            </a>
+        <div className="container">
+          <SectionHeading sectionId="accessibilite" eyebrow="Le web, pour tous" />
+          <div className="accessibility-layout" data-reveal="up">
+            <div>
+              <p className="accessibility-lede">
+                Ce site vise un niveau de conformité aussi élevé que possible au RGAA 4.1.2 et fait
+                l’objet d’améliorations continues.
+              </p>
+              <p className="accessibility-status">
+                <span className="status-dot" aria-hidden="true" />
+                Améliorations continues
+              </p>
+            </div>
+            <div>
+              <ul className="accessibility-list">
+                <li>
+                  <strong>Navigation</strong>
+                  <span>Lien d’évitement, titres structurés et utilisation au clavier.</span>
+                </li>
+                <li>
+                  <strong>Lecture</strong>
+                  <span>
+                    Contrastes renforcés, textes redimensionnables et thème clair ou sombre, au
+                    choix.
+                  </span>
+                </li>
+                <li>
+                  <strong>Confort</strong>
+                  <span>
+                    Mise en page responsive et préférence de réduction des mouvements respectée.
+                  </span>
+                </li>
+              </ul>
+              <p className="accessibility-limit">
+                <strong>Limite connue :</strong> le CV PDF téléchargeable est en cours de remise en
+                accessibilité.
+              </p>
+              <a
+                className="text-link"
+                href={`mailto:${profile.email}?subject=Signalement%20accessibilit%C3%A9%20du%20portfolio`}
+              >
+                Signaler un problème d’accessibilité
+                <IconArrowUpRight size={16} aria-hidden="true" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       <section
-        className="contact-section section-dark"
+        className="page-section contact-section"
         id="contact"
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <SectionHeading sectionId="contact" id="titre-contact">
-            <span className="contact-title-text">PARLONS-EN</span>
-            <IconArrowUpRight stroke={1} aria-hidden="true" />
+          <SectionHeading sectionId="contact" eyebrow="Contact">
+            Me contacter
           </SectionHeading>
-          <p className="contact-intro" data-reveal="up">
-            Une opportunité, une idée ou simplement l’envie de faire connaissance.
+          <p className="contact-statement" data-reveal="up">
+            Une opportunité, une idée
+            <br /> ou l’envie de faire connaissance ?
           </p>
-          <address className="contact-links" data-reveal="up">
-            <a className="contact-email" href={`mailto:${profile.email}`}>
-              <IconMail size={23} aria-hidden="true" />
+          <p className="section-eyebrow" data-reveal="up">
+            {profile.availability}
+          </p>
+          <address className="contact-rows" data-reveal="up">
+            <a href={`mailto:${profile.email}`}>
               <span>{profile.email}</span>
-              <IconArrowUpRight size={24} aria-hidden="true" />
+              <IconArrowUpRight size={16} aria-hidden="true" />
             </a>
             <a href={profile.phone.href}>
-              <IconPhone size={19} aria-hidden="true" />
-              {profile.phone.label}
+              <span>{profile.phone.label}</span>
+              <IconArrowUpRight size={16} aria-hidden="true" />
             </a>
             <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer">
-              <IconMapPin size={19} aria-hidden="true" />
-              {profile.location}
+              <span>{profile.location}</span>
+              <IconArrowUpRight size={16} aria-hidden="true" />
               <span className="visually-hidden"> (nouvelle fenêtre)</span>
             </a>
           </address>
-          <div className="contact-bottom">
-            <p>{profile.availability}</p>
+          <div className="contact-direct" data-reveal="up">
+            <p className="section-eyebrow">Ou retrouvez-moi</p>
             <ul className="contact-socials" aria-label="Réseaux professionnels">
               <li>
                 <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  <IconBrandGithub size={19} aria-hidden="true" />
                   GitHub
-                  <IconArrowUpRight size={15} aria-hidden="true" />
                   <span className="visually-hidden"> (nouvelle fenêtre)</span>
                 </a>
               </li>
               <li>
                 <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  <IconBrandLinkedin size={19} aria-hidden="true" />
                   LinkedIn
-                  <IconArrowUpRight size={15} aria-hidden="true" />
                   <span className="visually-hidden"> (nouvelle fenêtre)</span>
                 </a>
+              </li>
+              <li>
+                <a href={`mailto:${profile.email}`}>E-mail</a>
               </li>
             </ul>
           </div>

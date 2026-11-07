@@ -120,7 +120,7 @@ afterEach(() => {
 });
 
 describe("lien profond vers une section au chargement", () => {
-  it.each(["apropos", ...navigationSectionIds])(
+  it.each([...new Set(["apropos", ...navigationSectionIds])])(
     "devrait amener la section à l'écran quand l'URL est ouverte sur #%s",
     async (sectionId) => {
       setInitialHash(`#${sectionId}`);

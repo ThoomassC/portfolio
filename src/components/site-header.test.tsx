@@ -92,12 +92,29 @@ describe("menu mobile de l'en-tête", () => {
     const user = userEvent.setup();
     render(<App />);
     const toggle = await openMenu(user);
-    act(() => toggle.blur());
+    act(() => (document.activeElement as HTMLElement | null)?.blur());
     expect(document.body).toHaveFocus();
 
     await user.keyboard("{Escape}");
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  /**
+   * Le panneau ouvert couvre tout l'écran : sans cela, Tab partait dans le contenu
+   * principal masqué derrière lui, et le lecteur d'écran le parcourait encore.
+   */
+  it("devrait amener le focus dans le panneau et rendre la page inerte tant qu'il est ouvert", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const toggle = await openMenu(user);
+
+    expect(within(getMainNavigation()).getAllByRole("link")[0]).toHaveFocus();
+    expect(screen.getByRole("main", { hidden: true })).toHaveProperty("inert", true);
+
+    await user.click(toggle);
+
+    expect(screen.getByRole("main")).toHaveProperty("inert", false);
   });
 
   it("devrait redonner le focus au bouton après une fermeture par Escape", async () => {

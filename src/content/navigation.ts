@@ -1,9 +1,11 @@
 import type { NavigationItem } from "./types";
 
+/** Dans l'ordre de la page : la navigation verticale suit la lecture. */
 export const navigationItems: readonly NavigationItem[] = [
-  { id: "projets", label: "Projets" },
-  { id: "parcours", label: "Parcours" },
+  { id: "apropos", label: "À propos" },
   { id: "competences", label: "Compétences" },
+  { id: "parcours", label: "Parcours" },
+  { id: "projets", label: "Projets" },
   { id: "passions", label: "Passions" },
   { id: "accessibilite", label: "Accessibilité" },
   { id: "contact", label: "Contact" },

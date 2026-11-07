@@ -1,20 +1,19 @@
 # Portfolio — Thomas Caron
 
 Portfolio personnel de développeur logiciel full-stack et QA, en React 19 et TypeScript.
-La version **2.0.0** reprend mes contenus dans une direction éditoriale inspirée de
-[Matthew, par Muhammad Aseif](https://dribbble.com/shots/22469576-Matthew-Personal-Portfolio-Website-Animation) :
-grand nom derrière le portrait, typographie condensée, alternance de sections claires
-et sombres, projets illustrés et apparitions au défilement.
+La version **3.0.0** adopte une direction « Obsidian », inspirée du template
+[Dark Photo Portfolio de Lovable](https://lovable.dev/templates/websites/portfolio/obsidian-template) :
+page sombre et cinématographique, nom géant posé sur un portrait en noir et blanc,
+titres condensés, listes à filets fins, grain de film, navigation verticale qui suit
+la section lue et apparitions au défilement.
 
-La palette **Ivoire & cobalt** reprend le canvas choisi : fond ivoire `#F7F4EA`,
-hero bleu clair `#E1E8F6`, texte marine `#232F52` et actions cobalt `#375AC0`.
-Le thème sombre utilise `#192139`, `#344369`, `#F2F3FC` et `#A9BAFF`.
-Les sections sont arrondies à 32 px, les cartes à 24 px et les éléments internes
-à 16 px ; la navigation, les actions et les badges adoptent une forme de pilule.
+La palette **Ivoire & cobalt** de la v2 est conservée : fond ivoire `#F7F4EA`,
+hero bleu clair `#E1E8F6`, sections marine `#232F52` (À propos, Compétences),
+contact et actions cobalt `#375AC0`. Le thème sombre utilise `#192139`, `#344369`,
+`#F2F3FC` et `#A9BAFF`. Le thème suit la préférence du système, puis le choix mémorisé.
 
-Le parcours, les missions, les formations, les compétences, les passions et les coordonnées
-restent centralisés dans `src/content`. Les compositions de projets sont des illustrations,
-pas des captures d'applications ni des liens fictifs vers des démos.
+Le parcours, les missions, les formations, les compétences, les projets, les passions
+et les coordonnées restent centralisés dans `src/content`.
 
 ## Développement
 
@@ -41,7 +40,8 @@ est native pour adapter les six entrées au menu mobile.
   préservation de la transparence pour le chargement du hero.
   Instruction : retirer uniquement le fond, conserver l'identité, le visage, la pose,
   les vêtements et les couleurs, obtenir une transparence réelle sans ombre ni ajout.
-- Les visuels de projets sont construits en HTML/CSS et avec les icônes Tabler.
+- Le grain de film est une texture SVG en `data:` URI, masquée en contraste renforcé
+  et en couleurs forcées.
 - Les favicons portent une version dans leur nom (`favicon-v2.*`) : `vercel.json` sert
   `/assets/*` en cache `immutable`, un logo changé sous le même nom resterait l'ancien
   dans les navigateurs. Incrémenter la version à chaque nouveau logo.

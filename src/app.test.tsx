@@ -315,3 +315,118 @@ describe("contact", () => {
     ).not.toBeNull();
   });
 });
+
+describe("projets personnels", () => {
+  function getProjectsSection(): HTMLElement {
+    const section = document.getElementById("projets");
+    if (!section) throw new Error("section #projets absente");
+    return section;
+  }
+
+  function getProjectCard(title: RegExp): HTMLElement {
+    const heading = within(getProjectsSection()).getByRole("heading", { level: 3, name: title });
+    const card = heading.closest("article");
+    if (!card) throw new Error(`carte absente pour ${title}`);
+    return card;
+  }
+
+  it("devrait présenter les projets dans l'ordre éditorial, du plus récent au plus ancien", () => {
+    render(<App />);
+
+    const titres = within(getProjectsSection())
+      .getAllByRole("heading", { level: 3 })
+      .map((titre) => titre.textContent);
+
+    expect(titres).toEqual([
+      "Astrologie",
+      "Astronomie",
+      "Grand Oral Studio",
+      "Opale",
+      "Board",
+      "Travels in World",
+      "Portfolio personnel",
+      "Application de gestion de budget",
+      "Sites web & APIs",
+      "GameJam Rouen Métropole",
+    ]);
+  });
+
+  it.each([
+    {
+      title: /^astrologie$/i,
+      site: "https://astrologie-pi.vercel.app",
+      code: "https://github.com/ThoomassC/astrologie",
+    },
+    {
+      title: /^astronomie$/i,
+      site: "https://astronomie.vercel.app",
+      code: "https://github.com/ThoomassC/astronomie",
+    },
+    {
+      title: /^grand oral studio$/i,
+      site: "https://grand-oral-studio.vercel.app",
+      code: "https://github.com/ThoomassC/grand-oral-studio",
+    },
+    {
+      title: /^opale$/i,
+      site: "https://ui-commune.vercel.app",
+      code: "https://github.com/ThoomassC/opale-ui",
+    },
+  ])("devrait relier $title à son site en ligne et à son code", ({ title, site, code }) => {
+    render(<App />);
+    const card = getProjectCard(title);
+
+    const siteLink = within(card).getByRole("link", { name: /voir le site/i });
+    const codeLink = within(card).getByRole("link", { name: /code source/i });
+
+    expect(siteLink).toHaveAttribute("href", site);
+    expect(codeLink).toHaveAttribute("href", code);
+  });
+
+  it.each([
+    { title: /^board$/i, code: "https://github.com/ThoomassC/board" },
+    { title: /^travels in world$/i, code: "https://github.com/ThoomassC/travels_in_world" },
+  ])("devrait relier $title à son seul code, faute de version en ligne", ({ title, code }) => {
+    render(<App />);
+    const card = getProjectCard(title);
+
+    expect(within(card).queryByRole("link", { name: /voir le site/i })).toBeNull();
+    expect(within(card).getByRole("link", { name: /code source/i })).toHaveAttribute("href", code);
+  });
+
+  it("devrait ouvrir chaque lien de projet dans un nouvel onglet, sans exposer l'opener", () => {
+    render(<App />);
+
+    const liens = within(getProjectsSection()).getAllByRole("link");
+
+    expect(liens.length).toBeGreaterThan(0);
+    for (const lien of liens) {
+      expect(lien).toHaveAttribute("target", "_blank");
+      expect(lien).toHaveAttribute("rel", "noopener noreferrer");
+      expect(lien).toHaveAccessibleName(/nouvelle fenêtre/i);
+    }
+  });
+
+  it("devrait donner à chaque projet sa propre composition visuelle", () => {
+    render(<App />);
+
+    const cartes = Array.from(getProjectsSection().querySelectorAll("article"));
+    const variantes = cartes.map((carte) => {
+      const visuel = carte.querySelector(".project-visual");
+      return Array.from(visuel?.classList ?? []).find((nom) => nom.startsWith("project-visual--"));
+    });
+
+    expect(variantes.every(Boolean)).toBe(true);
+    expect(new Set(variantes).size).toBe(cartes.length);
+  });
+
+  it("ne devrait jamais lier astrologie.vercel.app, qui appartient à un tiers", () => {
+    render(<App />);
+
+    const hrefs = within(getProjectsSection())
+      .getAllByRole("link")
+      .map((lien) => lien.getAttribute("href"));
+
+    expect(hrefs.some((href) => href?.startsWith("https://astrologie.vercel.app"))).toBe(false);
+  });
+});

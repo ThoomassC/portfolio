@@ -42,6 +42,9 @@ est native pour adapter les six entrées au menu mobile.
   Instruction : retirer uniquement le fond, conserver l'identité, le visage, la pose,
   les vêtements et les couleurs, obtenir une transparence réelle sans ombre ni ajout.
 - Les visuels de projets sont construits en HTML/CSS et avec les icônes Tabler.
+- Les favicons portent une version dans leur nom (`favicon-v2.*`) : `vercel.json` sert
+  `/assets/*` en cache `immutable`, un logo changé sous le même nom resterait l'ancien
+  dans les navigateurs. Incrémenter la version à chaque nouveau logo.
 
 ## Accessibilité
 

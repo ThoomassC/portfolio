@@ -26,23 +26,20 @@ const DateRangeText = ({ range }: { readonly range: DateRange }) => (
 );
 
 /**
- * Surtitre discret puis grand titre condensé. Le titre de niveau 2 porte le libellé
- * de la navigation, pour que chaque entrée du menu retrouve sa section par son nom.
+ * Grand titre condensé. Le titre de niveau 2 porte le libellé de la navigation, pour
+ * que chaque entrée du menu retrouve sa section par son nom.
  */
 const SectionHeading = ({
   sectionId,
-  eyebrow,
   children,
 }: {
   readonly sectionId: string;
-  readonly eyebrow: string;
   readonly children?: ReactNode;
 }) => {
   const navigationItem = navigationItems.find((item) => item.id === sectionId);
 
   return (
     <div className="section-heading" data-reveal="up">
-      <p className="section-eyebrow">{eyebrow}</p>
       <h2 id={`titre-${sectionId}`}>{children ?? navigationItem?.label}</h2>
     </div>
   );
@@ -184,7 +181,7 @@ const Home = () => {
         aria-labelledby="titre-competences"
       >
         <div className="container">
-          <SectionHeading sectionId="competences" eyebrow="Expertise" />
+          <SectionHeading sectionId="competences" />
           <div className="skills-groups">
             {skillGroups.map((group) => (
               <div className="skill-group" data-reveal="up" key={group.id}>
@@ -208,7 +205,7 @@ const Home = () => {
         aria-labelledby="titre-parcours"
       >
         <div className="container">
-          <SectionHeading sectionId="parcours" eyebrow="Carrière" />
+          <SectionHeading sectionId="parcours" />
           <ol className="timeline" aria-label="Expériences professionnelles">
             {experiences.map((experience) => (
               <li className="timeline-item" data-reveal="up" key={experience.company}>
@@ -251,7 +248,6 @@ const Home = () => {
           </ol>
 
           <div className="education" data-reveal="up">
-            <p className="section-eyebrow">Formation · École CESI</p>
             <h3 className="education-title" id="titre-formations">
               Apprendre pour mieux construire
             </h3>
@@ -280,7 +276,7 @@ const Home = () => {
         aria-labelledby="titre-projets"
       >
         <div className="container">
-          <SectionHeading sectionId="projets" eyebrow="Projets personnels" />
+          <SectionHeading sectionId="projets" />
           <div className="row-list">
             {projects.map((project) => (
               <article className="project-row" data-reveal="up" key={project.id}>
@@ -334,7 +330,7 @@ const Home = () => {
         aria-labelledby="titre-passions"
       >
         <div className="container">
-          <SectionHeading sectionId="passions" eyebrow="Au-delà du code" />
+          <SectionHeading sectionId="passions" />
           <ul className="row-list" aria-label="Pratiques personnelles">
             {passions.map((passion, index) => (
               <li className="passion-row" data-reveal="up" key={passion.id}>
@@ -374,7 +370,7 @@ const Home = () => {
         aria-labelledby="titre-accessibilite"
       >
         <div className="container">
-          <SectionHeading sectionId="accessibilite" eyebrow="Le web, pour tous" />
+          <SectionHeading sectionId="accessibilite" />
           <div className="accessibility-layout" data-reveal="up">
             <div>
               <p className="accessibility-lede">
@@ -428,9 +424,7 @@ const Home = () => {
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <SectionHeading sectionId="contact" eyebrow="Contact">
-            Me contacter
-          </SectionHeading>
+          <SectionHeading sectionId="contact">Me contacter</SectionHeading>
           <p className="contact-statement" data-reveal="up">
             Une opportunité, une idée
             <br /> ou l’envie de faire connaissance ?

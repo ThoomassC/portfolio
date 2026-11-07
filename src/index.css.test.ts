@@ -69,10 +69,25 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
     { ink: "--contact-ink", surface: "--contact-surface" },
     { ink: "--text-body", surface: "--soft-surface" },
     { ink: "--inverse-muted", surface: "--inverse-soft-surface" },
-    { ink: "--highlight", surface: "--site-background" },
-    { ink: "--highlight", surface: "--hero-surface" },
   ])("$ink reste lisible sur $surface", ({ ink, surface }) => {
     expect(contrastRatio(value(tokens, ink), value(tokens, surface))).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+/**
+ * « Chef de projet » garde le même bleu lavande dans les deux thèmes, par choix de
+ * Thomas (2026-11-07). Lisible sur le fond sombre ; sur le fond clair il descend à
+ * environ 1,7:1, sous le seuil de 3:1 des grands titres : exception connue, à
+ * reprendre lors de la mise en couleur. Ce test verrouille les deux faits.
+ */
+describe("couleur du rôle dans le hero", () => {
+  it("garde la même valeur dans les deux thèmes", () => {
+    expect(value(dark, "--highlight")).toBe(value(light, "--highlight"));
+  });
+  it("reste lisible comme grand titre sur le fond sombre", () => {
+    expect(
+      contrastRatio(value(dark, "--highlight"), value(dark, "--hero-surface"))
+    ).toBeGreaterThanOrEqual(3);
   });
 });
 

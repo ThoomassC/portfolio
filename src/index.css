@@ -36,7 +36,7 @@
   --focus: #232f52;
   --chip-surface: #e7e5e4;
   --grain-opacity: 0.05;
-  --highlight: #375ac0;
+  --highlight: #a9baff;
   --positive-surface: #dcfce7;
   --positive-ink: #14532d;
   --info-surface: #dbeafe;
@@ -552,17 +552,9 @@ ol {
   text-transform: uppercase;
   color: var(--text-muted);
 }
-.section-heading .section-eyebrow::after {
-  content: "";
-  display: block;
-  width: 1.75rem;
-  height: 1px;
-  margin-top: 0.6rem;
-  background: var(--control-border);
-}
 .section-heading h2,
 .education-title {
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 0;
   font-family: var(--display-font);
   font-size: var(--display-l);
   font-weight: 400;
@@ -573,14 +565,6 @@ ol {
 }
 .education-title {
   font-size: clamp(2.25rem, 4.5vw, 4rem);
-}
-.education > .section-eyebrow::after {
-  content: "";
-  display: block;
-  width: 1.75rem;
-  height: 1px;
-  margin-top: 0.6rem;
-  background: var(--control-border);
 }
 .row-label {
   font-size: 0.6875rem;

@@ -72,7 +72,7 @@ const Home = () => {
         <div className="hero-content">
           <h1 id="titre-principal" className="hero-name">
             <span>Thomas</span> <span>Caron</span>{" "}
-            <span className="hero-name__role">Développeur</span>
+            <span className="hero-name__role">Chef de projet</span>
           </h1>
           <div className="hero-details">
             <div className="hero-intro">
@@ -115,11 +115,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section
-        className="page-section about-section"
-        id="apropos"
-        aria-labelledby="titre-apropos"
-      >
+      <section className="page-section about-section" id="apropos" aria-labelledby="titre-apropos">
         <div className="container">
           <h2 className="visually-hidden" id="titre-apropos">
             À propos

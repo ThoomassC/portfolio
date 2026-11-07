@@ -69,6 +69,8 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
     { ink: "--contact-ink", surface: "--contact-surface" },
     { ink: "--text-body", surface: "--soft-surface" },
     { ink: "--inverse-muted", surface: "--inverse-soft-surface" },
+    { ink: "--highlight", surface: "--site-background" },
+    { ink: "--highlight", surface: "--hero-surface" },
   ])("$ink reste lisible sur $surface", ({ ink, surface }) => {
     expect(contrastRatio(value(tokens, ink), value(tokens, surface))).toBeGreaterThanOrEqual(4.5);
   });

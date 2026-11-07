@@ -116,7 +116,7 @@ const Home = () => {
       </section>
 
       <section
-        className="page-section about-section section-dark"
+        className="page-section about-section"
         id="apropos"
         aria-labelledby="titre-apropos"
       >
@@ -183,7 +183,7 @@ const Home = () => {
       </section>
 
       <section
-        className="page-section skills-section section-dark"
+        className="page-section skills-section"
         id="competences"
         aria-labelledby="titre-competences"
       >

@@ -7,10 +7,10 @@ page sombre et cinématographique, nom géant posé sur un portrait en noir et b
 titres condensés, listes à filets fins, grain de film, navigation verticale qui suit
 la section lue et apparitions au défilement.
 
-La palette **Ivoire & cobalt** de la v2 est conservée : fond ivoire `#F7F4EA`,
-hero bleu clair `#E1E8F6`, sections marine `#232F52` (À propos, Compétences),
-contact et actions cobalt `#375AC0`. Le thème sombre utilise `#192139`, `#344369`,
-`#F2F3FC` et `#A9BAFF`. Le thème suit la préférence du système, puis le choix mémorisé.
+Le thème sombre est la référence : fond `#0A0A0A`, texte `#FAFAFA`, corps `#A3A3A3`,
+filets `#262626`. Le thème clair en est l'inverse monochrome (`#F5F5F4`, `#0A0A0A`,
+`#3F3F46`). Le thème suit la préférence du système, puis le choix mémorisé. La mise
+en couleur sera retravaillée élément par élément.
 
 Le parcours, les missions, les formations, les compétences, les projets, les passions
 et les coordonnées restent centralisés dans `src/content`.

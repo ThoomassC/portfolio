@@ -153,6 +153,10 @@ const Home = () => {
               <dt>Formation actuelle</dt>
               <dd>Architecture logicielle · Bac +5</dd>
             </div>
+            <div>
+              <dt>Objectif</dt>
+              <dd>Responsable portefeuille projets</dd>
+            </div>
           </dl>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { IconMenu2, IconMoon, IconSun, IconX } from "@tabler/icons-react";
 import { navigationItems, navigationSectionIds } from "../content/navigation";
 import { profile } from "../content/profile";
 import { useActiveSection } from "../hooks/useActiveSection";
+import { useIsScrolling } from "../hooks/useIsScrolling";
 import { useTheme } from "../hooks/useTheme";
 
 /**
@@ -14,6 +15,7 @@ const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { activeSection, selectSection } = useActiveSection(navigationSectionIds);
   const { isDarkTheme, toggleTheme } = useTheme();
+  const isScrolling = useIsScrolling();
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navigationPanelRef = useRef<HTMLDivElement>(null);
@@ -129,7 +131,9 @@ const SiteHeader = () => {
         <div
           id="navigation-principale"
           ref={navigationPanelRef}
-          className={`section-nav${isMenuOpen ? " is-open" : ""}`}
+          className={`section-nav${isMenuOpen ? " is-open" : ""}${
+            isScrolling && !isMenuOpen ? " is-scrolling" : ""
+          }`}
         >
           {navigationItems.map(({ id, label }) => (
             <a

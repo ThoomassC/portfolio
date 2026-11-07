@@ -1,6 +1,6 @@
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
 import { profile } from "../content/profile";
 import { setPrefersColorScheme, setPrefersReducedMotion } from "../test/setup";
@@ -173,5 +173,40 @@ describe("liens directs de l'en-tête", () => {
       profile.cv.fileName
     );
     expect(links.queryByRole("link", { name: /github|linkedin/i })).toBeNull();
+  });
+});
+
+/**
+ * La colonne de navigation s'efface pendant le défilement, pour laisser la lecture
+ * libre, et revient dès que la page s'immobilise.
+ */
+describe("navigation pendant le défilement", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("devrait masquer la navigation pendant le défilement et la réafficher à l'arrêt", () => {
+    vi.useFakeTimers();
+    render(<App />);
+    const panel = document.getElementById(NAVIGATION_PANEL_ID);
+
+    expect(panel).not.toHaveClass("is-scrolling");
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    expect(panel).toHaveClass("is-scrolling");
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+      window.dispatchEvent(new Event("scroll"));
+      vi.advanceTimersByTime(300);
+    });
+    expect(panel).toHaveClass("is-scrolling");
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(panel).not.toHaveClass("is-scrolling");
   });
 });

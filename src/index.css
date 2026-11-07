@@ -615,7 +615,7 @@ ol {
 }
 .about-facts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 2rem;
   margin-top: clamp(4rem, 8vw, 7rem);
   padding-top: 1.5rem;
@@ -1020,6 +1020,18 @@ ol {
 @media (min-width: 1001px) {
   :root {
     --nav-space: 10rem;
+  }
+  /* La colonne s'efface pendant le défilement et revient à l'arrêt ; elle reste
+     visible tant qu'un de ses liens a le focus clavier. */
+  .section-nav {
+    transition:
+      opacity 300ms ease,
+      transform 300ms ease;
+  }
+  .section-nav.is-scrolling:not(:focus-within) {
+    opacity: 0;
+    transform: translateX(12px);
+    pointer-events: none;
   }
   /* La colonne de navigation est réservée à droite seulement, hero compris. */
   .page-section,

@@ -94,4 +94,4 @@ automatiquement le mode Vite `recette`. Ces fichiers ne contiennent aucun secret
 **La fusion vers `develop`/`main`, la création de la release et le déploiement en production
 attendent toujours le go explicite de Thomas.** La branche `main` pilote la production Vercel.
 
-Site de production : [portfolio-omega-umber-81.vercel.app](https://portfolio-omega-umber-81.vercel.app).
+Site de production : [thomasca-portfolio.vercel.app](https://thomasca-portfolio.vercel.app/).

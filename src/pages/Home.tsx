@@ -120,7 +120,7 @@ const Home = () => {
           <p className="about-statement" data-reveal="up">
             “Je construis des applications, <mark>et la confiance</mark> qui va avec.”
           </p>
-          <p className="section-eyebrow about-signature" data-reveal="up">
+          <p className="about-signature" data-reveal="up">
             Alternant chez Blue Soft · étudiant au CESI
           </p>
           <div className="about-layout">
@@ -143,19 +143,6 @@ const Home = () => {
                   Me contacter <IconArrowUpRight size={18} aria-hidden="true" />
                 </a>
               </div>
-            </div>
-            <div className="about-figure" data-reveal="up">
-              <img
-                src={profile.portrait.src}
-                width={profile.portrait.width}
-                height={profile.portrait.height}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
-              <p className="about-figure__caption" aria-hidden="true">
-                Rouen · France
-              </p>
             </div>
           </div>
           <dl className="about-facts" data-reveal="up">

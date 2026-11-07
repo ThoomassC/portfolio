@@ -504,9 +504,9 @@ ol {
   display: none;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  min-height: 44px;
-  padding: 0 0.65rem;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   color: inherit;
   background: var(--soft-surface);
   border: 1px solid var(--control-border);
@@ -523,8 +523,9 @@ ol {
   overflow: clip;
   display: grid;
   grid-template-rows: auto minmax(min(6rem, 14dvh), 1fr) auto auto;
-  height: calc(100vh - var(--page-inset));
-  height: calc(100dvh - var(--page-inset));
+  /* Même retrait en bas que sur les côtés : la carte flotte dans le premier écran. */
+  height: calc(100vh - 2 * var(--page-inset));
+  height: calc(100dvh - 2 * var(--page-inset));
   min-height: min-content;
   padding-top: clamp(6.5rem, 15dvh, 9.125rem);
   border-radius: var(--radius-section);
@@ -2009,8 +2010,6 @@ ol {
   }
   .menu-toggle {
     border: 0;
-    padding-inline: 0.35rem;
-    font-size: 0.6875rem;
   }
   .theme-toggle {
     --theme-toggle-width: 68px;

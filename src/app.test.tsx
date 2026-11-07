@@ -30,6 +30,18 @@ beforeEach(() => {
 });
 
 describe("structure de la page", () => {
+  it("devrait identifier chaque rubrique du menu dans son titre accessible", () => {
+    render(<App />);
+
+    const navigation = screen.getByRole("navigation", { name: /navigation principale/i });
+    for (const link of within(navigation).getAllByRole("link")) {
+      const target = document.querySelector(link.getAttribute("href")!);
+      expect(target).not.toBeNull();
+      const heading = within(target as HTMLElement).getByRole("heading", { level: 2 });
+      expect(heading).toHaveAccessibleName(new RegExp(link.textContent!, "i"));
+    }
+  });
+
   it("devrait exposer un landmark banner situé en dehors du contenu principal", () => {
     render(<App />);
 
@@ -217,7 +229,7 @@ describe("passions", () => {
     render(<App />);
 
     const section = screen.getByRole("region", {
-      name: /ce que je fais du reste de mon temps/i,
+      name: /au-delà du code/i,
     });
 
     expect(section).toHaveAttribute("id", "passions");

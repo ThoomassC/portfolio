@@ -10,15 +10,18 @@ const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
 /**
  * Doit rester aligné sur le script inline de `index.html`.
  *
- * Une seule valeur par thème, égale à `--site-background` de `index.css` : le header
- * est un îlot flottant (`--header-offset`), donc c'est bien le fond de page que le
- * navigateur borde en haut de l'écran. Trois valeurs contradictoires cohabitaient
- * auparavant entre ce fichier et `index.html`, et la barre d'adresse mobile
- * n'annonçait la couleur d'aucune des deux.
+ * Une valeur par thème, égale à `--site-background` de `index.css`, pour aligner
+ * la barre d'adresse mobile sur le fond de page.
  */
 const THEME_COLORS: Record<Theme, string> = {
-  light: "#deedf0",
-  dark: "#0f191c",
+  light: "#f7f4ea",
+  dark: "#192139",
+};
+
+/** Assets communs au header et aux onglets du navigateur, sans police externe. */
+export const THEME_ICONS: Record<Theme, { svg: string; ico: string }> = {
+  light: { svg: "/assets/favicon.svg", ico: "/assets/favicon.ico" },
+  dark: { svg: "/assets/favicon-dark.svg", ico: "/assets/favicon-dark.ico" },
 };
 
 function isTheme(value: string | null): value is Theme {
@@ -57,6 +60,12 @@ export function useTheme(): UseThemeResult {
     document
       .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
       ?.setAttribute("content", THEME_COLORS[theme]);
+    document
+      .querySelector<HTMLLinkElement>('link[rel="icon"][type="image/svg+xml"]')
+      ?.setAttribute("href", THEME_ICONS[theme].svg);
+    document
+      .querySelector<HTMLLinkElement>('link[rel="icon"][type="image/x-icon"]')
+      ?.setAttribute("href", THEME_ICONS[theme].ico);
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

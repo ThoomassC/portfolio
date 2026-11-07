@@ -77,7 +77,7 @@ export const experiences: readonly Experience[] = [
     description:
       "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
     icon: IconCode,
-    stack: ["C#", "SQL", "Git"],
+    stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
     missions: [],
   },
 ];

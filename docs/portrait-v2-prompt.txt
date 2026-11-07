@@ -1,0 +1,7 @@
+Outil : imagegen intégré (édition), transparent_background=true.
+Entrée : public/assets/portrait-thomas-caron.jpg.
+Asset final : public/assets/portrait-thomas-caron-cutout-v2.webp.
+Optimisation : WebP qualité 90, alpha sans perte ; le portrait original est conservé.
+
+Prompt envoyé :
+Use case: background-extraction. Edit target: the supplied real portrait photograph of Thomas Caron. Remove ONLY the pale wall/background and produce a clean photo cutout with a genuinely transparent alpha background, for use in a portfolio website hero. Preserve the exact man's identity, face, hair, smile, skin texture, navy blue dotted shirt, hands, body, pose, proportions, original photography and colors; do not beautify, retouch, redraw or stylize anything. Keep the person complete exactly as visible in the original including lower torso at the bottom edge. Closely crop unused empty margins around the person, with a small transparent margin above his hair. Clean natural edges around hair and clothes, no white fringe, no shadow, no text, no added elements. Change only the background; the man must remain the original photograph.

@@ -37,7 +37,7 @@ describe("portrait de l'en-tête", () => {
   it("devrait afficher le portrait à côté du nom", () => {
     render(<App />);
 
-    const portrait = within(getBrandLink()).getByRole("presentation", { hidden: true });
+    const portrait = getBrandLink().querySelector(".site-header__avatar");
 
     expect(portrait).toHaveAttribute("src", profile.portrait.src);
   });
@@ -54,7 +54,9 @@ describe("portrait de l'en-tête", () => {
     const brand = getBrandLink();
 
     expect(brand).toHaveAccessibleName(profile.name);
-    expect(within(brand).getByRole("presentation", { hidden: true })).toHaveAttribute("alt", "");
+    for (const decoration of within(brand).getAllByRole("presentation", { hidden: true })) {
+      expect(decoration).toHaveAttribute("alt", "");
+    }
   });
 });
 

@@ -12,7 +12,7 @@ export const projects: readonly Project[] = [
     status: "En ligne",
     statusType: "completed",
     description:
-      "Conception de ce portfolio responsive en React et TypeScript, avec un design liquid glass, un thème sombre et une attention portée au RGAA.",
+      "Conception et développement de ce portfolio en React et TypeScript : une direction visuelle éditoriale, un thème sombre et une attention portée au RGAA.",
     stack: ["React 19", "TypeScript", "Vite", "RGAA"],
     links: [{ label: "Code source", href: "https://github.com/ThoomassC/portfolio" }],
   },

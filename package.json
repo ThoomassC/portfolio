@@ -1,11 +1,13 @@
 {
   "name": "portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:recette": "node scripts/build-recette.mjs",
+    "deploy:recette": "node scripts/deploy-recette.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
@@ -14,7 +16,7 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^3.33.0",
-    "@thomascaron/ui": "git+https://github.com/ThoomassC/ui-commune.git#f41041b",
+    "@thomascaron/opale": "github:ThoomassC/opale#5bdefcf",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

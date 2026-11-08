@@ -1,8 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   IconArrowUpRight,
-  IconBrandGithub,
-  IconBrandLinkedin,
   IconInfoCircle,
   IconMail,
   IconMapPin,
@@ -458,36 +456,10 @@ const Home = () => {
           <SectionHeading sectionId="contact" />
           <div className="contact-panel" data-reveal="up">
             <div className="contact-panel__intro">
-              <p className="contact-statement">
-                Une opportunité, une idée
-                <br /> ou l’envie de faire connaissance ?
+              <p className="contact-statement">Parlons-en.</p>
+              <p className="contact-invite">
+                Une opportunité, une idée ou l’envie de faire connaissance ?
               </p>
-              <p className="contact-next-step">{profile.nextStep}</p>
-              <div className="contact-direct">
-                <p className="contact-direct__label">Ou retrouvez-moi</p>
-                <ul className="contact-socials" aria-label="Réseaux professionnels">
-                  <li>
-                    <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                      <IconBrandGithub size={18} aria-hidden="true" />
-                      GitHub
-                      <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                      <IconBrandLinkedin size={18} aria-hidden="true" />
-                      LinkedIn
-                      <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href={`mailto:${profile.email}`}>
-                      <IconMail size={18} aria-hidden="true" />
-                      E-mail
-                    </a>
-                  </li>
-                </ul>
-              </div>
             </div>
             <address className="contact-rows">
               <a href={`mailto:${profile.email}`}>

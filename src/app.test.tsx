@@ -355,12 +355,21 @@ describe("contact", () => {
     expect(screen.queryByRole("heading", { name: /me contacter/i })).toBeNull();
   });
 
-  it("devrait garder l'accroche, le Mastère, l'e-mail, le téléphone et la localisation", () => {
+  it("devrait accrocher par « Parlons-en. », l'invitation en sous-titre, sans répéter le Mastère", () => {
     render(<App />);
     const section = screen.getByRole("region", { name: /^contact$/i });
 
-    expect(section).toHaveTextContent(/une opportunité, une idée/i);
-    expect(section).toHaveTextContent(/mastère spécialisé/i);
+    expect(section.querySelector(".contact-statement")).toHaveTextContent(/^Parlons-en\.$/);
+    expect(section.querySelector(".contact-invite")).toHaveTextContent(
+      /^Une opportunité, une idée ou l’envie de faire connaissance\s?\?$/
+    );
+    expect(section).not.toHaveTextContent(/mastère spécialisé/i);
+  });
+
+  it("devrait garder l'e-mail et le téléphone dans le panneau", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^contact$/i });
+
     expect(within(section).getByRole("link", { name: profile.email })).toHaveAttribute(
       "href",
       `mailto:${profile.email}`
@@ -381,19 +390,11 @@ describe("contact", () => {
     expect(mapsLink.getAttribute("href")).toMatch(/google\.[a-z.]+\/maps/i);
   });
 
-  it("devrait exposer les réseaux professionnels sous forme de liste", () => {
+  it("ne devrait plus répéter les réseaux déjà présents dans l'en-tête", () => {
     render(<App />);
 
-    const socials = screen.getByRole("list", {
-      name: /réseaux professionnels/i,
-    });
-
-    expect(within(socials).getAllByRole("listitem").length).toBeGreaterThanOrEqual(2);
-    expect(
-      within(socials)
-        .getByRole("link", { name: /linkedin/i })
-        .closest("li")
-    ).not.toBeNull();
+    expect(screen.queryByText(/ou retrouvez-moi/i)).toBeNull();
+    expect(screen.queryByRole("list", { name: /réseaux professionnels/i })).toBeNull();
   });
 });
 

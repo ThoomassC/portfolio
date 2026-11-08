@@ -1092,54 +1092,21 @@ ol {
 .contact-panel :focus-visible {
   outline-color: var(--contact-ink);
 }
+.contact-panel__intro {
+  align-self: center;
+}
 .contact-statement {
   font-family: var(--display-font);
-  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.875rem);
+  font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
   line-height: 1.05;
   text-transform: uppercase;
   text-wrap: balance;
 }
-.contact-next-step {
+.contact-invite {
   max-width: 34rem;
   margin-top: 1.25rem;
   font-size: 1.0625rem;
   color: var(--contact-muted);
-}
-.contact-direct {
-  margin-top: clamp(2rem, 4vw, 3rem);
-}
-.contact-direct__label {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--contact-muted);
-}
-.contact-socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 0.85rem;
-}
-.contact-socials a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  padding-inline: 1.1rem;
-  border: 1px solid var(--contact-line);
-  border-radius: var(--radius-pill);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  transition:
-    background-color 250ms ease,
-    border-color 250ms ease,
-    color 250ms ease;
-}
-.contact-socials a:hover {
-  border-color: #a9baff;
-  color: #232f52;
-  background: #a9baff;
 }
 .contact-rows {
   display: grid;

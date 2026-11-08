@@ -156,6 +156,27 @@ describe("liens directs de l'en-tête", () => {
       profile.linkedInUrl
     );
   });
+
+  it("devrait placer le CV en premier, avec une flèche de téléchargement", () => {
+    render(<App />);
+    const names = within(screen.getByRole("list", { name: /liens directs/i }))
+      .getAllByRole("link")
+      .map((link) => link.textContent?.trim().split(/\s/)[0]);
+
+    expect(names).toEqual(["CV", "E-mail", "GitHub", "LinkedIn"]);
+  });
+
+  it("devrait signaler par une flèche décorative la redirection ou le téléchargement", () => {
+    render(<App />);
+    const links = within(screen.getByRole("list", { name: /liens directs/i }));
+    const arrowOf = (name: RegExp) =>
+      links.getByRole("link", { name }).querySelector("svg[aria-hidden='true']");
+
+    expect(arrowOf(/^cv/i)).toHaveClass("tabler-icon-arrow-down");
+    for (const name of [/e-mail/i, /github/i, /linkedin/i]) {
+      expect(arrowOf(name)).toHaveClass("tabler-icon-arrow-up-right");
+    }
+  });
 });
 
 /**

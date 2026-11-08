@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { IconMenu2, IconMoon, IconSun, IconX } from "@tabler/icons-react";
+import {
+  IconArrowDown,
+  IconArrowUpRight,
+  IconMenu2,
+  IconMoon,
+  IconSun,
+  IconX,
+} from "@tabler/icons-react";
 import { navigationItems, navigationSectionIds } from "../content/navigation";
 import { profile } from "../content/profile";
 import { useActiveSection } from "../hooks/useActiveSection";
@@ -78,22 +85,28 @@ const SiteHeader = () => {
     <header className={`site-header${isMenuOpen ? " is-menu-open" : ""}`} ref={headerRef}>
       <div className="header-actions">
         <ul className="header-links" aria-label="Liens directs">
-          <li>
-            <a href={`mailto:${profile.email}`}>E-mail</a>
-          </li>
           <li className="header-links__cv">
             <a href={profile.cv.href} download={profile.cv.fileName}>
               CV<span className="visually-hidden"> — télécharger (PDF, 104 Ko)</span>
+              <IconArrowDown size={14} stroke={2} aria-hidden="true" />
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${profile.email}`}>
+              E-mail
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
             </a>
           </li>
           <li>
             <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
               GitHub<span className="visually-hidden"> (nouvelle fenêtre)</span>
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
             </a>
           </li>
           <li>
             <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
               LinkedIn<span className="visually-hidden"> (nouvelle fenêtre)</span>
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
             </a>
           </li>
         </ul>

@@ -247,6 +247,7 @@ ol {
 .header-links a {
   display: inline-flex;
   align-items: center;
+  gap: 0.2rem;
   min-height: 44px;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -255,6 +256,16 @@ ol {
 }
 .header-links a:hover {
   background-size: 100% 1px;
+}
+.header-links svg {
+  flex: none;
+  transition: transform 200ms ease;
+}
+.header-links a:hover svg {
+  transform: translate(1px, -1px);
+}
+.header-links__cv a:hover svg {
+  transform: translateY(2px);
 }
 
 /* Navigation : colonne fixe en bas à droite, la section lue soulignée. */

@@ -223,41 +223,19 @@ ol {
   align-items: center;
   gap: 1.25rem;
 }
-/* Voile rectangulaire juste derrière les liens et le switch, bords fondus courts. */
-.header-actions {
-  position: relative;
-  --veil-x: 1rem;
-  --veil-y: 0.6rem;
-  --veil-extra-right: 0px;
+/* L'encre des liens suit le fond qui passe derrière eux (voir useBackdropTone). */
+.header-links a,
+.menu-toggle {
+  color: var(--text-strong);
+  transition: color 200ms ease;
 }
-.header-actions::before {
-  content: "";
-  position: absolute;
-  inset: calc(var(--veil-y) * -1) calc((var(--veil-x) + var(--veil-extra-right)) * -1)
-    calc(var(--veil-y) * -1) calc(var(--veil-x) * -1);
-  z-index: -1;
-  background: var(--site-background);
-  -webkit-mask-image:
-    linear-gradient(
-      to right,
-      transparent,
-      #000 var(--veil-x),
-      #000 calc(100% - var(--veil-x)),
-      transparent
-    ),
-    linear-gradient(transparent, #000 var(--veil-y), #000 calc(100% - var(--veil-y)), transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(
-      to right,
-      transparent,
-      #000 var(--veil-x),
-      #000 calc(100% - var(--veil-x)),
-      transparent
-    ),
-    linear-gradient(transparent, #000 var(--veil-y), #000 calc(100% - var(--veil-y)), transparent);
-  mask-composite: intersect;
-  pointer-events: none;
+.header-links a[data-backdrop="dark"],
+.menu-toggle[data-backdrop="dark"] {
+  color: #f7f4ea;
+}
+.header-links a[data-backdrop="light"],
+.menu-toggle[data-backdrop="light"] {
+  color: #232f52;
 }
 .header-links {
   display: flex;
@@ -988,9 +966,6 @@ ol {
 @media (max-width: 1000px) {
   .menu-toggle {
     display: inline-flex;
-  }
-  .header-actions {
-    --veil-extra-right: calc(1.5rem + 44px);
   }
   .header-links li:not(.header-links__cv) {
     display: none;

@@ -3,6 +3,7 @@ import { IconMenu2, IconMoon, IconSun, IconX } from "@tabler/icons-react";
 import { navigationItems, navigationSectionIds } from "../content/navigation";
 import { profile } from "../content/profile";
 import { useActiveSection } from "../hooks/useActiveSection";
+import { useBackdropTone } from "../hooks/useBackdropTone";
 import { useIsScrolling } from "../hooks/useIsScrolling";
 import { useTheme } from "../hooks/useTheme";
 
@@ -11,12 +12,16 @@ import { useTheme } from "../hooks/useTheme";
  * Sur grand écran, la navigation devient une colonne fixe en bas à droite qui suit
  * la section lue ; en dessous, elle s'ouvre en plein écran depuis l'icône de menu.
  */
+/** Éléments de l'en-tête dont l'encre suit le fond qui passe derrière eux. */
+const BACKDROP_TARGETS = ".header-links a, .menu-toggle";
+
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { activeSection, selectSection } = useActiveSection(navigationSectionIds);
   const { isDarkTheme, toggleTheme } = useTheme();
   const isScrolling = useIsScrolling();
   const headerRef = useRef<HTMLElement>(null);
+  useBackdropTone(headerRef, BACKDROP_TARGETS);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navigationPanelRef = useRef<HTMLDivElement>(null);
 

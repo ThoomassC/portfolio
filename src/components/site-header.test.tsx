@@ -1,4 +1,4 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
@@ -190,5 +190,37 @@ describe("navigation pendant le défilement", () => {
       vi.advanceTimersByTime(1000);
     });
     expect(panel).not.toHaveClass("is-scrolling");
+  });
+});
+
+describe("encre des liens selon le fond", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(document, "elementsFromPoint");
+  });
+
+  function mockBackdrop(color: string) {
+    const backdrop = document.createElement("div");
+    backdrop.style.backgroundColor = color;
+    Object.defineProperty(document, "elementsFromPoint", {
+      configurable: true,
+      value: () => [backdrop],
+    });
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue(
+      DOMRect.fromRect({ x: 10, y: 10, width: 60, height: 24 })
+    );
+  }
+
+  it.each([
+    { color: "rgb(25, 33, 57)", tone: "dark" },
+    { color: "rgb(245, 245, 244)", tone: "light" },
+  ])("devrait marquer le fond $tone derrière les liens", async ({ color, tone }) => {
+    mockBackdrop(color);
+    render(<App />);
+    const email = within(screen.getByRole("list", { name: /liens directs/i })).getByRole("link", {
+      name: /e-mail/i,
+    });
+
+    await waitFor(() => expect(email).toHaveAttribute("data-backdrop", tone));
   });
 });

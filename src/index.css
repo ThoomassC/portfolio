@@ -428,7 +428,7 @@ ol {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(transparent 55%, var(--hero-surface) 98%),
+    linear-gradient(transparent 80%, var(--hero-surface) 100%),
     radial-gradient(ellipse at 60% 40%, transparent 30%, var(--hero-surface) 85%);
 }
 .hero-portrait img {

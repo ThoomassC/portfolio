@@ -66,6 +66,17 @@ const TitleWithBadge = ({
   );
 };
 
+/**
+ * Une période est en cours tant que sa borne de fin est absente ou à venir. Les
+ * dates machine sont au format « AAAA-MM », comparables comme des chaînes.
+ */
+function isOngoing(range: DateRange): boolean {
+  if (!range.end) return true;
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  return range.end.dateTime >= currentMonth;
+}
+
 const badgeVariantByStatus = {
   completed: "positive",
   "in-progress": "info",
@@ -147,44 +158,62 @@ const Home = () => {
         <div className="container">
           <SectionHeading sectionId="parcours" />
           <ol className="timeline" aria-label="Expériences professionnelles">
-            {experiences.map((experience) => (
-              <li className="timeline-item" data-reveal="up" key={experience.company}>
-                <div className="timeline-item__head">
-                  <h3>{experience.title}</h3>
-                  <p className="company">{experience.company}</p>
-                </div>
-                <p className="timeline-item__date">
-                  <DateRangeText range={experience.range} />
-                </p>
-                <div className="timeline-item__body">
-                  <p>{experience.description}</p>
-                  <StackChips
-                    label={`Technologies utilisées chez ${experience.company}`}
-                    items={experience.stack}
-                  />
-                  {experience.missions.length > 0 && (
-                    <ul
-                      className="mission-list"
-                      aria-label={`Missions réalisées chez ${experience.company}`}
-                    >
-                      {experience.missions.map((mission) => (
-                        <li key={mission.title}>
-                          <h4>{mission.title}</h4>
-                          <p className="mission-date">
-                            <DateRangeText range={mission.range} />
-                          </p>
-                          <p>{mission.description}</p>
-                          <StackChips
-                            label={`Technologies de la mission ${mission.title}`}
-                            items={mission.stack}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </li>
-            ))}
+            {experiences.map((experience) => {
+              const isCurrentExperience = isOngoing(experience.range);
+              return (
+                <li className="timeline-item" data-reveal="up" key={experience.company}>
+                  <div className="timeline-item__aside">
+                    <h3>{experience.title}</h3>
+                    <p className="company">{experience.company}</p>
+                    <p className="timeline-item__date">
+                      {isCurrentExperience && (
+                        <>
+                          <span className="status-dot" aria-hidden="true" />
+                          <span className="visually-hidden">En cours : </span>
+                        </>
+                      )}
+                      <DateRangeText range={experience.range} />
+                    </p>
+                  </div>
+                  <div className="timeline-item__body">
+                    <p className="timeline-item__lede">{experience.description}</p>
+                    <StackChips
+                      label={`Technologies utilisées chez ${experience.company}`}
+                      items={experience.stack}
+                    />
+                    {experience.missions.length > 0 && (
+                      <ul
+                        className="mission-list"
+                        aria-label={`Missions réalisées chez ${experience.company}`}
+                      >
+                        {experience.missions.map((mission) => {
+                          const isCurrentMission = isOngoing(mission.range);
+                          return (
+                            <li
+                              className={`mission${isCurrentMission ? " mission--current" : ""}`}
+                              key={mission.title}
+                            >
+                              <p className="mission-date">
+                                {isCurrentMission && (
+                                  <span className="visually-hidden">En cours : </span>
+                                )}
+                                <DateRangeText range={mission.range} />
+                              </p>
+                              <h4>{mission.title}</h4>
+                              <p>{mission.description}</p>
+                              <StackChips
+                                label={`Technologies de la mission ${mission.title}`}
+                                items={mission.stack}
+                              />
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
 
           <div className="education" data-reveal="up">
@@ -193,7 +222,14 @@ const Home = () => {
             </h3>
             <ul className="education-list">
               {formations.map((formation) => (
-                <li key={formation.title}>
+                <li
+                  className={
+                    formation.statusType === "in-progress"
+                      ? "formation formation--current"
+                      : "formation"
+                  }
+                  key={formation.title}
+                >
                   <span className="formation-level">{formation.level}</span>
                   <strong>{formation.title}</strong>
                   <Badge

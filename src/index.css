@@ -592,26 +592,39 @@ ol {
   font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem);
 }
 
-/* Parcours : poste, période, détail, comme une filmographie. */
+/* Parcours : l'entreprise en grand dans une colonne qui accompagne la lecture,
+   le chapeau puis les missions sur une frise ; ce qui est en cours ressort. */
 .timeline {
   border-top: 1px solid var(--line);
 }
 .timeline-item {
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 2fr) minmax(0, 6fr);
-  gap: 1.5rem 2rem;
-  padding-block: clamp(2.5rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 2rem clamp(2rem, 5vw, 5rem);
+  padding-block: clamp(3rem, 6vw, 5rem);
   border-bottom: 1px solid var(--line);
 }
-.timeline-item__head h3 {
-  font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+.timeline-item__aside {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  position: sticky;
+  top: 6rem;
 }
-.company {
-  margin-top: 0.5rem;
-  color: var(--text-body);
+.timeline-item__aside .company {
+  order: -1;
+  font-family: var(--display-font);
+  font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+.timeline-item__aside h3 {
+  margin-top: 0.75rem;
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.3;
 }
 .timeline-item__date,
 .mission-date,
@@ -622,35 +635,73 @@ ol {
   color: var(--text-muted);
 }
 .timeline-item__date {
-  padding-top: 0.55rem;
+  margin-top: 0.75rem;
 }
-.timeline-item__body > p {
-  font-size: 1.0625rem;
-  color: var(--text-body);
+.timeline-item__lede {
+  max-width: 40rem;
+  font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  line-height: 1.5;
+  color: var(--text-strong);
 }
 .date-range time {
   white-space: nowrap;
 }
+/* Frise des missions : un rail, un point par mission, le point plein en cours. */
 .mission-list {
+  position: relative;
   display: grid;
-  gap: 1.75rem;
-  margin-top: 2rem;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
 }
-.mission-list li {
-  padding-left: 1.25rem;
-  border-left: 1px solid var(--line);
+.mission-list::before {
+  content: "";
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0.3rem;
+  width: 1px;
+  background: var(--line);
 }
-.mission-list h4 {
-  font-size: 1.0625rem;
-  font-weight: 500;
+.mission {
+  position: relative;
+  padding: 1rem 1.25rem 1.25rem 2rem;
+  border-radius: 16px;
 }
-.mission-date {
+.mission::before {
+  content: "";
+  position: absolute;
+  top: 1.35rem;
+  left: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--site-background);
+  border: 2px solid var(--control-border);
+}
+.mission--current {
+  background: var(--chip-surface);
+}
+.mission--current .mission-date {
+  color: var(--text-body);
+}
+.mission--current::before {
+  background: var(--positive-ink);
+  border-color: var(--positive-ink);
+  box-shadow: 0 0 0 4px var(--positive-surface);
+}
+.mission h4 {
   margin-top: 0.35rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
-.mission-list p:not(.mission-date) {
-  margin-top: 0.6rem;
+.mission p:not(.mission-date) {
+  margin-top: 0.5rem;
   font-size: 1rem;
   color: var(--text-body);
+}
+.mission .experience-stack {
+  margin-top: 0.85rem;
 }
 
 /* Les badges Opale gardent leur composant, avec des surfaces opaques mesurables. */
@@ -716,7 +767,7 @@ ol {
   color: var(--warning-ink) !important;
 }
 
-/* Formation : titre condensé, lignes niveau / diplôme / statut. */
+/* Formation : le niveau en grand, la formation en cours soulignée. */
 .education {
   margin-top: var(--section-space);
 }
@@ -724,23 +775,33 @@ ol {
   margin-top: clamp(2.5rem, 5vw, 4rem);
   border-top: 1px solid var(--line);
 }
-.education-list li {
+.formation {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 8fr) auto;
+  grid-template-columns: minmax(6rem, 2fr) minmax(0, 8fr) auto;
   align-items: center;
   gap: 1rem 2rem;
-  padding-block: 1.5rem;
+  padding: 1.5rem 0;
   border-bottom: 1px solid var(--line);
 }
-.formation-level {
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.formation--current {
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  background: var(--chip-surface);
+  box-shadow: inset 3px 0 0 var(--text-strong);
 }
-.education-list strong {
+.formation-level {
+  font-family: var(--display-font);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+.formation strong {
   font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.375rem);
   font-weight: 400;
+}
+.formation--current strong {
+  font-weight: 600;
 }
 
 /* Projets et passions : lignes éditoriales, l'année à droite. */
@@ -1025,10 +1086,10 @@ ol {
     text-underline-offset: 8px;
   }
   .timeline-item {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
   }
-  .timeline-item__body {
-    grid-column: 1 / -1;
+  .timeline-item__aside {
+    position: static;
   }
   .hero-portrait img {
     margin-left: 12vw;
@@ -1073,17 +1134,16 @@ ol {
     grid-template-columns: minmax(0, 1fr);
   }
   .timeline-item {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.75rem;
+    gap: 1.25rem;
   }
-  .timeline-item__date {
-    padding-top: 0;
+  .mission {
+    padding-right: 1rem;
   }
-  .education-list li {
+  .formation {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.5rem 1rem;
   }
-  .education-list strong {
+  .formation strong {
     grid-column: 1 / -1;
     grid-row: 2;
   }

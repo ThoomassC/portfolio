@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { IconArrowDown, IconArrowUpRight } from "@tabler/icons-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
@@ -85,24 +85,6 @@ const Home = () => {
           </div>
           <div className="hero-footer">
             <p className="hero-next-step">{profile.nextStep}</p>
-            <ul className="hero-socials" aria-label="Profils en ligne">
-              <li>
-                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  GitHub <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
-                  <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-                </a>
-              </li>
-            </ul>
-            <a className="hero-scroll" href="#competences">
-              Faire connaissance
-              <IconArrowDown aria-hidden="true" size={16} />
-            </a>
           </div>
         </div>
       </section>

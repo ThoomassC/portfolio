@@ -87,9 +87,19 @@ const SiteHeader = () => {
           <li>
             <a href={`mailto:${profile.email}`}>E-mail</a>
           </li>
-          <li>
+          <li className="header-links__cv">
             <a href={profile.cv.href} download={profile.cv.fileName}>
               CV<span className="visually-hidden"> — télécharger (PDF, 104 Ko)</span>
+            </a>
+          </li>
+          <li>
+            <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+              GitHub<span className="visually-hidden"> (nouvelle fenêtre)</span>
+            </a>
+          </li>
+          <li>
+            <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+              LinkedIn<span className="visually-hidden"> (nouvelle fenêtre)</span>
             </a>
           </li>
         </ul>

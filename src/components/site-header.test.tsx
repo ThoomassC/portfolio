@@ -160,7 +160,7 @@ describe("menu mobile de l'en-tête", () => {
 });
 
 describe("liens directs de l'en-tête", () => {
-  it("devrait proposer l'e-mail et le CV, sans répéter GitHub ni LinkedIn de la carte d'accueil", () => {
+  it("devrait proposer l'e-mail, le CV, GitHub et LinkedIn", () => {
     render(<App />);
     const links = within(screen.getByRole("list", { name: /liens directs/i }));
 
@@ -172,7 +172,11 @@ describe("liens directs de l'en-tête", () => {
       "download",
       profile.cv.fileName
     );
-    expect(links.queryByRole("link", { name: /github|linkedin/i })).toBeNull();
+    expect(links.getByRole("link", { name: /github/i })).toHaveAttribute("href", profile.gitHubUrl);
+    expect(links.getByRole("link", { name: /linkedin/i })).toHaveAttribute(
+      "href",
+      profile.linkedInUrl
+    );
   });
 });
 

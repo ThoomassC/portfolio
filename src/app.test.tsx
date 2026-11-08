@@ -141,20 +141,10 @@ describe("dates", () => {
 });
 
 describe("hero", () => {
-  it("devrait proposer un lien GitHub et un lien LinkedIn", () => {
+  it("devrait laisser le bas de l'image sans liens", () => {
     render(<App />);
-    const hero = getHero();
 
-    expect(
-      within(hero)
-        .getByRole("link", { name: /github/i })
-        .getAttribute("href")
-    ).toMatch(/github\.com/i);
-    expect(
-      within(hero)
-        .getByRole("link", { name: /linkedin/i })
-        .getAttribute("href")
-    ).toMatch(/linkedin\.com/i);
+    expect(within(getHero()).queryAllByRole("link")).toHaveLength(0);
   });
 
   it("devrait annoncer le projet de Mastère Spécialisé au CESI", () => {
@@ -241,15 +231,6 @@ describe("section À propos retirée", () => {
 
     expect(document.getElementById("apropos")).toBeNull();
     expect(screen.queryByText(/je construis des applications/i)).toBeNull();
-  });
-
-  it("devrait faire pointer « Faire connaissance » vers une section existante", () => {
-    render(<App />);
-
-    const link = within(getHero()).getByRole("link", { name: /faire connaissance/i });
-    const target = document.querySelector(link.getAttribute("href")!);
-
-    expect(target).not.toBeNull();
   });
 });
 

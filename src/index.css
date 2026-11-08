@@ -427,9 +427,7 @@ ol {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(transparent 80%, var(--hero-surface) 100%),
-    radial-gradient(ellipse at 60% 40%, transparent 30%, var(--hero-surface) 85%);
+  background: radial-gradient(ellipse at 60% 40%, transparent 30%, var(--hero-surface) 85%);
 }
 .hero-portrait img {
   width: auto;
@@ -508,30 +506,11 @@ ol {
   align-items: center;
   gap: 0.5rem 2rem;
   margin-top: 2.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
   font-size: 0.8125rem;
 }
 .hero-next-step {
   color: var(--text-strong);
   margin-right: auto;
-}
-.hero-socials {
-  display: flex;
-  gap: 1.5rem;
-}
-.hero-socials a,
-.hero-scroll {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  color: var(--text-body);
-  transition: color 250ms ease;
-}
-.hero-socials a:hover,
-.hero-scroll:hover {
-  color: var(--text-strong);
 }
 
 /* Sections : beaucoup d'air, surtitre discret, titre condensé géant. */
@@ -986,7 +965,7 @@ ol {
   .menu-toggle {
     display: inline-flex;
   }
-  .header-links li:first-child {
+  .header-links li:not(.header-links__cv) {
     display: none;
   }
   .section-nav {

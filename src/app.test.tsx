@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import { profile } from "./content/profile";
@@ -488,6 +488,45 @@ describe("projets personnels", () => {
       expect(preview).toHaveAttribute("loading", "lazy");
     }
   );
+
+  it("devrait ranger la description derrière un bouton d'information fermé par défaut", () => {
+    render(<App />);
+    const card = getProjectCard(/^astrologie$/i);
+    const toggle = within(card).getByRole("button", { name: /description du projet astrologie/i });
+    const description = within(card).getByText(/site pédagogique bilingue/i);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(description).not.toBeVisible();
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(description).toBeVisible();
+  });
+
+  it("devrait refermer la description avec Échap et rendre le focus au bouton", () => {
+    render(<App />);
+    const card = getProjectCard(/^opale$/i);
+    const toggle = within(card).getByRole("button", { name: /description du projet opale/i });
+
+    fireEvent.click(toggle);
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveFocus();
+  });
+
+  it("devrait refermer la description au clic en dehors", () => {
+    render(<App />);
+    const toggle = within(getProjectCard(/^board$/i)).getByRole("button", {
+      name: /description du projet board/i,
+    });
+
+    fireEvent.click(toggle);
+    fireEvent.pointerDown(document.body);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
 
   it("ne devrait montrer aucun aperçu pour un projet sans version en ligne", () => {
     render(<App />);

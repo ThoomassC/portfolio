@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   IconArrowUpRight,
   IconBrandGithub,
   IconBrandLinkedin,
+  IconInfoCircle,
   IconMail,
   IconMapPin,
   IconPhone,
@@ -97,9 +98,40 @@ const badgeVariantByStatus = {
  */
 const ProjectCard = ({ project }: { readonly project: Project }) => {
   const siteLink = project.links.find((link) => link.label === "Voir le site");
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const descriptionId = `description-${project.id}`;
+
+  /** Bulle ouverte : Échap la referme et rend le focus au bouton, un clic ailleurs aussi. */
+  useEffect(() => {
+    if (!isInfoOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setIsInfoOpen(false);
+      toggleRef.current?.focus();
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!infoRef.current?.contains(event.target as Node)) setIsInfoOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isInfoOpen]);
+
+  const cardClassName = [
+    "project-card",
+    project.preview && "project-card--featured",
+    isInfoOpen && "project-card--info-open",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <article className={`project-card${project.preview ? " project-card--featured" : ""}`}>
+    <article className={cardClassName}>
       {project.preview && (
         <a
           className="project-card__preview"
@@ -135,8 +167,23 @@ const ProjectCard = ({ project }: { readonly project: Project }) => {
             {project.status}
           </Badge>
         </p>
-        <h3 className="project-card__title">{project.title}</h3>
-        <p className="project-card__description">{project.description}</p>
+        <div className="project-card__heading" ref={infoRef}>
+          <h3 className="project-card__title">{project.title}</h3>
+          <button
+            ref={toggleRef}
+            className="info-toggle"
+            type="button"
+            aria-expanded={isInfoOpen}
+            aria-controls={descriptionId}
+            onClick={() => setIsInfoOpen((open) => !open)}
+          >
+            <IconInfoCircle size={22} stroke={1.75} aria-hidden="true" />
+            <span className="visually-hidden">Description du projet {project.title}</span>
+          </button>
+          <div className="project-card__info" id={descriptionId} hidden={!isInfoOpen}>
+            <p>{project.description}</p>
+          </div>
+        </div>
         <StackChips label={`Technologies du projet ${project.title}`} items={project.stack} />
         {project.links.length > 0 && (
           <div className="project-links">

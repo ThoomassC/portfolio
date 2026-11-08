@@ -7,7 +7,7 @@ import { useIsScrolling } from "../hooks/useIsScrolling";
 import { useTheme } from "../hooks/useTheme";
 
 /**
- * En-tête discret, posé sur la page : nom à gauche, liens directs et thème à droite.
+ * En-tête discret, posé sur la page : liens directs et thème à droite.
  * Sur grand écran, la navigation devient une colonne fixe en bas à droite qui suit
  * la section lue ; en dessous, elle s'ouvre en plein écran depuis l'icône de menu.
  */
@@ -71,17 +71,6 @@ const SiteHeader = () => {
 
   return (
     <header className={`site-header${isMenuOpen ? " is-menu-open" : ""}`} ref={headerRef}>
-      <a className="site-header__brand" href="#contenu-principal">
-        <img
-          className="site-header__avatar"
-          src={profile.portrait.src}
-          width={28}
-          height={28}
-          alt=""
-          decoding="async"
-        />
-        <span>{profile.name}</span>
-      </a>
       <div className="header-actions">
         <ul className="header-links" aria-label="Liens directs">
           <li>

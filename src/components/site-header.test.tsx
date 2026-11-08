@@ -28,35 +28,13 @@ beforeEach(() => {
   setPrefersReducedMotion(true);
 });
 
-function getBrandLink(): HTMLElement {
-  // Plusieurs liens de la page portent le nom : on reste dans le landmark d'en-tête.
-  return within(screen.getByRole("banner")).getByRole("link", { name: profile.name });
-}
-
-describe("portrait de l'en-tête", () => {
-  it("devrait afficher le portrait à côté du nom", () => {
+describe("en-tête épuré", () => {
+  it("devrait ne plus afficher le nom ni le portrait", () => {
     render(<App />);
+    const banner = screen.getByRole("banner");
 
-    const portrait = getBrandLink().querySelector(".site-header__avatar");
-
-    expect(portrait).toHaveAttribute("src", profile.portrait.src);
-  });
-
-  /**
-   * Le portrait du hero porte une alternative descriptive : il y est seul et porte
-   * l'identité. Dans l'en-tête il vit DANS le lien qui affiche déjà le nom, donc une
-   * alternative descriptive ferait annoncer « Thomas Caron Thomas Caron, souriant, en
-   * chemise bleu marine… ». Le nom accessible du lien doit rester son texte visible.
-   */
-  it("devrait laisser le nom accessible du lien égal à son texte visible", () => {
-    render(<App />);
-
-    const brand = getBrandLink();
-
-    expect(brand).toHaveAccessibleName(profile.name);
-    for (const decoration of within(brand).getAllByRole("presentation", { hidden: true })) {
-      expect(decoration).toHaveAttribute("alt", "");
-    }
+    expect(within(banner).queryByRole("link", { name: profile.name })).toBeNull();
+    expect(banner.querySelector("img")).toBeNull();
   });
 });
 

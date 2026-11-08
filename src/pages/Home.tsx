@@ -309,12 +309,16 @@ const Home = () => {
       >
         <div className="container">
           <SectionHeading sectionId="passions" />
-          <ul className="row-list" aria-label="Pratiques personnelles">
-            {passions.map((passion, index) => (
-              <li className="passion-row" data-reveal="up" key={passion.id}>
-                <div>
-                  <h3>{passion.title}</h3>
-                  <p>{passion.description}</p>
+          <ul className="passion-grid" data-reveal="up" aria-label="Pratiques personnelles">
+            {passions.map((passion) => {
+              const Icon = passion.icon;
+              return (
+                <li className="passion-card" key={passion.id}>
+                  <span className="passion-card__icon" aria-hidden="true">
+                    <Icon size={26} stroke={1.75} />
+                  </span>
+                  <h3 className="passion-card__title">{passion.title}</h3>
+                  <p className="passion-card__text">{passion.description}</p>
                   {passion.links.length > 0 && (
                     <div className="project-links">
                       {passion.links.map((link) => (
@@ -332,67 +336,16 @@ const Home = () => {
                       ))}
                     </div>
                   )}
-                </div>
-                <span className="row-year" aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              </li>
-            ))}
+                  <Icon
+                    className="passion-card__watermark"
+                    size={168}
+                    stroke={1}
+                    aria-hidden="true"
+                  />
+                </li>
+              );
+            })}
           </ul>
-        </div>
-      </section>
-
-      <section
-        className="page-section accessibility-section"
-        id="accessibilite"
-        aria-labelledby="titre-accessibilite"
-      >
-        <div className="container">
-          <SectionHeading sectionId="accessibilite" />
-          <div className="accessibility-layout" data-reveal="up">
-            <div>
-              <p className="accessibility-lede">
-                Ce site vise un niveau de conformité aussi élevé que possible au RGAA 4.1.2 et fait
-                l’objet d’améliorations continues.
-              </p>
-              <p className="accessibility-status">
-                <span className="status-dot" aria-hidden="true" />
-                Améliorations continues
-              </p>
-            </div>
-            <div>
-              <ul className="accessibility-list">
-                <li>
-                  <strong>Navigation</strong>
-                  <span>Lien d’évitement, titres structurés et utilisation au clavier.</span>
-                </li>
-                <li>
-                  <strong>Lecture</strong>
-                  <span>
-                    Contrastes renforcés, textes redimensionnables et thème clair ou sombre, au
-                    choix.
-                  </span>
-                </li>
-                <li>
-                  <strong>Confort</strong>
-                  <span>
-                    Mise en page responsive et préférence de réduction des mouvements respectée.
-                  </span>
-                </li>
-              </ul>
-              <p className="accessibility-limit">
-                <strong>Limite connue :</strong> le CV PDF téléchargeable est en cours de remise en
-                accessibilité.
-              </p>
-              <a
-                className="text-link"
-                href={`mailto:${profile.email}?subject=Signalement%20accessibilit%C3%A9%20du%20portfolio`}
-              >
-                Signaler un problème d’accessibilité
-                <IconArrowUpRight size={16} aria-hidden="true" />
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 

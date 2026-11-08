@@ -240,6 +240,14 @@ describe("mentions retirées", () => {
 
     expect(screen.queryByText(/audit technique réalisé/i)).toBeNull();
   });
+
+  it("devrait avoir retiré la section Accessibilité, sa navigation et son lien de pied de page", () => {
+    render(<App />);
+
+    expect(document.getElementById("accessibilite")).toBeNull();
+    expect(screen.queryByRole("region", { name: /accessibilité/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^accessibilité$/i })).toBeNull();
+  });
 });
 
 describe("téléchargement du CV", () => {
@@ -287,6 +295,13 @@ describe("passions", () => {
       .map((titre) => titre.textContent);
 
     expect(titres).toEqual(["Natation", "Sauvetage en mer", "Projets personnels", "Anglais"]);
+  });
+
+  it("ne devrait plus numéroter les passions (01, 02…)", () => {
+    render(<App />);
+    const liste = screen.getByRole("list", { name: /pratiques personnelles/i });
+
+    expect(within(liste).queryByText(/^0\d$/)).not.toBeInTheDocument();
   });
 
   /**

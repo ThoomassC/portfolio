@@ -6,7 +6,6 @@ const Footer = () => (
       <p>© {new Date().getFullYear()} Thomas Caron · Conçu et développé avec soin.</p>
       <div className="footer-links">
         <span>Rouen · Paris</span>
-        <a href="#accessibilite">Accessibilité</a>
         <a href="#contenu-principal">
           Retour en haut
           <IconArrowUp size={14} aria-hidden="true" />

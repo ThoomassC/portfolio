@@ -45,6 +45,27 @@ const SectionHeading = ({
   );
 };
 
+/** Garde la pastille collée au dernier mot : elle ne passe jamais seule à la ligne. */
+const TitleWithBadge = ({
+  title,
+  children,
+}: {
+  readonly title: string;
+  readonly children: ReactNode;
+}) => {
+  const words = title.split(" ");
+  const lastWord = words.pop();
+  return (
+    <>
+      {words.length > 0 && `${words.join(" ")} `}
+      <span className="nowrap">
+        {lastWord}
+        {children}
+      </span>
+    </>
+  );
+};
+
 const badgeVariantByStatus = {
   completed: "positive",
   "in-progress": "info",
@@ -100,11 +121,12 @@ const Home = () => {
             {skillGroups.map((group) => (
               <div className="skill-group" data-reveal="up" key={group.id}>
                 <h3 className="skill-group__title" id={`skill-${group.id}`}>
-                  {group.title}
-                  <span className="skill-group__count">
-                    {group.items.length}
-                    <span className="visually-hidden"> compétences</span>
-                  </span>
+                  <TitleWithBadge title={group.title}>
+                    <span className="skill-group__count" aria-hidden="true">
+                      {group.items.length}
+                    </span>
+                    <span className="visually-hidden">{`, ${group.items.length} compétences`}</span>
+                  </TitleWithBadge>
                 </h3>
                 <ul className="skill-list" aria-label={`Compétences ${group.title}`}>
                   {group.items.map((item) => (

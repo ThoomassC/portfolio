@@ -425,3 +425,16 @@ describe("projets personnels", () => {
     expect(hrefs.some((href) => href?.startsWith("https://astrologie.vercel.app"))).toBe(false);
   });
 });
+
+describe("sous-titres des compétences", () => {
+  it("devrait annoncer chaque groupe avec son nombre de compétences", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: /^Expérience professionnelle,\s*16\s*compétences$/,
+      })
+    ).toBeInTheDocument();
+  });
+});

@@ -3,7 +3,7 @@ import { IconArrowUp } from "@tabler/icons-react";
 const Footer = () => (
   <footer className="site-footer">
     <div className="container footer-content">
-      <p>© {new Date().getFullYear()} Thomas Caron · Conçu et développé avec soin.</p>
+      <p>© {new Date().getFullYear()} Thomas Caron · Développé à la main et avec IA.</p>
       <div className="footer-links">
         <span>Rouen</span>
         <a href="#contenu-principal">

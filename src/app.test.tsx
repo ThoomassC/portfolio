@@ -105,6 +105,23 @@ describe("parcours", () => {
     expect(firstExperience).toHaveTextContent(/blue soft/i);
     expect(firstExperience).not.toHaveTextContent(/linkt/i);
   });
+
+  it("ne devrait plus résumer les missions Blue Soft en un paragraphe", () => {
+    render(<App />);
+
+    expect(screen.queryByText(/cinq missions successives/i)).not.toBeInTheDocument();
+  });
+
+  it("devrait détailler chez Linkt le poste de développeur et deux postes de chef de projet annexe", () => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
+    const posts = within(missions).getAllByRole("heading", { level: 4 });
+
+    expect(posts).toHaveLength(3);
+    expect(posts[0]).toHaveTextContent(/développeur/i);
+    expect(posts[1]).toHaveTextContent(/chef de projet annexe.*documentation/i);
+    expect(posts[2]).toHaveTextContent(/chef de projet annexe.*documentation/i);
+  });
 });
 
 describe("dates", () => {

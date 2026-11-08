@@ -176,7 +176,9 @@ const Home = () => {
                     </p>
                   </div>
                   <div className="timeline-item__body">
-                    <p className="timeline-item__lede">{experience.description}</p>
+                    {experience.description && (
+                      <p className="timeline-item__lede">{experience.description}</p>
+                    )}
                     <StackChips
                       label={`Technologies utilisées chez ${experience.company}`}
                       items={experience.stack}

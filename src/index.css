@@ -653,6 +653,9 @@ ol {
   gap: 0.5rem;
   margin-top: 2.5rem;
 }
+.mission-list:first-child {
+  margin-top: 0;
+}
 .mission-list::before {
   content: "";
   position: absolute;

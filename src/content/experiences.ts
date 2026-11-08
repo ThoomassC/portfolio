@@ -11,8 +11,6 @@ export const experiences: readonly Experience[] = [
       start: { label: "Octobre 2025", dateTime: "2025-10" },
       end: { label: "Septembre 2027", dateTime: "2027-09" },
     },
-    description:
-      "Cinq missions successives couvrant la maintenance applicative, le développement mobile, l’automatisation des tests, l’infrastructure et le développement d’une plateforme de transport de colis, puis le développement d’une plateforme de radiologie médicale.",
     icon: IconBriefcase,
     stack: [],
     missions: [
@@ -69,15 +67,44 @@ export const experiences: readonly Experience[] = [
   },
   {
     company: "Linkt",
-    title: "Développeur informatique en alternance",
+    title: "Développeur et chef de projet en alternance",
     range: {
       start: { label: "Septembre 2022", dateTime: "2022-09" },
       end: { label: "Septembre 2025", dateTime: "2025-09" },
     },
-    description:
-      "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
     icon: IconCode,
-    stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
-    missions: [],
+    stack: [],
+    missions: [
+      {
+        title: "Développeur informatique en alternance — outil de production",
+        range: {
+          start: { label: "Septembre 2022", dateTime: "2022-09" },
+          end: { label: "Septembre 2025", dateTime: "2025-09" },
+        },
+        description:
+          "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
+        stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
+      },
+      {
+        title: "Chef de projet annexe — documentation de l’outil de production",
+        range: {
+          start: { label: "2022", dateTime: "2022" },
+          end: { label: "2023", dateTime: "2023" },
+        },
+        description:
+          "En parallèle du développement, pilotage d’un projet interne d’amélioration de la documentation de l’outil de production sur lequel je développais.",
+        stack: [],
+      },
+      {
+        title: "Chef de projet annexe — documentation d’un second outil interne",
+        range: {
+          start: { label: "2023", dateTime: "2023" },
+          end: { label: "2024", dateTime: "2024" },
+        },
+        description:
+          "Même démarche sur un autre outil interne : pilotage d’un projet d’amélioration de sa documentation.",
+        stack: [],
+      },
+    ],
   },
 ];

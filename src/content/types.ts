@@ -32,7 +32,8 @@ export type Experience = {
   readonly company: string;
   readonly title: string;
   readonly range: DateRange;
-  readonly description: string;
+  /** Chapeau facultatif : absent quand les missions parlent d'elles-mêmes. */
+  readonly description?: string;
   readonly icon: TablerIcon;
   readonly stack: readonly string[];
   readonly missions: readonly Mission[];

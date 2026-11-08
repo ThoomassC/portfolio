@@ -76,19 +76,21 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
 });
 
 /**
- * « Chef de projet » garde le même bleu lavande dans les deux thèmes, par choix de
- * Thomas (2026-11-07). Lisible sur le fond sombre ; sur le fond clair il descend à
- * environ 1,7:1, sous le seuil de 3:1 des grands titres : exception connue, à
- * reprendre lors de la mise en couleur. Ce test verrouille les deux faits.
+ * « Chef de projet » : lavande sur le fond sombre, indigo plus soutenu sur le fond
+ * clair, où le lavande descendait à 1,7:1 (essai validé par Thomas le 2026-11-08).
+ * Grand titre : seuil de 3:1 sur le fond du hero, dans les deux thèmes.
  */
 describe("couleur du rôle dans le hero", () => {
-  it("garde la même valeur dans les deux thèmes", () => {
-    expect(value(dark, "--highlight")).toBe(value(light, "--highlight"));
-  });
-  it("reste lisible comme grand titre sur le fond sombre", () => {
+  it.each([
+    ["clair", light],
+    ["sombre", dark],
+  ])("reste lisible comme grand titre sur le fond %s", (_, tokens) => {
     expect(
-      contrastRatio(value(dark, "--highlight"), value(dark, "--hero-surface"))
+      contrastRatio(value(tokens, "--role-ink"), value(tokens, "--hero-surface"))
     ).toBeGreaterThanOrEqual(3);
+  });
+  it("garde le lavande de l'accent en thème sombre", () => {
+    expect(value(dark, "--role-ink")).toBe(value(dark, "--highlight"));
   });
 });
 

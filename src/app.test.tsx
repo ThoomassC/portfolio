@@ -78,7 +78,6 @@ describe("structure de la page", () => {
 
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   });
-
 });
 
 describe("parcours", () => {

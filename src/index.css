@@ -39,6 +39,7 @@
   --chip-surface: #e7e5e4;
   --grain-opacity: 0.05;
   --highlight: #a9baff;
+  --role-ink: #4c5fd5;
   --positive-surface: #dcfce7;
   --positive-ink: #14532d;
   --info-surface: #dbeafe;
@@ -90,6 +91,7 @@
   --chip-surface: #2c395b;
   --grain-opacity: 0.07;
   --highlight: #a9baff;
+  --role-ink: #a9baff;
   --positive-surface: #13251a;
   --positive-ink: #a7e3b5;
   --info-surface: #121e2c;
@@ -481,7 +483,7 @@ ol {
 }
 .hero-name__role {
   margin-top: 0.06em;
-  color: var(--highlight);
+  color: var(--role-ink);
   animation-delay: 180ms !important;
 }
 .hero-details {

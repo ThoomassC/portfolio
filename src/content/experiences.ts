@@ -9,7 +9,7 @@ import type { Experience } from "./types";
 export const experiences: readonly Experience[] = [
   {
     company: "Blue Soft",
-    title: "Développeur Full Stack",
+    title: "Développeur Full Stack & QA en alternance",
     range: {
       start: { label: "Octobre 2025", dateTime: "2025-10" },
       end: { label: "Septembre 2027", dateTime: "2027-09" },

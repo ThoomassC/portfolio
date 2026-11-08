@@ -130,6 +130,29 @@ describe("parcours", () => {
     expect(screen.queryByText(/cinq missions successives/i)).not.toBeInTheDocument();
   });
 
+  it("devrait intituler les deux postes en alternance", () => {
+    render(<App />);
+    const timeline = screen.getByRole("list", { name: /expériences professionnelles/i });
+    const titles = within(timeline)
+      .getAllByRole("heading", { level: 3 })
+      .map((title) => title.textContent);
+
+    expect(titles).toEqual([
+      "Développeur Full Stack & QA en alternance",
+      "Développeur et chef de projet en alternance",
+    ]);
+  });
+
+  it("devrait mettre en avant le rôle de Scrum Master dans la formation MAALSI en cours", () => {
+    render(<App />);
+    const maalsi = screen
+      .getByText(/manager en architectures et applications logicielles/i)
+      .closest("li");
+
+    expect(maalsi).toHaveTextContent(/scrum master/i);
+    expect(maalsi).toHaveTextContent(/projet de groupe de 4 personnes/i);
+  });
+
   it("devrait détailler chez Linkt le poste de développeur et deux postes de chef de projet annexe", () => {
     render(<App />);
     const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
@@ -220,11 +243,21 @@ describe("hero", () => {
     }
 
     expect(Array.from(eyebrow.querySelectorAll("span"), (role) => role.textContent)).toEqual([
-      "Développeur logiciel",
-      "Full-stack",
-      "QA",
+      "Responsable portefeuille projets",
+      "Management",
+      "Chefferie de projet",
     ]);
-    expect(eyebrow).toHaveTextContent("Développeur logiciel · Full-stack · QA");
+    expect(eyebrow).toHaveTextContent(
+      "Responsable portefeuille projets · Management · Chefferie de projet"
+    );
+  });
+
+  it("devrait présenter le poste actuel comme une alternance", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent(
+      "Actuellement alternant développeur full stack chez Blue Soft"
+    );
   });
 });
 
@@ -568,7 +601,7 @@ describe("sous-titres des compétences", () => {
     expect(
       screen.getByRole("heading", {
         level: 3,
-        name: /^Expérience professionnelle,\s*16\s*compétences$/,
+        name: /^Expérience professionnelle,\s*21\s*compétences$/,
       })
     ).toBeInTheDocument();
   });

@@ -9,6 +9,7 @@ export const formations: readonly Formation[] = [
   },
   {
     title: "Manager en architectures et applications logicielles des SI",
+    highlight: "Scrum Master d’un projet de groupe de 4 personnes",
     level: "Bac +5",
     status: "En cours",
     statusType: "in-progress",

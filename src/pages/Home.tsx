@@ -5,6 +5,7 @@ import {
   IconMail,
   IconMapPin,
   IconPhone,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
 import StackChips from "../components/StackChips";
@@ -231,11 +232,12 @@ const Home = () => {
           <div className="hero-details">
             <div className="hero-intro">
               <p className="eyebrow-roles">
-                <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
+                <span>Responsable portefeuille projets</span> · <span>Management</span> ·{" "}
+                <span>Chefferie de projet</span>
               </p>
               <p className="hero-current">
                 <span className="status-dot" aria-hidden="true" />
-                Actuellement développeur full stack chez Blue Soft
+                Actuellement alternant développeur full stack chez Blue Soft
               </p>
               <p>Basé à Rouen, France · remote partiel</p>
             </div>
@@ -358,7 +360,15 @@ const Home = () => {
                   key={formation.title}
                 >
                   <span className="formation-level">{formation.level}</span>
-                  <strong>{formation.title}</strong>
+                  <div className="formation-title">
+                    <strong>{formation.title}</strong>
+                    {formation.highlight && (
+                      <p className="formation-highlight">
+                        <IconUsersGroup size={16} stroke={1.75} aria-hidden="true" />
+                        {formation.highlight}
+                      </p>
+                    )}
+                  </div>
                   <Badge
                     rootClassName="status-badge-root"
                     className={`status-badge status-badge--${formation.statusType}`}

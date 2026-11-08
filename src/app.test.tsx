@@ -619,17 +619,17 @@ describe("pied de page", () => {
   });
 });
 
-describe("formation", () => {
+describe("formations", () => {
   function getFormationSection(): HTMLElement {
-    return screen.getByRole("region", { name: /^formation$/i });
+    return screen.getByRole("region", { name: /^formations$/i });
   }
 
-  it("devrait être une section à part entière, titrée « Formation » comme les autres", () => {
+  it("devrait être une section à part entière, titrée « Formations » comme les autres", () => {
     render(<App />);
     const section = getFormationSection();
 
-    expect(section).toHaveAttribute("id", "formation");
-    expect(within(section).getByRole("heading", { level: 2, name: /^formation$/i })).toBeVisible();
+    expect(section).toHaveAttribute("id", "formations");
+    expect(within(section).getByRole("heading", { level: 2, name: /^formations$/i })).toBeVisible();
     expect(screen.queryByText(/apprendre pour mieux construire/i)).toBeNull();
   });
 
@@ -640,7 +640,7 @@ describe("formation", () => {
       .getAllByRole("link")
       .map((link) => link.textContent);
 
-    expect(labels.indexOf("Formation")).toBe(labels.indexOf("Parcours") + 1);
+    expect(labels.indexOf("Formations")).toBe(labels.indexOf("Parcours") + 1);
   });
 
   it.each([

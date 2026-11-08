@@ -354,11 +354,11 @@ const Home = () => {
 
       <section
         className="page-section formation-section"
-        id="formation"
-        aria-labelledby="titre-formation"
+        id="formations"
+        aria-labelledby="titre-formations"
       >
         <div className="container">
-          <SectionHeading sectionId="formation" />
+          <SectionHeading sectionId="formations" />
           <ul className="education-list" data-reveal="up">
             {formations.map((formation) => (
               <li

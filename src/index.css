@@ -217,27 +217,47 @@ ol {
 .site-header > * {
   pointer-events: auto;
 }
-/* Voile limité au coin droit, derrière les liens, le switch et le menu. */
-.site-header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: -1rem;
-  z-index: -1;
-  width: min(36rem, 100%);
-  background: radial-gradient(
-    ellipse 100% 100% at 100% 0%,
-    var(--site-background) 50%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
 .header-actions {
   display: flex;
   margin-left: auto;
   align-items: center;
   gap: 1.25rem;
+}
+/* Voile rectangulaire juste derrière les liens et le switch, bords fondus courts. */
+.header-actions {
+  position: relative;
+  --veil-x: 1rem;
+  --veil-y: 0.6rem;
+  --veil-extra-right: 0px;
+}
+.header-actions::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--veil-y) * -1) calc((var(--veil-x) + var(--veil-extra-right)) * -1)
+    calc(var(--veil-y) * -1) calc(var(--veil-x) * -1);
+  z-index: -1;
+  background: var(--site-background);
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      #000 var(--veil-x),
+      #000 calc(100% - var(--veil-x)),
+      transparent
+    ),
+    linear-gradient(transparent, #000 var(--veil-y), #000 calc(100% - var(--veil-y)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      #000 var(--veil-x),
+      #000 calc(100% - var(--veil-x)),
+      transparent
+    ),
+    linear-gradient(transparent, #000 var(--veil-y), #000 calc(100% - var(--veil-y)), transparent);
+  mask-composite: intersect;
+  pointer-events: none;
 }
 .header-links {
   display: flex;
@@ -969,6 +989,9 @@ ol {
   .menu-toggle {
     display: inline-flex;
   }
+  .header-actions {
+    --veil-extra-right: calc(1.5rem + 44px);
+  }
   .header-links li:not(.header-links__cv) {
     display: none;
   }
@@ -1014,9 +1037,6 @@ ol {
 }
 
 @media (max-width: 700px) {
-  .site-header::before {
-    width: 17rem;
-  }
   .header-actions {
     gap: 0.5rem;
   }

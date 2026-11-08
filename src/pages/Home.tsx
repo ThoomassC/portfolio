@@ -10,7 +10,7 @@ import {
 import { Badge } from "@thomascaron/opale";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
-import { formations } from "../content/formations";
+import { certifications, formations, languages } from "../content/formations";
 import { passions } from "../content/passions";
 import { navigationItems } from "../content/navigation";
 import { profile } from "../content/profile";
@@ -243,6 +243,10 @@ const Home = () => {
             </div>
           </div>
           <div className="hero-footer">
+            <p className="hero-seeking">
+              <span className="status-dot" aria-hidden="true" />
+              {profile.seeking}
+            </p>
             <p className="hero-next-step">{profile.nextStep}</p>
           </div>
         </div>
@@ -344,41 +348,68 @@ const Home = () => {
               );
             })}
           </ol>
+        </div>
+      </section>
 
-          <div className="education" data-reveal="up">
-            <h3 className="education-title" id="titre-formations">
-              Apprendre pour mieux construire
-            </h3>
-            <ul className="education-list">
-              {formations.map((formation) => (
-                <li
-                  className={
-                    formation.statusType === "in-progress"
-                      ? "formation formation--current"
-                      : "formation"
-                  }
-                  key={formation.title}
+      <section
+        className="page-section formation-section"
+        id="formation"
+        aria-labelledby="titre-formation"
+      >
+        <div className="container">
+          <SectionHeading sectionId="formation" />
+          <ul className="education-list" data-reveal="up">
+            {formations.map((formation) => (
+              <li
+                className={
+                  formation.statusType === "in-progress"
+                    ? "formation formation--current"
+                    : "formation"
+                }
+                key={formation.title}
+              >
+                <span className="formation-level">{formation.level}</span>
+                <div className="formation-title">
+                  <strong>{formation.title}</strong>
+                  <p className="formation-years">
+                    <DateRangeText range={formation.range} />
+                  </p>
+                  {formation.highlight && (
+                    <p className="formation-highlight">
+                      <IconUsersGroup size={16} stroke={1.75} aria-hidden="true" />
+                      {formation.highlight}
+                    </p>
+                  )}
+                </div>
+                <Badge
+                  rootClassName="status-badge-root"
+                  className={`status-badge status-badge--${formation.statusType}`}
+                  variant={badgeVariantByStatus[formation.statusType]}
                 >
-                  <span className="formation-level">{formation.level}</span>
-                  <div className="formation-title">
-                    <strong>{formation.title}</strong>
-                    {formation.highlight && (
-                      <p className="formation-highlight">
-                        <IconUsersGroup size={16} stroke={1.75} aria-hidden="true" />
-                        {formation.highlight}
-                      </p>
-                    )}
-                  </div>
-                  <Badge
-                    rootClassName="status-badge-root"
-                    className={`status-badge status-badge--${formation.statusType}`}
-                    variant={badgeVariantByStatus[formation.statusType]}
-                  >
-                    {formation.status}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
+                  {formation.status}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+          <div className="qualifications" data-reveal="up">
+            <div className="qualification-group">
+              <h3 className="qualification-group__title">Langues</h3>
+              <ul className="qualification-list">
+                {languages.map((language) => (
+                  <li key={language.label}>
+                    {language.label} <strong>{language.level}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="qualification-group">
+              <h3 className="qualification-group__title">Certifications</h3>
+              <ul className="qualification-list">
+                {certifications.map((certification) => (
+                  <li key={certification}>{certification}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>

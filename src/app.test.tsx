@@ -79,16 +79,6 @@ describe("structure de la page", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   });
 
-  it("devrait titrer l'encart Formation au niveau 3", () => {
-    render(<App />);
-
-    expect(
-      screen.getByRole("heading", {
-        level: 3,
-        name: /apprendre pour mieux construire/i,
-      })
-    ).toBeInTheDocument();
-  });
 });
 
 describe("parcours", () => {
@@ -250,6 +240,12 @@ describe("hero", () => {
     expect(eyebrow).toHaveTextContent(
       "Responsable portefeuille projets · Management · Chefferie de projet"
     );
+  });
+
+  it("devrait annoncer la recherche d'alternance à partir d'octobre 2027", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent("Je recherche une alternance à partir d’octobre 2027");
   });
 
   it("devrait présenter le poste actuel comme une alternance", () => {
@@ -460,8 +456,6 @@ describe("projets personnels", () => {
       "Board",
       "Travels in World",
       "Portfolio personnel",
-      "Application de gestion de budget",
-      "Sites web & APIs",
       "GameJam Rouen Métropole",
     ]);
   });
@@ -562,6 +556,15 @@ describe("projets personnels", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("devrait indiquer 20 h pour la GameJam, dans le badge comme dans le texte", () => {
+    render(<App />);
+    const card = getProjectCard(/^gamejam rouen métropole$/i);
+
+    expect(within(card).getByText("20 h — Janvier")).toBeVisible();
+    expect(card).toHaveTextContent(/20 heures/);
+    expect(card).not.toHaveTextContent(/48/);
+  });
+
   it("ne devrait montrer aucun aperçu pour un projet sans version en ligne", () => {
     render(<App />);
 
@@ -614,5 +617,64 @@ describe("pied de page", () => {
 
     expect(footer).toHaveTextContent(/rouen/i);
     expect(footer).not.toHaveTextContent(/paris/i);
+  });
+});
+
+describe("formation", () => {
+  function getFormationSection(): HTMLElement {
+    return screen.getByRole("region", { name: /^formation$/i });
+  }
+
+  it("devrait être une section à part entière, titrée « Formation » comme les autres", () => {
+    render(<App />);
+    const section = getFormationSection();
+
+    expect(section).toHaveAttribute("id", "formation");
+    expect(within(section).getByRole("heading", { level: 2, name: /^formation$/i })).toBeVisible();
+    expect(screen.queryByText(/apprendre pour mieux construire/i)).toBeNull();
+  });
+
+  it("devrait figurer au sommaire, juste après le parcours", () => {
+    render(<App />);
+    const navigation = screen.getByRole("navigation", { name: /navigation principale/i });
+    const labels = within(navigation)
+      .getAllByRole("link")
+      .map((link) => link.textContent);
+
+    expect(labels.indexOf("Formation")).toBe(labels.indexOf("Parcours") + 1);
+  });
+
+  it.each([
+    [/^bac \+6$/i, "2027", "2028"],
+    [/^bac \+5$/i, "2025", "2027"],
+    [/^bac \+3$/i, "2024", "2025"],
+    [/^bac \+2$/i, "2022", "2024"],
+  ])("devrait dater %s de %s à %s", (level, start, end) => {
+    render(<App />);
+    const row = within(getFormationSection()).getByText(level).closest("li");
+    const years = Array.from(row?.querySelectorAll("time") ?? [], (time) => time.dateTime);
+
+    expect(years).toEqual([start, end]);
+  });
+
+  it("devrait afficher les langues avec leur niveau, le PSC1 et le permis B", () => {
+    render(<App />);
+    const section = getFormationSection();
+
+    expect(section).toHaveTextContent(/anglais\s*B1/i);
+    expect(section).toHaveTextContent(/espagnol\s*A2/i);
+    expect(section).toHaveTextContent(/PSC1/);
+    expect(section).toHaveTextContent(/permis B/i);
+  });
+});
+
+describe("compétences en apprentissage", () => {
+  it("devrait regrouper les outils d'IA sous « IA générative »", () => {
+    render(<App />);
+    const group = screen.getByRole("list", { name: /^compétences en apprentissage$/i });
+
+    expect(within(group).getByText("IA générative (Claude Code, Codex, Gemini)")).toBeVisible();
+    expect(within(group).queryByText(/^codex$/i)).toBeNull();
+    expect(within(group).queryByText(/^gemini$/i)).toBeNull();
   });
 });

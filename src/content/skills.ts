@@ -50,6 +50,6 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "en-apprentissage",
     title: "En apprentissage",
-    items: ["Next.js", "NestJS", "Docker", "Codex", "Gemini"],
+    items: ["Next.js", "NestJS", "Docker", "IA générative (Claude Code, Codex, Gemini)"],
   },
 ];

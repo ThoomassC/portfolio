@@ -10,17 +10,11 @@ export const profile = {
   /** Intitulé officiel du Bac +6 visé au CESI, à reprendre tel quel. */
   nextStep:
     "Je souhaite poursuivre en Mastère Spécialisé® Manager de Portefeuille de Projets – Transition Numérique au CESI (Bac +6).",
+  /** Recherche d'alternance pour le Mastère, affichée en tête du hero. */
+  seeking: "Je recherche une alternance à partir d’octobre 2027",
   portrait: {
-    src: "/assets/portrait-thomas-caron.jpg",
-    width: 900,
-    height: 1200,
-    /** Alternative descriptive POUR LE HERO, où l'image est seule et porte l'identité
-        à elle seule. Dans un contexte qui affiche déjà le nom à côté d'elle — l'en-tête,
-        voir SiteHeader.tsx — l'équivalent textuel est donc déjà fourni et l'alternative
-        doit être VIDE : WCAG 1.1.1 proscrit le doublon, et une alternative descriptive y
-        ferait annoncer « Thomas Caron Thomas Caron, souriant, en chemise… ». Une même
-        image peut recevoir des alternatives différentes selon son contexte. */
-    alt: "Thomas Caron, souriant, en chemise bleu marine sur fond clair.",
+    /** Portrait détouré du hero : l'image y est seule et porte l'identité, d'où une
+        alternative descriptive. Ailleurs, à côté du nom, elle devrait rester vide. */
     cutout: {
       src: "/assets/portrait-thomas-caron-cutout-v2.webp",
       width: 1086,

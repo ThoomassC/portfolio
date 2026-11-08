@@ -34,7 +34,7 @@ est native pour adapter les six entrées au menu mobile.
 - **Anton** est servie localement, avec `font-display: swap` et un préchargement.
   Sa licence SIL Open Font License est dans `public/assets/fonts/OFL-Anton.txt`.
 - Le texte courant utilise Helvetica ou la police sans-serif disponible sur l'appareil.
-- Le portrait original reste dans `public/assets/portrait-thomas-caron.jpg`.
+- Le portrait original (`public/assets/portrait-thomas-caron.jpg`) n'est plus versionné : seule la version détourée sert au site, l'original reste dans l'historique Git.
   Une copie détourée se trouve dans `public/assets/portrait-thomas-caron-cutout-v2.webp`.
   Elle a été produite avec l'outil intégré `imagegen`, puis optimisée en WebP avec
   préservation de la transparence pour le chargement du hero.

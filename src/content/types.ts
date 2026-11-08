@@ -47,6 +47,7 @@ export type Formation = {
   /** Rôle ou réalisation à mettre en avant sous l'intitulé, s'il y en a un. */
   readonly highlight?: string;
   readonly level: string;
+  readonly range: DateRange;
   readonly status: string;
   readonly statusType: StatusType;
 };
@@ -98,4 +99,10 @@ export type Passion = {
 export type NavigationItem = {
   readonly id: string;
   readonly label: string;
+};
+
+/** Une langue parlée et son niveau du CECRL. */
+export type Language = {
+  readonly label: string;
+  readonly level: string;
 };

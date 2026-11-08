@@ -4,6 +4,7 @@ import type { NavigationItem } from "./types";
 export const navigationItems: readonly NavigationItem[] = [
   { id: "competences", label: "Compétences" },
   { id: "parcours", label: "Parcours" },
+  { id: "formation", label: "Formation" },
   { id: "projets", label: "Projets" },
   { id: "passions", label: "Passions" },
   { id: "contact", label: "Contact" },

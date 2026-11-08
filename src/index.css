@@ -524,11 +524,24 @@ ol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 2rem;
-  margin-top: 2.25rem;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.5rem;
   font-size: 0.8125rem;
 }
+.hero-seeking {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 1rem 0.45rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #232f52;
+  background: var(--highlight);
+}
 .hero-next-step {
+  flex: 1 1 22rem;
+  max-width: 40rem;
   color: var(--text-strong);
   margin-right: auto;
 }
@@ -540,8 +553,7 @@ ol {
 .section-heading {
   margin-bottom: clamp(3rem, 6vw, 5rem);
 }
-.section-heading h2,
-.education-title {
+.section-heading h2 {
   margin-top: 0;
   font-family: var(--display-font);
   font-size: var(--display-l);
@@ -550,9 +562,6 @@ ol {
   letter-spacing: -0.015em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
-}
-.education-title {
-  font-size: clamp(2.25rem, 4.5vw, 4rem);
 }
 /* Sous-titre de groupe : police d'affichage et pastille du nombre d'éléments. */
 .skill-group__title {
@@ -778,12 +787,55 @@ ol {
 }
 
 /* Formation : le niveau en grand, la formation en cours soulignée. */
-.education {
-  margin-top: var(--section-space);
-}
 .education-list {
-  margin-top: clamp(2.5rem, 5vw, 4rem);
   border-top: 1px solid var(--line);
+}
+.formation-years {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.formation--current .formation-years {
+  color: var(--text-body);
+}
+/* Langues et certifications : deux groupes de pastilles sous la liste des formations. */
+.qualifications {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem clamp(2.5rem, 6vw, 5rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+.qualification-group__title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.qualification-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.qualification-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  color: var(--text-strong);
+  background: var(--surface);
+}
+.qualification-list strong {
+  font-family: var(--display-font);
+  font-size: 1.0625rem;
+  font-weight: 400;
 }
 .formation {
   display: grid;
@@ -1333,11 +1385,13 @@ ol {
     margin-top: 1.75rem;
   }
   .hero-footer {
-    gap: 0 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
     margin-top: 1.5rem;
   }
   .hero-next-step {
-    flex-basis: 100%;
+    flex: none;
   }
   .skill-list {
     grid-template-columns: minmax(0, 1fr);

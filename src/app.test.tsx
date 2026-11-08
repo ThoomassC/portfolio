@@ -348,6 +348,29 @@ describe("passions", () => {
 });
 
 describe("contact", () => {
+  it("devrait intituler la section « Contact »", () => {
+    render(<App />);
+
+    expect(screen.getByRole("region", { name: /^contact$/i })).toHaveAttribute("id", "contact");
+    expect(screen.queryByRole("heading", { name: /me contacter/i })).toBeNull();
+  });
+
+  it("devrait garder l'accroche, le Mastère, l'e-mail, le téléphone et la localisation", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^contact$/i });
+
+    expect(section).toHaveTextContent(/une opportunité, une idée/i);
+    expect(section).toHaveTextContent(/mastère spécialisé/i);
+    expect(within(section).getByRole("link", { name: profile.email })).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`
+    );
+    expect(within(section).getByRole("link", { name: profile.phone.label })).toHaveAttribute(
+      "href",
+      profile.phone.href
+    );
+  });
+
   it("devrait donner au lien Google Maps un nom accessible contenant le texte visible", () => {
     render(<App />);
 
@@ -486,5 +509,15 @@ describe("sous-titres des compétences", () => {
         name: /^Expérience professionnelle,\s*16\s*compétences$/,
       })
     ).toBeInTheDocument();
+  });
+});
+
+describe("pied de page", () => {
+  it("devrait indiquer seulement Rouen comme ville", () => {
+    render(<App />);
+    const footer = screen.getByRole("contentinfo");
+
+    expect(footer).toHaveTextContent(/rouen/i);
+    expect(footer).not.toHaveTextContent(/paris/i);
   });
 });

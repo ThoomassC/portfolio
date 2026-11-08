@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+  IconMapPin,
+  IconPhone,
+} from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
@@ -355,48 +362,64 @@ const Home = () => {
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <SectionHeading sectionId="contact">Me contacter</SectionHeading>
-          <p className="contact-statement" data-reveal="up">
-            Une opportunité, une idée
-            <br /> ou l’envie de faire connaissance ?
-          </p>
-          <p className="contact-next-step" data-reveal="up">
-            {profile.nextStep}
-          </p>
-          <address className="contact-rows" data-reveal="up">
-            <a href={`mailto:${profile.email}`}>
-              <span>{profile.email}</span>
-              <IconArrowUpRight size={16} aria-hidden="true" />
-            </a>
-            <a href={profile.phone.href}>
-              <span>{profile.phone.label}</span>
-              <IconArrowUpRight size={16} aria-hidden="true" />
-            </a>
-            <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer">
-              <span>{profile.location}</span>
-              <IconArrowUpRight size={16} aria-hidden="true" />
-              <span className="visually-hidden"> (nouvelle fenêtre)</span>
-            </a>
-          </address>
-          <div className="contact-direct" data-reveal="up">
-            <p className="section-eyebrow">Ou retrouvez-moi</p>
-            <ul className="contact-socials" aria-label="Réseaux professionnels">
-              <li>
-                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  GitHub
-                  <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  LinkedIn
-                  <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${profile.email}`}>E-mail</a>
-              </li>
-            </ul>
+          <SectionHeading sectionId="contact" />
+          <div className="contact-panel" data-reveal="up">
+            <div className="contact-panel__intro">
+              <p className="contact-statement">
+                Une opportunité, une idée
+                <br /> ou l’envie de faire connaissance ?
+              </p>
+              <p className="contact-next-step">{profile.nextStep}</p>
+              <div className="contact-direct">
+                <p className="contact-direct__label">Ou retrouvez-moi</p>
+                <ul className="contact-socials" aria-label="Réseaux professionnels">
+                  <li>
+                    <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+                      <IconBrandGithub size={18} aria-hidden="true" />
+                      GitHub
+                      <span className="visually-hidden"> (nouvelle fenêtre)</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+                      <IconBrandLinkedin size={18} aria-hidden="true" />
+                      LinkedIn
+                      <span className="visually-hidden"> (nouvelle fenêtre)</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`mailto:${profile.email}`}>
+                      <IconMail size={18} aria-hidden="true" />
+                      E-mail
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <address className="contact-rows">
+              <a href={`mailto:${profile.email}`}>
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconMail size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.email}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+              </a>
+              <a href={profile.phone.href}>
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconPhone size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.phone.label}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+              </a>
+              <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer">
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconMapPin size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.location}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+                <span className="visually-hidden"> (nouvelle fenêtre)</span>
+              </a>
+            </address>
           </div>
         </div>
       </section>

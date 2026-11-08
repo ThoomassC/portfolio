@@ -99,8 +99,12 @@ const Home = () => {
           <div className="skills-groups">
             {skillGroups.map((group) => (
               <div className="skill-group" data-reveal="up" key={group.id}>
-                <h3 className="row-label" id={`skill-${group.id}`}>
+                <h3 className="skill-group__title" id={`skill-${group.id}`}>
                   {group.title}
+                  <span className="skill-group__count">
+                    {group.items.length}
+                    <span className="visually-hidden"> compétences</span>
+                  </span>
                 </h3>
                 <ul className="skill-list" aria-label={`Compétences ${group.title}`}>
                   {group.items.map((item) => (

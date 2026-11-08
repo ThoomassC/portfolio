@@ -2,7 +2,10 @@ import { IconBriefcase, IconCode } from "@tabler/icons-react";
 
 import type { Experience } from "./types";
 
-/** Timeline inversée : la mission en cours ouvre le parcours. */
+/**
+ * Timeline inversée à tous les niveaux : le poste le plus récent ouvre le parcours,
+ * et dans chaque poste la mission la plus récente ouvre la frise.
+ */
 export const experiences: readonly Experience[] = [
   {
     company: "Blue Soft",
@@ -15,33 +18,14 @@ export const experiences: readonly Experience[] = [
     stack: [],
     missions: [
       {
-        title: "TMA full-stack — C# et Angular",
+        title: "Développement et TMA — plateforme de radiologie médicale",
         range: {
-          start: { label: "Octobre 2025", dateTime: "2025-10" },
-          end: { label: "Décembre 2025", dateTime: "2025-12" },
+          start: { label: "Septembre 2026", dateTime: "2026-09" },
+          // Mission en cours : pas de borne de fin.
         },
         description:
-          "Résolution de bugs sur une application en microservices, côté back-end et front-end.",
-        stack: ["C#", ".NET", "Angular", "Microservices"],
-      },
-      {
-        title: "Développement iOS — Swift",
-        range: {
-          start: { label: "Décembre 2025", dateTime: "2025-12" },
-          end: { label: "Février 2026", dateTime: "2026-02" },
-        },
-        description: "Développement au sein d’une cellule de sprint pour une application iOS.",
-        stack: ["Swift", "Xcode"],
-      },
-      {
-        title: "QA et tests automatisés — Java",
-        range: {
-          start: { label: "Février 2026", dateTime: "2026-02" },
-          end: { label: "Août 2026", dateTime: "2026-08" },
-        },
-        description:
-          "Conception et maintenance de tests avec Selenium et Cucumber sur deux projets.",
-        stack: ["Java", "Selenium", "Cucumber", "CI"],
+          "Participation au développement d’une plateforme de radiologie médicale et maintenance applicative (TMA).",
+        stack: [],
       },
       {
         title: "Infrastructure et développement — plateforme de transport de colis",
@@ -54,14 +38,33 @@ export const experiences: readonly Experience[] = [
         stack: ["Terraform", "Ansible", "Spring Boot", "React", "PostgreSQL", "Claude Code"],
       },
       {
-        title: "Développement et TMA — plateforme de radiologie médicale",
+        title: "QA et tests automatisés — Java",
         range: {
-          start: { label: "Septembre 2026", dateTime: "2026-09" },
-          // Mission en cours : pas de borne de fin.
+          start: { label: "Février 2026", dateTime: "2026-02" },
+          end: { label: "Août 2026", dateTime: "2026-08" },
         },
         description:
-          "Participation au développement d’une plateforme de radiologie médicale et maintenance applicative (TMA).",
-        stack: [],
+          "Conception et maintenance de tests avec Selenium et Cucumber sur deux projets.",
+        stack: ["Java", "Selenium", "Cucumber", "CI"],
+      },
+      {
+        title: "Développement iOS — Swift",
+        range: {
+          start: { label: "Décembre 2025", dateTime: "2025-12" },
+          end: { label: "Février 2026", dateTime: "2026-02" },
+        },
+        description: "Développement au sein d’une cellule de sprint pour une application iOS.",
+        stack: ["Swift", "Xcode"],
+      },
+      {
+        title: "TMA full-stack — C# et Angular",
+        range: {
+          start: { label: "Octobre 2025", dateTime: "2025-10" },
+          end: { label: "Décembre 2025", dateTime: "2025-12" },
+        },
+        description:
+          "Résolution de bugs sur une application en microservices, côté back-end et front-end.",
+        stack: ["C#", ".NET", "Angular", "Microservices"],
       },
     ],
   },
@@ -86,16 +89,6 @@ export const experiences: readonly Experience[] = [
         stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
       },
       {
-        title: "Chef de projet annexe — documentation de l’outil de production",
-        range: {
-          start: { label: "2022", dateTime: "2022" },
-          end: { label: "2023", dateTime: "2023" },
-        },
-        description:
-          "En parallèle du développement, pilotage d’un projet interne d’amélioration de la documentation de l’outil de production sur lequel je développais.",
-        stack: [],
-      },
-      {
         title: "Chef de projet annexe — documentation d’un second outil interne",
         range: {
           start: { label: "2023", dateTime: "2023" },
@@ -103,6 +96,16 @@ export const experiences: readonly Experience[] = [
         },
         description:
           "Même démarche sur un autre outil interne : pilotage d’un projet d’amélioration de sa documentation.",
+        stack: [],
+      },
+      {
+        title: "Chef de projet annexe — documentation de l’outil de production",
+        range: {
+          start: { label: "2022", dateTime: "2022" },
+          end: { label: "2023", dateTime: "2023" },
+        },
+        description:
+          "En parallèle du développement, pilotage d’un projet interne d’amélioration de la documentation de l’outil de production sur lequel je développais.",
         stack: [],
       },
     ],

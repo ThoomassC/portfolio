@@ -106,6 +106,24 @@ describe("parcours", () => {
     expect(firstExperience).not.toHaveTextContent(/linkt/i);
   });
 
+  it("devrait lister les missions de chaque poste de la plus récente à la plus ancienne", () => {
+    render(<App />);
+    const missionLists = screen.getAllByRole("list", { name: /missions réalisées chez/i });
+
+    for (const list of missionLists) {
+      // Clé de tri : fin de mission (une mission en cours passe devant), puis début.
+      const keys = within(list)
+        .getAllByRole("listitem")
+        .filter((item) => item.parentElement === list)
+        .map((item) => {
+          const [start, end] = Array.from(item.querySelectorAll(".mission-date time"));
+          return `${end?.getAttribute("datetime") ?? "9999"}|${start.getAttribute("datetime")}`;
+        });
+
+      expect(keys).toEqual([...keys].sort().reverse());
+    }
+  });
+
   it("ne devrait plus résumer les missions Blue Soft en un paragraphe", () => {
     render(<App />);
 

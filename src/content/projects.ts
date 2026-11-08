@@ -3,6 +3,10 @@ import type { Project } from "./types";
 /**
  * Triés du plus récent au plus ancien. Seuls les dépôts réellement publiables
  * sont liés : les autres n'ont pas encore de contenu exploitable.
+ *
+ * Les projets en ligne portent un aperçu et ouvrent la section en grandes cartes :
+ * ils doivent rester en tête de liste pour que l'ordre chronologique tienne.
+ * Les captures sont versionnées (`-v1`) : `/assets/*` est servi en cache immuable.
  */
 export const projects: readonly Project[] = [
   {
@@ -18,6 +22,7 @@ export const projects: readonly Project[] = [
       { label: "Voir le site", href: "https://astrologie-pi.vercel.app" },
       { label: "Code source", href: "https://github.com/ThoomassC/astrologie" },
     ],
+    preview: { src: "/assets/projects/astrologie-v1.webp", width: 960, height: 540 },
   },
   {
     id: "astronomie",
@@ -32,6 +37,7 @@ export const projects: readonly Project[] = [
       { label: "Voir le site", href: "https://astronomie.vercel.app" },
       { label: "Code source", href: "https://github.com/ThoomassC/astronomie" },
     ],
+    preview: { src: "/assets/projects/astronomie-v1.webp", width: 960, height: 540 },
   },
   {
     id: "grand-oral-studio",
@@ -46,6 +52,7 @@ export const projects: readonly Project[] = [
       { label: "Voir le site", href: "https://grand-oral-studio.vercel.app" },
       { label: "Code source", href: "https://github.com/ThoomassC/grand-oral-studio" },
     ],
+    preview: { src: "/assets/projects/grand-oral-studio-v1.webp", width: 960, height: 540 },
   },
   {
     id: "opale",
@@ -60,6 +67,7 @@ export const projects: readonly Project[] = [
       { label: "Voir le site", href: "https://ui-commune.vercel.app" },
       { label: "Code source", href: "https://github.com/ThoomassC/opale-ui" },
     ],
+    preview: { src: "/assets/projects/opale-v1.webp", width: 960, height: 540 },
   },
   {
     id: "board",

@@ -475,6 +475,28 @@ describe("projets personnels", () => {
     expect(within(card).getByRole("link", { name: /code source/i })).toHaveAttribute("href", code);
   });
 
+  it.each([/^astrologie$/i, /^astronomie$/i, /^grand oral studio$/i, /^opale$/i])(
+    "devrait montrer un aperçu du site en ligne pour %s",
+    (title) => {
+      render(<App />);
+      const preview = getProjectCard(title).querySelector<HTMLImageElement>(
+        ".project-card__preview img"
+      );
+
+      expect(preview).not.toBeNull();
+      expect(preview?.getAttribute("src")).toMatch(/^\/assets\/projects\/.+\.webp$/);
+      expect(preview).toHaveAttribute("loading", "lazy");
+    }
+  );
+
+  it("ne devrait montrer aucun aperçu pour un projet sans version en ligne", () => {
+    render(<App />);
+
+    for (const title of [/^board$/i, /^travels in world$/i, /^gamejam rouen métropole$/i]) {
+      expect(getProjectCard(title).querySelector(".project-card__preview")).toBeNull();
+    }
+  });
+
   it("devrait ouvrir chaque lien de projet dans un nouvel onglet, sans exposer l'opener", () => {
     render(<App />);
 

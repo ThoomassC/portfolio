@@ -60,6 +60,13 @@ export type ProjectLink = {
   readonly href: string;
 };
 
+/** Capture de la page d'accueil d'un site en ligne, servie depuis `public/assets/projects`. */
+export type ProjectPreview = {
+  readonly src: string;
+  readonly width: number;
+  readonly height: number;
+};
+
 export type Project = {
   readonly id: string;
   readonly date: string;
@@ -69,6 +76,8 @@ export type Project = {
   readonly description: string;
   readonly stack: readonly string[];
   readonly links: readonly ProjectLink[];
+  /** Absent pour un projet sans version en ligne : la carte reste compacte. */
+  readonly preview?: ProjectPreview;
 };
 
 /**

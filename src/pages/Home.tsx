@@ -16,7 +16,7 @@ import { navigationItems } from "../content/navigation";
 import { profile } from "../content/profile";
 import { projects } from "../content/projects";
 import { skillGroups } from "../content/skills";
-import type { DateRange } from "../content/types";
+import type { DateRange, Project } from "../content/types";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const DateRangeText = ({ range }: { readonly range: DateRange }) => (
@@ -89,6 +89,79 @@ const badgeVariantByStatus = {
   "in-progress": "info",
   upcoming: "warning",
 } as const;
+
+/**
+ * Carte de projet. Avec un aperçu, la capture est cliquable à la souris, mais retirée
+ * du clavier et des lecteurs d'écran : le lien « Voir le site » porte déjà la même
+ * destination, un second arrêt de tabulation ferait doublon.
+ */
+const ProjectCard = ({ project }: { readonly project: Project }) => {
+  const siteLink = project.links.find((link) => link.label === "Voir le site");
+
+  return (
+    <article className={`project-card${project.preview ? " project-card--featured" : ""}`}>
+      {project.preview && (
+        <a
+          className="project-card__preview"
+          href={siteLink?.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <span className="project-card__chrome">
+            <span />
+            <span />
+            <span />
+          </span>
+          <img
+            src={project.preview.src}
+            width={project.preview.width}
+            height={project.preview.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      )}
+      <div className="project-card__body">
+        <p className="project-card__meta">
+          <span className="project-card__date">{project.date}</span>
+          <Badge
+            rootClassName="status-badge-root"
+            className={`status-badge status-badge--${project.statusType}`}
+            variant={badgeVariantByStatus[project.statusType]}
+          >
+            {project.status}
+          </Badge>
+        </p>
+        <h3 className="project-card__title">{project.title}</h3>
+        <p className="project-card__description">{project.description}</p>
+        <StackChips label={`Technologies du projet ${project.title}`} items={project.stack} />
+        {project.links.length > 0 && (
+          <div className="project-links">
+            {project.links.map((link) => (
+              <a
+                className="text-link"
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+                <IconArrowUpRight size={16} aria-hidden="true" />
+                <span className="visually-hidden"> — {project.title} (nouvelle fenêtre)</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+};
+
+const featuredProjects = projects.filter((project) => project.preview);
+const otherProjects = projects.filter((project) => !project.preview);
 
 const Home = () => {
   useScrollReveal();
@@ -262,50 +335,23 @@ const Home = () => {
       >
         <div className="container">
           <SectionHeading sectionId="projets" />
-          <div className="row-list">
-            {projects.map((project) => (
-              <article className="project-row" data-reveal="up" key={project.id}>
-                <div className="project-row__main">
-                  <h3>{project.title}</h3>
-                  <p className="row-meta">
-                    <Badge
-                      rootClassName="status-badge-root"
-                      className={`status-badge status-badge--${project.statusType}`}
-                      variant={badgeVariantByStatus[project.statusType]}
-                    >
-                      {project.status}
-                    </Badge>
-                  </p>
-                  <p className="project-row__description">{project.description}</p>
-                  <StackChips
-                    label={`Technologies du projet ${project.title}`}
-                    items={project.stack}
-                  />
-                  {project.links.length > 0 && (
-                    <div className="project-links">
-                      {project.links.map((link) => (
-                        <a
-                          className="text-link"
-                          key={link.href}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {link.label}
-                          <IconArrowUpRight size={16} aria-hidden="true" />
-                          <span className="visually-hidden">
-                            {" "}
-                            — {project.title} (nouvelle fenêtre)
-                          </span>
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <p className="row-year">{project.date}</p>
-              </article>
+          <div className="project-showcase" data-reveal="up">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
+          {otherProjects.length > 0 && (
+            <>
+              <p className="projects-subtitle" data-reveal="up">
+                Autres projets
+              </p>
+              <div className="project-grid" data-reveal="up">
+                {otherProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 

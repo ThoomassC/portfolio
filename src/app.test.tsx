@@ -218,18 +218,38 @@ describe("mentions retirées", () => {
 });
 
 describe("téléchargement du CV", () => {
+  function getCvLink(): HTMLElement {
+    return within(screen.getByRole("banner")).getByRole("link", { name: /^cv/i });
+  }
+
   it("devrait proposer un nom de fichier de téléchargement explicite", () => {
     render(<App />);
 
-    const cvLink = screen.getByRole("link", { name: /télécharger mon cv/i });
-
-    expect(cvLink.getAttribute("download")).toMatch(/Thomas-Caron/);
+    expect(getCvLink().getAttribute("download")).toMatch(/Thomas-Caron/);
   });
 
   it("devrait annoncer le format du fichier dans le libellé du lien", () => {
     render(<App />);
 
-    expect(screen.getByRole("link", { name: /télécharger mon cv.*pdf/i })).toBeInTheDocument();
+    expect(getCvLink()).toHaveAccessibleName(/^cv.*pdf/i);
+  });
+});
+
+describe("section À propos retirée", () => {
+  it("devrait ne plus afficher la section ni sa citation", () => {
+    render(<App />);
+
+    expect(document.getElementById("apropos")).toBeNull();
+    expect(screen.queryByText(/je construis des applications/i)).toBeNull();
+  });
+
+  it("devrait faire pointer « Faire connaissance » vers une section existante", () => {
+    render(<App />);
+
+    const link = within(getHero()).getByRole("link", { name: /faire connaissance/i });
+    const target = document.querySelector(link.getAttribute("href")!);
+
+    expect(target).not.toBeNull();
   });
 });
 

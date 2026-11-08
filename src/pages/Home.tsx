@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { IconArrowDown, IconArrowUpRight, IconDownload } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUpRight } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
@@ -99,65 +99,11 @@ const Home = () => {
                 </a>
               </li>
             </ul>
-            <a className="hero-scroll" href="#apropos">
+            <a className="hero-scroll" href="#competences">
               Faire connaissance
               <IconArrowDown aria-hidden="true" size={16} />
             </a>
           </div>
-        </div>
-      </section>
-
-      <section className="page-section about-section" id="apropos" aria-labelledby="titre-apropos">
-        <div className="container">
-          <h2 className="visually-hidden" id="titre-apropos">
-            À propos
-          </h2>
-          <p className="about-statement" data-reveal="up">
-            “Je construis des applications, <mark>et la confiance</mark> qui va avec.”
-          </p>
-          <p className="about-signature" data-reveal="up">
-            Alternant chez Blue Soft · étudiant au CESI
-          </p>
-          <div className="about-layout">
-            <div className="about-copy" data-reveal="up">
-              <p>
-                Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
-                tests automatisés Java avec Selenium et Cucumber. J’aime comprendre le besoin,
-                construire une solution utile et m’assurer qu’elle tient dans la durée.
-              </p>
-              <p>
-                En alternance chez Blue Soft et en formation au CESI, je relie développement
-                full-stack, architecture et assurance qualité.
-              </p>
-              <div className="about-actions">
-                <a className="button" href={profile.cv.href} download={profile.cv.fileName}>
-                  <IconDownload size={18} aria-hidden="true" />
-                  {profile.cv.label}
-                </a>
-                <a className="text-link" href="#contact">
-                  Me contacter <IconArrowUpRight size={18} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <dl className="about-facts" data-reveal="up">
-            <div>
-              <dt>Développement</dt>
-              <dd>Web & mobile</dd>
-            </div>
-            <div>
-              <dt>Assurance qualité</dt>
-              <dd>Tests & automatisation</dd>
-            </div>
-            <div>
-              <dt>Formation actuelle</dt>
-              <dd>Architecture logicielle · Bac +5</dd>
-            </div>
-            <div>
-              <dt>Objectif</dt>
-              <dd>Responsable portefeuille projets</dd>
-            </div>
-          </dl>
         </div>
       </section>
 

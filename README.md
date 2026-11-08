@@ -1,6 +1,6 @@
 # Portfolio — Thomas Caron
 
-Portfolio personnel de développeur logiciel full-stack et QA, en React 19 et TypeScript.
+Portfolio personnel de Thomas Caron, chef de projet en devenir (alternant développeur full stack), en React 19 et TypeScript.
 La version **3.0.0** adopte une direction « Obsidian », inspirée du template
 [Dark Photo Portfolio de Lovable](https://lovable.dev/templates/websites/portfolio/obsidian-template) :
 page sombre et cinématographique, nom géant posé sur un portrait en noir et blanc,
@@ -89,7 +89,7 @@ La commande `deploy:recette` vérifie la branche, l'absence de modifications non
 committées et l'égalité du commit courant avec `origin/recette`. Elle cible explicitement
 le projet Vercel de recette, indépendamment du lien local `.vercel`.
 
-L’aperçu des liens utilise `public/assets/og-portrait-cobalt-v1.jpg` (1200 × 630).
+L’aperçu des liens utilise `public/assets/og-portrait-marine-v1.jpg` (1200 × 630), versionnée comme les favicons.
 Les métadonnées HTML prennent leur domaine dans `VITE_SITE_URL` : `.env` pour la
 production et `.env.recette` pour la recette. Le build de recette sélectionne
 automatiquement le mode Vite `recette`. Ces fichiers ne contiennent aucun secret.

@@ -211,7 +211,27 @@ ol {
   justify-content: space-between;
   gap: 1.5rem;
   padding: calc(env(safe-area-inset-top, 0px) + 0.9rem) var(--gutter) 0.9rem;
-  background: linear-gradient(var(--site-background) 30%, transparent);
+  /* La bande vide de l'en-tête laisse passer les clics vers la page. */
+  pointer-events: none;
+}
+.site-header > * {
+  pointer-events: auto;
+}
+/* Voile limité au coin droit, derrière les liens, le switch et le menu. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: -1rem;
+  z-index: -1;
+  width: min(36rem, 100%);
+  background: radial-gradient(
+    ellipse 100% 100% at 100% 0%,
+    var(--site-background) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 .header-actions {
   display: flex;
@@ -994,6 +1014,9 @@ ol {
 }
 
 @media (max-width: 700px) {
+  .site-header::before {
+    width: 17rem;
+  }
   .header-actions {
     gap: 0.5rem;
   }

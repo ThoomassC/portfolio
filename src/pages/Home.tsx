@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   IconArrowUpRight,
+  IconBriefcase,
   IconInfoCircle,
   IconMail,
   IconMapPin,
@@ -244,7 +245,7 @@ const Home = () => {
           </div>
           <div className="hero-footer">
             <p className="hero-seeking">
-              <span className="status-dot" aria-hidden="true" />
+              <IconBriefcase size={16} stroke={1.75} aria-hidden="true" />
               {profile.seeking}
             </p>
             <p className="hero-next-step">{profile.nextStep}</p>

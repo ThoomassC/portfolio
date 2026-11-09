@@ -177,7 +177,7 @@ const ProjectCard = ({ project }: { readonly project: Project }) => {
             aria-controls={descriptionId}
             onClick={() => setIsInfoOpen((open) => !open)}
           >
-            <IconInfoCircle size={22} stroke={1.75} aria-hidden="true" />
+            <IconInfoCircle size={18} stroke={1.75} aria-hidden="true" />
             <span className="visually-hidden">Description du projet {project.title}</span>
           </button>
           <div className="project-card__info" id={descriptionId} hidden={!isInfoOpen}>

@@ -996,20 +996,23 @@ ol {
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 0.25rem;
+  gap: 0;
   margin-top: 0.85rem;
 }
 .project-card__heading .project-card__title {
   margin-top: 0;
 }
-/* Le « i » cerclé : 22px à l'œil, une zone de 44px au doigt. */
+/* Le « i » en exposant, collé en haut à droite du titre : pastille de 26px à l'œil,
+   zone de 44px au doigt grâce au ::before qui déborde de 9px de chaque côté. */
 .info-toggle {
+  position: relative;
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  margin: -0.4rem -0.6rem 0 0;
+  width: 1.625rem;
+  height: 1.625rem;
+  margin: -0.35rem 0 0 0.1rem;
+  padding: 0;
   border: 0;
   border-radius: 50%;
   color: var(--text-muted);
@@ -1018,6 +1021,11 @@ ol {
   transition:
     color 200ms ease,
     background-color 200ms ease;
+}
+.info-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -0.5625rem;
 }
 .info-toggle:hover,
 .info-toggle[aria-expanded="true"] {

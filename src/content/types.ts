@@ -21,18 +21,28 @@ export type DateRange = {
   readonly end?: DateMark;
 };
 
+/** Fiche d'un poste piloté : affichée dans une bulle d'information à côté de l'intitulé. */
+export type MissionDetails = {
+  readonly context: string;
+  readonly role: string;
+  readonly method: string;
+  readonly result: string;
+};
+
 export type Mission = {
   readonly title: string;
   readonly range: DateRange;
   readonly description: string;
   readonly stack: readonly string[];
+  readonly details?: MissionDetails;
 };
 
 export type Experience = {
   readonly company: string;
   readonly title: string;
   readonly range: DateRange;
-  readonly description: string;
+  /** Chapeau facultatif : absent quand les missions parlent d'elles-mêmes. */
+  readonly description?: string;
   readonly icon: TablerIcon;
   readonly stack: readonly string[];
   readonly missions: readonly Mission[];
@@ -43,20 +53,39 @@ export type StatusType = "completed" | "in-progress" | "upcoming";
 
 export type Formation = {
   readonly title: string;
+  readonly school: string;
+  /** Rôle ou réalisation à mettre en avant sous l'intitulé, s'il y en a un. */
+  readonly highlight?: string;
   readonly level: string;
+  readonly range: DateRange;
   readonly status: string;
   readonly statusType: StatusType;
 };
+
+/** Un ensemble de compétences sous un libellé (« Données », « Gestion de projet »…). */
+export type SkillFamily = { readonly label: string; readonly items: readonly string[] };
 
 export type SkillGroup = {
   readonly id: string;
   readonly title: string;
   readonly items: readonly string[];
+  /** Technique rangée par familles nommées, affichées après les compétences mises en avant. */
+  readonly families?: readonly SkillFamily[];
+  /** Compétences mises en avant en tête du groupe, sous leur propre libellé ;
+      `items` liste alors le reste, et le total du groupe additionne les deux. */
+  readonly featured?: SkillFamily;
 };
 
 export type ProjectLink = {
   readonly label: string;
   readonly href: string;
+};
+
+/** Capture de la page d'accueil d'un site en ligne, servie depuis `public/assets/projects`. */
+export type ProjectPreview = {
+  readonly src: string;
+  readonly width: number;
+  readonly height: number;
 };
 
 export type Project = {
@@ -68,6 +97,8 @@ export type Project = {
   readonly description: string;
   readonly stack: readonly string[];
   readonly links: readonly ProjectLink[];
+  /** Absent pour un projet sans version en ligne : la carte reste compacte. */
+  readonly preview?: ProjectPreview;
 };
 
 /**
@@ -86,4 +117,10 @@ export type Passion = {
 export type NavigationItem = {
   readonly id: string;
   readonly label: string;
+};
+
+/** Une langue parlée et son niveau du CECRL. */
+export type Language = {
+  readonly label: string;
+  readonly level: string;
 };

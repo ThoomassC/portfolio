@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import { profile } from "./content/profile";
@@ -78,17 +78,6 @@ describe("structure de la page", () => {
 
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   });
-
-  it("devrait titrer l'encart Formation au niveau 3", () => {
-    render(<App />);
-
-    expect(
-      screen.getByRole("heading", {
-        level: 3,
-        name: /apprendre pour mieux construire/i,
-      })
-    ).toBeInTheDocument();
-  });
 });
 
 describe("parcours", () => {
@@ -105,6 +94,156 @@ describe("parcours", () => {
     expect(firstExperience).toHaveTextContent(/blue soft/i);
     expect(firstExperience).not.toHaveTextContent(/linkt/i);
   });
+
+  it("devrait lister les missions Blue Soft de la plus récente à la plus ancienne", () => {
+    render(<App />);
+    const missionLists = screen.getAllByRole("list", {
+      name: /missions réalisées chez blue soft/i,
+    });
+
+    for (const list of missionLists) {
+      // Clé de tri : fin de mission (une mission en cours passe devant), puis début.
+      const keys = within(list)
+        .getAllByRole("listitem")
+        .filter((item) => item.parentElement === list)
+        .map((item) => {
+          const [start, end] = Array.from(item.querySelectorAll(".mission-date time"));
+          return `${end?.getAttribute("datetime") ?? "9999"}|${start.getAttribute("datetime")}`;
+        });
+
+      expect(keys).toEqual([...keys].sort().reverse());
+    }
+  });
+
+  it.each([
+    [/TMA full-stack.*plannings BTP/i, ["C#", "Angular"]],
+    [/application mobile iOS.*Téléthon/i, ["Swift"]],
+    [/tests automatisés QA.*ERP/i, ["Java", "Selenium"]],
+    [/transporteur de colis/i, ["React", "C#", "Terraform", "Ansible", "Claude Code"]],
+    [
+      /équipe Scrum.*radiologie médicale/i,
+      [
+        "Java",
+        "Spring Boot",
+        "Quarkus",
+        "PHP",
+        "Symfony",
+        "Angular",
+        "Python",
+        "TypeScript",
+        "Vue.js",
+        "PostgreSQL",
+        "MySQL",
+        "MariaDB",
+        "Redis",
+        "Kafka",
+        "Keycloak",
+        "Docker",
+        "Azure DevOps",
+        "SonarQube",
+      ],
+    ],
+  ])("devrait préciser la mission Blue Soft %s et ses technologies", (title, technos) => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez blue soft/i });
+    const heading = within(missions).getByRole("heading", { level: 4, name: title });
+    const mission = heading.closest("li") as HTMLElement;
+    const chips = within(mission)
+      .getByRole("list", { name: /technologies de la mission/i })
+      .querySelectorAll("li");
+    const names = Array.from(chips, (chip) => chip.textContent);
+
+    for (const techno of technos) expect(names).toContain(techno);
+  });
+
+  it("devrait replier les technologies de la radiologie derrière un bouton « +12 »", () => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez blue soft/i });
+    const mission = within(missions)
+      .getByRole("heading", { level: 4, name: /radiologie/i })
+      .closest("li") as HTMLElement;
+    const toggle = within(mission).getByRole("button", { name: /12 autres technologies/i });
+
+    expect(toggle).toHaveTextContent("+12");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(mission.querySelectorAll(".stack-chip-item--extra")).toHaveLength(12);
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(mission.querySelector(".experience-stack")).toHaveClass("is-expanded");
+  });
+
+  it("ne devrait replier aucune autre mission", () => {
+    render(<App />);
+
+    expect(screen.getAllByRole("button", { name: /autres technologies/i })).toHaveLength(1);
+  });
+
+  it("ne devrait plus résumer les missions Blue Soft en un paragraphe", () => {
+    render(<App />);
+
+    expect(screen.queryByText(/cinq missions successives/i)).not.toBeInTheDocument();
+  });
+
+  it("devrait intituler les deux postes en alternance", () => {
+    render(<App />);
+    const timeline = screen.getByRole("list", { name: /expériences professionnelles/i });
+    const titles = within(timeline)
+      .getAllByRole("heading", { level: 3 })
+      .map((title) => title.textContent);
+
+    expect(titles).toEqual([
+      "Développeur Full Stack & QA en alternance",
+      "Développeur et chef de projet en alternance",
+    ]);
+  });
+
+  it("devrait mettre en avant le rôle de Scrum Master dans la formation MAALSI en cours", () => {
+    render(<App />);
+    const maalsi = screen
+      .getByText(/manager en architectures et applications logicielles/i)
+      .closest("li");
+
+    expect(maalsi).toHaveTextContent(/scrum master/i);
+    expect(maalsi).toHaveTextContent(/projet de groupe de 4 personnes/i);
+  });
+
+  it("devrait détailler chez Linkt deux postes de chef de projet annexe, puis le développement en bas", () => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
+    const posts = within(missions).getAllByRole("heading", { level: 4 });
+
+    expect(posts).toHaveLength(3);
+    expect(posts[0]).toHaveTextContent(/chef de projet annexe.*second outil interne/i);
+    expect(posts[1]).toHaveTextContent(/chef de projet annexe.*outil de production/i);
+    expect(posts[2]).toHaveTextContent(/développeur informatique en alternance/i);
+  });
+
+  it.each([/second outil interne/i, /documentation de l’outil de production/i])(
+    "devrait expliquer le poste de chef de projet %s dans une bulle d'information",
+    (title) => {
+      render(<App />);
+      const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
+      const toggle = within(missions).getByRole("button", {
+        name: new RegExp(`détails.*${title.source}`, "i"),
+      });
+
+      expect(toggle).toHaveAttribute("aria-expanded", "false");
+      fireEvent.click(toggle);
+
+      const bubble = document.getElementById(toggle.getAttribute("aria-controls") ?? "");
+      expect(bubble).toBeVisible();
+      for (const term of ["Contexte", "Rôle", "Méthode", "Résultat"]) {
+        expect(within(bubble as HTMLElement).getByText(term)).toBeVisible();
+      }
+      expect(bubble).toHaveTextContent(/nouveaux collaborateurs/i);
+      expect(bubble).toHaveTextContent(/équipe de 5 personnes/i);
+      expect(bubble).toHaveTextContent(/7 personnes au total/i);
+      expect(bubble).toHaveTextContent(/réunion de 2 h par semaine/i);
+      expect(bubble).toHaveTextContent(/OpenProject/);
+    }
+  );
 });
 
 describe("dates", () => {
@@ -141,28 +280,27 @@ describe("dates", () => {
 });
 
 describe("hero", () => {
-  it("devrait proposer un lien GitHub et un lien LinkedIn", () => {
+  it("devrait laisser le bas de l'image sans liens", () => {
     render(<App />);
-    const hero = getHero();
 
-    expect(
-      within(hero)
-        .getByRole("link", { name: /github/i })
-        .getAttribute("href")
-    ).toMatch(/github\.com/i);
-    expect(
-      within(hero)
-        .getByRole("link", { name: /linkedin/i })
-        .getAttribute("href")
-    ).toMatch(/linkedin\.com/i);
+    expect(within(getHero()).queryAllByRole("link")).toHaveLength(0);
   });
 
-  it("devrait annoncer la disponibilité", () => {
+  it("devrait annoncer le projet de Mastère Spécialisé au CESI", () => {
     render(<App />);
 
     expect(
-      within(getHero()).getByText(/Disponible à partir d’octobre 2027 — CDI/i)
+      within(getHero()).getByText(
+        /Mastère Spécialisé® Manager de Portefeuille de Projets – Transition Numérique/
+      )
     ).toBeInTheDocument();
+  });
+
+  it("devrait ne plus annoncer de disponibilité en CDI ni de mobilité à Paris", () => {
+    render(<App />);
+
+    expect(screen.queryByText(/Disponible à partir d’octobre 2027/i)).toBeNull();
+    expect(within(getHero()).queryByText(/mobile Paris/i)).toBeNull();
   });
 
   /**
@@ -186,11 +324,48 @@ describe("hero", () => {
     }
 
     expect(Array.from(eyebrow.querySelectorAll("span"), (role) => role.textContent)).toEqual([
-      "Développeur logiciel",
-      "Full-stack",
-      "QA",
+      "Responsable portefeuille projets",
+      "Management",
+      "Chefferie de projet",
     ]);
-    expect(eyebrow).toHaveTextContent("Développeur logiciel · Full-stack · QA");
+    expect(eyebrow).toHaveTextContent(
+      "Responsable portefeuille projets · Management · Chefferie de projet"
+    );
+  });
+
+  it("devrait annoncer la recherche d'alternance à partir d'octobre 2027", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent("Je recherche une alternance à partir d’octobre 2027");
+  });
+
+  it("devrait proposer une version courte de chaque texte du hero pour le mobile", () => {
+    render(<App />);
+    const hero = getHero();
+    const short = Array.from(hero.querySelectorAll(".text-mobile"), (el) => el.textContent);
+
+    expect(short).toEqual([
+      "Alternant full stack chez Blue Soft",
+      "Alternance dès octobre 2027",
+      "Objectif : Mastère Spécialisé® au CESI",
+    ]);
+    // Chaque version courte double une version longue, gardée pour l'écran large.
+    expect(hero.querySelectorAll(".text-desktop")).toHaveLength(short.length);
+  });
+
+  it("devrait situer à Rouen, sans mention du télétravail", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent("Basé à Rouen, France");
+    expect(getHero()).not.toHaveTextContent(/remote/i);
+  });
+
+  it("devrait présenter le poste actuel comme une alternance", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent(
+      "Actuellement alternant développeur full stack chez Blue Soft"
+    );
   });
 });
 
@@ -206,21 +381,40 @@ describe("mentions retirées", () => {
 
     expect(screen.queryByText(/audit technique réalisé/i)).toBeNull();
   });
+
+  it("devrait avoir retiré la section Accessibilité, sa navigation et son lien de pied de page", () => {
+    render(<App />);
+
+    expect(document.getElementById("accessibilite")).toBeNull();
+    expect(screen.queryByRole("region", { name: /accessibilité/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^accessibilité$/i })).toBeNull();
+  });
 });
 
 describe("téléchargement du CV", () => {
+  function getCvLink(): HTMLElement {
+    return within(screen.getByRole("banner")).getByRole("link", { name: /^cv/i });
+  }
+
   it("devrait proposer un nom de fichier de téléchargement explicite", () => {
     render(<App />);
 
-    const cvLink = screen.getByRole("link", { name: /télécharger mon cv/i });
-
-    expect(cvLink.getAttribute("download")).toMatch(/Thomas-Caron/);
+    expect(getCvLink().getAttribute("download")).toMatch(/Thomas-Caron/);
   });
 
   it("devrait annoncer le format du fichier dans le libellé du lien", () => {
     render(<App />);
 
-    expect(screen.getByRole("link", { name: /télécharger mon cv.*pdf/i })).toBeInTheDocument();
+    expect(getCvLink()).toHaveAccessibleName(/^cv.*pdf/i);
+  });
+});
+
+describe("section À propos retirée", () => {
+  it("devrait ne plus afficher la section ni sa citation", () => {
+    render(<App />);
+
+    expect(document.getElementById("apropos")).toBeNull();
+    expect(screen.queryByText(/je construis des applications/i)).toBeNull();
   });
 });
 
@@ -228,9 +422,7 @@ describe("passions", () => {
   it("devrait rendre la section avec son titre accessible", () => {
     render(<App />);
 
-    const section = screen.getByRole("region", {
-      name: /au-delà du code/i,
-    });
+    const section = screen.getByRole("region", { name: /^passions$/i });
 
     expect(section).toHaveAttribute("id", "passions");
   });
@@ -244,6 +436,13 @@ describe("passions", () => {
       .map((titre) => titre.textContent);
 
     expect(titres).toEqual(["Natation", "Sauvetage en mer", "Projets personnels", "Anglais"]);
+  });
+
+  it("ne devrait plus numéroter les passions (01, 02…)", () => {
+    render(<App />);
+    const liste = screen.getByRole("list", { name: /pratiques personnelles/i });
+
+    expect(within(liste).queryByText(/^0\d$/)).not.toBeInTheDocument();
   });
 
   /**
@@ -290,29 +489,53 @@ describe("passions", () => {
 });
 
 describe("contact", () => {
+  it("devrait intituler la section « Contact »", () => {
+    render(<App />);
+
+    expect(screen.getByRole("region", { name: /^contact$/i })).toHaveAttribute("id", "contact");
+    expect(screen.queryByRole("heading", { name: /me contacter/i })).toBeNull();
+  });
+
+  it("devrait accrocher par « Parlons-en. », l'invitation en sous-titre, sans répéter le Mastère", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^contact$/i });
+
+    expect(section.querySelector(".contact-statement")).toHaveTextContent(/^Parlons-en\.$/);
+    expect(section.querySelector(".contact-invite")).toHaveTextContent(
+      /^Une opportunité, une idée ou l’envie de faire connaissance\s?\?$/
+    );
+    expect(section).not.toHaveTextContent(/mastère spécialisé/i);
+  });
+
+  it("devrait garder l'e-mail et le téléphone dans le panneau", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^contact$/i });
+
+    expect(within(section).getByRole("link", { name: profile.email })).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`
+    );
+    expect(within(section).getByRole("link", { name: profile.phone.label })).toHaveAttribute(
+      "href",
+      profile.phone.href
+    );
+  });
+
   it("devrait donner au lien Google Maps un nom accessible contenant le texte visible", () => {
     render(<App />);
 
     const mapsLink = screen.getByRole("link", {
-      name: /Mont-Saint-Aignan, France/i,
+      name: /Mont-Saint-Aignan \(Rouen\)/i,
     });
 
     expect(mapsLink.getAttribute("href")).toMatch(/google\.[a-z.]+\/maps/i);
   });
 
-  it("devrait exposer les réseaux professionnels sous forme de liste", () => {
+  it("ne devrait plus répéter les réseaux déjà présents dans l'en-tête", () => {
     render(<App />);
 
-    const socials = screen.getByRole("list", {
-      name: /réseaux professionnels/i,
-    });
-
-    expect(within(socials).getAllByRole("listitem").length).toBeGreaterThanOrEqual(2);
-    expect(
-      within(socials)
-        .getByRole("link", { name: /linkedin/i })
-        .closest("li")
-    ).not.toBeNull();
+    expect(screen.queryByText(/ou retrouvez-moi/i)).toBeNull();
+    expect(screen.queryByRole("list", { name: /réseaux professionnels/i })).toBeNull();
   });
 });
 
@@ -345,8 +568,6 @@ describe("projets personnels", () => {
       "Board",
       "Travels in World",
       "Portfolio personnel",
-      "Application de gestion de budget",
-      "Sites web & APIs",
       "GameJam Rouen Métropole",
     ]);
   });
@@ -394,6 +615,76 @@ describe("projets personnels", () => {
     expect(within(card).getByRole("link", { name: /code source/i })).toHaveAttribute("href", code);
   });
 
+  it.each([/^astrologie$/i, /^astronomie$/i, /^grand oral studio$/i, /^opale$/i])(
+    "devrait montrer un aperçu du site en ligne pour %s",
+    (title) => {
+      render(<App />);
+      const preview = getProjectCard(title).querySelector<HTMLImageElement>(
+        ".project-card__preview img"
+      );
+
+      expect(preview).not.toBeNull();
+      expect(preview?.getAttribute("src")).toMatch(/^\/assets\/projects\/.+\.webp$/);
+      expect(preview).toHaveAttribute("loading", "lazy");
+    }
+  );
+
+  it("devrait ranger la description derrière un bouton d'information fermé par défaut", () => {
+    render(<App />);
+    const card = getProjectCard(/^astrologie$/i);
+    const toggle = within(card).getByRole("button", { name: /description du projet astrologie/i });
+    const description = within(card).getByText(/site pédagogique bilingue/i);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(description).not.toBeVisible();
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(description).toBeVisible();
+  });
+
+  it("devrait refermer la description avec Échap et rendre le focus au bouton", () => {
+    render(<App />);
+    const card = getProjectCard(/^opale$/i);
+    const toggle = within(card).getByRole("button", { name: /description du projet opale/i });
+
+    fireEvent.click(toggle);
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveFocus();
+  });
+
+  it("devrait refermer la description au clic en dehors", () => {
+    render(<App />);
+    const toggle = within(getProjectCard(/^board$/i)).getByRole("button", {
+      name: /description du projet board/i,
+    });
+
+    fireEvent.click(toggle);
+    fireEvent.pointerDown(document.body);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("devrait indiquer 20 h pour la GameJam, dans le badge comme dans le texte", () => {
+    render(<App />);
+    const card = getProjectCard(/^gamejam rouen métropole$/i);
+
+    expect(within(card).getByText("20 h — Janvier")).toBeVisible();
+    expect(card).toHaveTextContent(/20 heures/);
+    expect(card).not.toHaveTextContent(/48/);
+  });
+
+  it("ne devrait montrer aucun aperçu pour un projet sans version en ligne", () => {
+    render(<App />);
+
+    for (const title of [/^board$/i, /^travels in world$/i, /^gamejam rouen métropole$/i]) {
+      expect(getProjectCard(title).querySelector(".project-card__preview")).toBeNull();
+    }
+  });
+
   it("devrait ouvrir chaque lien de projet dans un nouvel onglet, sans exposer l'opener", () => {
     render(<App />);
 
@@ -407,19 +698,6 @@ describe("projets personnels", () => {
     }
   });
 
-  it("devrait donner à chaque projet sa propre composition visuelle", () => {
-    render(<App />);
-
-    const cartes = Array.from(getProjectsSection().querySelectorAll("article"));
-    const variantes = cartes.map((carte) => {
-      const visuel = carte.querySelector(".project-visual");
-      return Array.from(visuel?.classList ?? []).find((nom) => nom.startsWith("project-visual--"));
-    });
-
-    expect(variantes.every(Boolean)).toBe(true);
-    expect(new Set(variantes).size).toBe(cartes.length);
-  });
-
   it("ne devrait jamais lier astrologie.vercel.app, qui appartient à un tiers", () => {
     render(<App />);
 
@@ -428,5 +706,238 @@ describe("projets personnels", () => {
       .map((lien) => lien.getAttribute("href"));
 
     expect(hrefs.some((href) => href?.startsWith("https://astrologie.vercel.app"))).toBe(false);
+  });
+});
+
+describe("sous-titres des compétences", () => {
+  it("devrait annoncer chaque groupe avec son nombre de compétences", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: /^Expérience professionnelle,\s*46\s*compétences$/,
+      })
+    ).toBeInTheDocument();
+  });
+});
+
+describe("pied de page", () => {
+  it("devrait indiquer seulement Rouen comme ville", () => {
+    render(<App />);
+    const footer = screen.getByRole("contentinfo");
+
+    expect(footer).toHaveTextContent(/rouen/i);
+    expect(footer).not.toHaveTextContent(/paris/i);
+  });
+});
+
+describe("formations", () => {
+  function getFormationSection(): HTMLElement {
+    return screen.getByRole("region", { name: /^formations$/i });
+  }
+
+  it("devrait être une section à part entière, titrée « Formations » comme les autres", () => {
+    render(<App />);
+    const section = getFormationSection();
+
+    expect(section).toHaveAttribute("id", "formations");
+    expect(within(section).getByRole("heading", { level: 2, name: /^formations$/i })).toBeVisible();
+    expect(screen.queryByText(/apprendre pour mieux construire/i)).toBeNull();
+  });
+
+  it("devrait figurer au sommaire, juste après le parcours", () => {
+    render(<App />);
+    const navigation = screen.getByRole("navigation", { name: /navigation principale/i });
+    const labels = within(navigation)
+      .getAllByRole("link")
+      .map((link) => link.textContent);
+
+    expect(labels.indexOf("Formations")).toBe(labels.indexOf("Parcours") + 1);
+  });
+
+  it.each([
+    [/^bac \+6$/i, "2027", "2028"],
+    [/^bac \+5$/i, "2025", "2027"],
+    [/^bac \+3$/i, "2024", "2025"],
+    [/^bac \+2$/i, "2022", "2024"],
+  ])("devrait dater %s de %s à %s", (level, start, end) => {
+    render(<App />);
+    const row = within(getFormationSection()).getByText(level).closest("li");
+    const years = Array.from(row?.querySelectorAll("time") ?? [], (time) => time.dateTime);
+
+    expect(years).toEqual([start, end]);
+  });
+
+  it("devrait indiquer le CESI pour chaque formation", () => {
+    render(<App />);
+    const rows = getFormationSection().querySelectorAll(".education-list > li");
+
+    expect(rows.length).toBe(4);
+    for (const row of rows) expect(row).toHaveTextContent(/CESI/);
+  });
+
+  it("devrait afficher les langues avec leur niveau, le PSC1 et le permis B", () => {
+    render(<App />);
+    const section = getFormationSection();
+
+    expect(section).toHaveTextContent(/anglais\s*B1/i);
+    expect(section).toHaveTextContent(/espagnol\s*A2/i);
+    expect(section).toHaveTextContent(/PSC1/);
+    expect(section).toHaveTextContent(/permis B/i);
+  });
+});
+
+/** Toutes les compétences techniques de l'expérience professionnelle, familles confondues. */
+function proTechniqueNames(): (string | null)[] {
+  return screen
+    .getAllByRole("list", { name: /^compétences expérience professionnelle — /i })
+    .filter((list) => !/gestion de projet/i.test(list.getAttribute("aria-label") ?? ""))
+    .flatMap((list) =>
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    );
+}
+
+describe("compétences", () => {
+  it("devrait ranger la technique professionnelle en quatre familles nommées", () => {
+    render(<App />);
+    const families = screen
+      .getAllByRole("list", { name: /^compétences expérience professionnelle — /i })
+      .map((list) => list.getAttribute("aria-label")?.split(" — ")[1]);
+
+    expect(families).toEqual([
+      "Gestion de projet",
+      "Langages et frameworks",
+      "Données",
+      "Infrastructure et outils",
+      "Qualité",
+    ]);
+    expect(proTechniqueNames()).toHaveLength(41);
+  });
+
+  it("ne devrait citer Claude Code qu'une fois, dans l'IA générative", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^compétences$/i });
+
+    expect(within(section).getAllByText(/claude code/i)).toHaveLength(1);
+    expect(within(section).getByText("IA générative (Claude Code, Codex, Gemini)")).toBeVisible();
+  });
+
+  it("devrait reprendre les technologies des missions Blue Soft", () => {
+    render(<App />);
+    const names = proTechniqueNames();
+
+    for (const techno of [
+      "Quarkus",
+      "PHP",
+      "Symfony",
+      "Python",
+      "Vue.js",
+      "MariaDB",
+      "Redis",
+      "Kafka",
+      "Keycloak",
+      "Docker",
+      "Azure DevOps",
+      "SonarQube",
+    ]) {
+      expect(names).toContain(techno);
+    }
+  });
+
+  it("devrait regrouper toute la technique dans l'expérience professionnelle", () => {
+    render(<App />);
+    const names = proTechniqueNames();
+
+    for (const techno of [
+      "JavaScript",
+      "Node.js",
+      "Express",
+      "HTML",
+      "CSS",
+      "REST API",
+      "Jest",
+      "MongoDB",
+      "Swagger",
+      "Figma",
+      "Next.js",
+      "NestJS",
+    ]) {
+      expect(names).toContain(techno);
+    }
+    expect(screen.getByRole("list", { name: /^compétences en apprentissage$/i }).textContent).toBe(
+      "IA générative (Claude Code, Codex, Gemini)"
+    );
+  });
+
+  it("devrait présenter la gestion de projet menée sur les projets personnels", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", { level: 3, name: /^Projets personnels,\s*8\s*compétences$/ })
+    ).toBeInTheDocument();
+    const list = screen.getByRole("list", {
+      name: /^compétences projets personnels — gestion de projet$/i,
+    });
+    expect(
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    ).toEqual([
+      "Cadrage et expression du besoin",
+      "Roadmap et gestion des versions",
+      "Priorisation et MVP",
+      "Mise en production continue",
+      "Recette et assurance qualité",
+      "Accessibilité (WCAG / RGAA)",
+      "Documentation et notes de version",
+      "Suivi d’activité et reporting",
+    ]);
+    expect(
+      screen.queryByRole("list", { name: /^compétences projets personnels — technique$/i })
+    ).toBeNull();
+  });
+
+  it("ne devrait citer chaque compétence qu'une seule fois", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^compétences$/i });
+    const names = Array.from(
+      section.querySelectorAll(".skill-chips li"),
+      (item) => item.textContent
+    );
+
+    expect(new Set(names).size).toBe(names.length);
+  });
+
+  it("devrait isoler la gestion de projet dans l'expérience professionnelle", () => {
+    render(<App />);
+    const list = screen.getByRole("list", {
+      name: /^compétences expérience professionnelle — gestion de projet$/i,
+    });
+
+    expect(
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    ).toEqual([
+      "Scrum / Agile",
+      "Jira",
+      "Planification",
+      "Animation d’équipe",
+      "Recette / tests QA",
+    ]);
+  });
+});
+
+describe("compétences en apprentissage", () => {
+  it("devrait regrouper les outils d'IA sous « IA générative »", () => {
+    render(<App />);
+    const group = screen.getByRole("list", { name: /^compétences en apprentissage$/i });
+
+    expect(within(group).getByText("IA générative (Claude Code, Codex, Gemini)")).toBeVisible();
+    expect(within(group).queryByText(/^codex$/i)).toBeNull();
+    expect(within(group).queryByText(/^gemini$/i)).toBeNull();
   });
 });

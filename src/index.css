@@ -799,6 +799,11 @@ ol {
   box-shadow: none;
   white-space: nowrap;
 }
+/* Sur le fond teinté de la mission en cours, les pastilles prennent le fond de la
+   page pour ne pas se fondre dans la carte (même couleur que --chip-surface). */
+.mission--current .stack-chip {
+  background: var(--site-background) !important;
+}
 .status-badge {
   font-family: var(--body-font);
   font-size: 0.625rem !important;

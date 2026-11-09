@@ -115,6 +115,47 @@ describe("parcours", () => {
     }
   });
 
+  it.each([
+    [/TMA full-stack.*plannings BTP/i, ["C#", "Angular"]],
+    [/application mobile iOS.*Téléthon/i, ["Swift"]],
+    [/tests automatisés QA.*ERP/i, ["Java", "Selenium"]],
+    [/transporteur de colis/i, ["React", "C#", "Terraform", "Ansible", "Claude Code"]],
+    [
+      /équipe Scrum.*radiologie médicale/i,
+      [
+        "Java",
+        "Spring Boot",
+        "Quarkus",
+        "PHP",
+        "Symfony",
+        "Angular",
+        "Python",
+        "TypeScript",
+        "Vue.js",
+        "PostgreSQL",
+        "MySQL",
+        "MariaDB",
+        "Redis",
+        "Kafka",
+        "Keycloak",
+        "Docker",
+        "Azure DevOps",
+        "SonarQube",
+      ],
+    ],
+  ])("devrait préciser la mission Blue Soft %s et ses technologies", (title, technos) => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez blue soft/i });
+    const heading = within(missions).getByRole("heading", { level: 4, name: title });
+    const mission = heading.closest("li") as HTMLElement;
+    const chips = within(mission)
+      .getByRole("list", { name: /technologies de la mission/i })
+      .querySelectorAll("li");
+    const names = Array.from(chips, (chip) => chip.textContent);
+
+    for (const techno of technos) expect(names).toContain(techno);
+  });
+
   it("ne devrait plus résumer les missions Blue Soft en un paragraphe", () => {
     render(<App />);
 

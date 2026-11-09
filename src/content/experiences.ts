@@ -19,53 +19,73 @@ export const experiences: readonly Experience[] = [
     stack: [],
     missions: [
       {
-        title: "Développement et TMA — plateforme de radiologie médicale",
+        title: "Équipe Scrum — radiologie médicale, client santé",
         range: {
           start: { label: "Septembre 2026", dateTime: "2026-09" },
           // Mission en cours : pas de borne de fin.
         },
         description:
-          "Participation au développement d’une plateforme de radiologie médicale et maintenance applicative (TMA).",
-        stack: [],
+          "Développement et maintenance applicative (TMA) au sein d’une équipe Scrum, pour un client du secteur de la santé : plusieurs projets autour d’une plateforme de radiologie médicale.",
+        stack: [
+          "Java",
+          "Spring Boot",
+          "Quarkus",
+          "PHP",
+          "Symfony",
+          "Angular",
+          "Python",
+          "TypeScript",
+          "Vue.js",
+          "PostgreSQL",
+          "MySQL",
+          "MariaDB",
+          "Redis",
+          "Kafka",
+          "Keycloak",
+          "Docker",
+          "Azure DevOps",
+          "SonarQube",
+        ],
       },
       {
-        title: "Infrastructure et développement — plateforme de transport de colis",
+        title: "Application pour un transporteur de colis",
         range: {
           start: { label: "Août 2026", dateTime: "2026-08" },
           end: { label: "Septembre 2026", dateTime: "2026-09" },
         },
         description:
-          "Conception de l’infrastructure d’une application de transport de colis et développement de la plateforme, du provisionnement jusqu’aux écrans.",
-        stack: ["Terraform", "Ansible", "Spring Boot", "React", "PostgreSQL", "Claude Code"],
+          "Conception de l’infrastructure et développement de l’application d’un transporteur de colis, du provisionnement jusqu’aux écrans, avec Claude Code.",
+        stack: ["React", "C#", "Terraform", "Ansible", "Claude Code"],
       },
       {
-        title: "QA et tests automatisés — Java",
+        title: "Tests automatisés QA — ERP",
         range: {
           start: { label: "Février 2026", dateTime: "2026-02" },
           end: { label: "Août 2026", dateTime: "2026-08" },
         },
         description:
-          "Conception et maintenance de tests avec Selenium et Cucumber sur deux projets.",
+          "Développement des tests automatisés QA d’un ERP, en Java avec Selenium et Cucumber.",
         stack: ["Java", "Selenium", "Cucumber", "CI"],
       },
       {
-        title: "Développement iOS — Swift",
+        title: "Application mobile iOS — Téléthon",
         range: {
           start: { label: "Décembre 2025", dateTime: "2025-12" },
           end: { label: "Février 2026", dateTime: "2026-02" },
         },
-        description: "Développement au sein d’une cellule de sprint pour une application iOS.",
+        description:
+          "Développement de l’application iOS du Téléthon en Swift, au sein d’une cellule de sprint.",
         stack: ["Swift", "Xcode"],
       },
       {
-        title: "TMA full-stack — C# et Angular",
+        title: "TMA full-stack — plannings BTP",
         range: {
           start: { label: "Octobre 2025", dateTime: "2025-10" },
           end: { label: "Décembre 2025", dateTime: "2025-12" },
         },
         description:
-          "Résolution de bugs sur une application en microservices, côté back-end et front-end.",
-        stack: ["C#", ".NET", "Angular", "Microservices"],
+          "Maintenance corrective d’une application de plannings BTP en microservices, côté back-end et front-end.",
+        stack: ["C#", "Angular"],
       },
     ],
   },

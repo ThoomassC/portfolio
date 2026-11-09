@@ -274,21 +274,23 @@ const Home = () => {
                         </ul>
                       </div>
                     )}
-                    <div className="skill-cluster">
-                      {group.featured && <p className="skill-cluster__label">Technique</p>}
-                      <ul
-                        className="skill-chips"
-                        aria-label={
-                          group.featured
-                            ? `Compétences ${group.title} — Technique`
-                            : `Compétences ${group.title}`
-                        }
-                      >
-                        {group.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
+                    {group.items.length > 0 && (
+                      <div className="skill-cluster">
+                        {group.featured && <p className="skill-cluster__label">Technique</p>}
+                        <ul
+                          className="skill-chips"
+                          aria-label={
+                            group.featured
+                              ? `Compétences ${group.title} — Technique`
+                              : `Compétences ${group.title}`
+                          }
+                        >
+                          {group.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

@@ -830,6 +830,34 @@ describe("compétences", () => {
     );
   });
 
+  it("devrait présenter la gestion de projet menée sur les projets personnels", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", { level: 3, name: /^Projets personnels,\s*8\s*compétences$/ })
+    ).toBeInTheDocument();
+    const list = screen.getByRole("list", {
+      name: /^compétences projets personnels — gestion de projet$/i,
+    });
+    expect(
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    ).toEqual([
+      "Cadrage et expression du besoin",
+      "Roadmap et gestion des versions",
+      "Priorisation et MVP",
+      "Mise en production continue",
+      "Recette et assurance qualité",
+      "Accessibilité (WCAG / RGAA)",
+      "Documentation et notes de version",
+      "Suivi d’activité et reporting",
+    ]);
+    expect(
+      screen.queryByRole("list", { name: /^compétences projets personnels — technique$/i })
+    ).toBeNull();
+  });
+
   it("ne devrait citer chaque compétence qu'une seule fois", () => {
     render(<App />);
     const section = screen.getByRole("region", { name: /^compétences$/i });

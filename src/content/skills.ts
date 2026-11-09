@@ -57,9 +57,22 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "projets-personnels",
     title: "Projets personnels",
-    // Vidé le 2026-11-09 : la technique est passée dans l'expérience professionnelle.
-    // Accueillera les compétences de gestion de projet tenues sur les projets perso ;
-    // un groupe vide n'est pas affiché.
+    // Gestion de projet tenue seul sur les projets perso, chaque point visible dans
+    // un projet du portfolio (choix de Thomas le 2026-11-09). La technique de ces
+    // projets est rangée dans l'expérience professionnelle.
+    featured: {
+      label: "Gestion de projet",
+      items: [
+        "Cadrage et expression du besoin",
+        "Roadmap et gestion des versions",
+        "Priorisation et MVP",
+        "Mise en production continue",
+        "Recette et assurance qualité",
+        "Accessibilité (WCAG / RGAA)",
+        "Documentation et notes de version",
+        "Suivi d’activité et reporting",
+      ],
+    },
     items: [],
   },
   {

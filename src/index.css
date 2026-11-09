@@ -425,6 +425,11 @@ ol {
   text-decoration-thickness: 2px;
 }
 
+/* Textes du hero : version longue à l'écran large, version courte sur mobile. */
+.text-mobile {
+  display: none;
+}
+
 /* Hero : portrait en noir et blanc, nom géant posé dessus. */
 .hero {
   position: relative;
@@ -1386,8 +1391,16 @@ ol {
     gap: 0.85rem;
     margin-top: 1.75rem;
   }
-  .hero-seeking {
-    border-radius: 12px;
+  .text-desktop {
+    display: none;
+  }
+  .text-mobile {
+    display: inline;
+  }
+  .eyebrow-roles {
+    font-size: 0.9375rem;
+    letter-spacing: 0.06em;
+    text-wrap: balance;
   }
   .hero-footer {
     flex-direction: column;

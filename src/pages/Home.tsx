@@ -238,17 +238,27 @@ const Home = () => {
               </p>
               <p className="hero-current">
                 <span className="status-dot" aria-hidden="true" />
-                Actuellement alternant développeur full stack chez Blue Soft
+                <span className="text-desktop">
+                  Actuellement alternant développeur full stack chez Blue Soft
+                </span>
+                <span className="text-mobile">Alternant full stack chez Blue Soft</span>
               </p>
-              <p>Basé à Rouen, France · remote partiel</p>
+              <p>
+                <span className="text-desktop">Basé à Rouen, France · remote partiel</span>
+                <span className="text-mobile">Basé à Rouen</span>
+              </p>
             </div>
           </div>
           <div className="hero-footer">
             <p className="hero-seeking">
               <IconBriefcase size={16} stroke={1.75} aria-hidden="true" />
-              {profile.seeking}
+              <span className="text-desktop">{profile.seeking}</span>
+              <span className="text-mobile">Alternance dès octobre 2027</span>
             </p>
-            <p className="hero-next-step">{profile.nextStep}</p>
+            <p className="hero-next-step">
+              <span className="text-desktop">{profile.nextStep}</span>
+              <span className="text-mobile">Objectif : Mastère Spécialisé® au CESI</span>
+            </p>
           </div>
         </div>
       </section>

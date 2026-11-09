@@ -247,6 +247,21 @@ describe("hero", () => {
     expect(getHero()).toHaveTextContent("Je recherche une alternance à partir d’octobre 2027");
   });
 
+  it("devrait proposer une version courte de chaque texte du hero pour le mobile", () => {
+    render(<App />);
+    const hero = getHero();
+    const short = Array.from(hero.querySelectorAll(".text-mobile"), (el) => el.textContent);
+
+    expect(short).toEqual([
+      "Alternant full stack chez Blue Soft",
+      "Basé à Rouen",
+      "Alternance dès octobre 2027",
+      "Objectif : Mastère Spécialisé® au CESI",
+    ]);
+    // Chaque version courte double une version longue, gardée pour l'écran large.
+    expect(hero.querySelectorAll(".text-desktop")).toHaveLength(short.length);
+  });
+
   it("devrait présenter le poste actuel comme une alternance", () => {
     render(<App />);
 

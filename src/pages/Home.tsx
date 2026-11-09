@@ -248,7 +248,10 @@ const Home = () => {
           <SectionHeading sectionId="competences" />
           <div className="skills-groups">
             {skillGroups.map((group) => {
-              const total = group.items.length + (group.featured?.items.length ?? 0);
+              const familiesCount =
+                group.families?.reduce((count, family) => count + family.items.length, 0) ?? 0;
+              const total =
+                group.items.length + (group.featured?.items.length ?? 0) + familiesCount;
               if (total === 0) return null;
               return (
                 <div className="skill-group" data-reveal="up" key={group.id}>
@@ -274,6 +277,19 @@ const Home = () => {
                         </ul>
                       </div>
                     )}
+                    {group.families?.map((family) => (
+                      <div className="skill-cluster" key={family.label}>
+                        <p className="skill-cluster__label">{family.label}</p>
+                        <ul
+                          className="skill-chips"
+                          aria-label={`Compétences ${group.title} — ${family.label}`}
+                        >
+                          {family.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                     {group.items.length > 0 && (
                       <div className="skill-cluster">
                         {group.featured && <p className="skill-cluster__label">Technique</p>}

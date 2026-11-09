@@ -4,7 +4,9 @@
    La mise en couleur sera retravaillée élément par élément. */
 @font-face {
   font-family: "Anton";
-  src: url("/assets/fonts/anton-latin.ttf") format("truetype");
+  /* Sous-ensemble latin (Latin-1, Œ, guillemets, tirets, flèches) en WOFF2 : 20 Ko au
+     lieu de 167 Ko pour le TTF complet. Fichier versionné, /assets étant immuable. */
+  src: url("/assets/fonts/anton-latin-v2.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -768,6 +770,21 @@ ol {
   gap: 6px;
   margin-top: 1.25rem;
 }
+/* Bouton « +N » des longues listes : caché sur grand écran, où tout s'affiche. */
+.stack-chip-more {
+  display: none;
+}
+.stack-chip-more__button {
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px dashed var(--control-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: transparent;
+  cursor: pointer;
+}
 .stack-chip-root,
 .status-badge-root {
   --lg-bg-color: transparent;
@@ -1502,6 +1519,18 @@ ol {
 }
 
 @media (max-width: 700px) {
+  /* Longues listes de technologies : six pastilles, puis « +N » pour le reste. */
+  .stack-chip-more {
+    display: list-item;
+    list-style: none;
+  }
+  .experience-stack:not(.is-expanded) .stack-chip-item--extra {
+    display: none;
+  }
+  /* Aperçus de projets plus bas sur mobile : la carte prend moins de hauteur. */
+  .project-card__preview img {
+    aspect-ratio: 16 / 7;
+  }
   .header-actions {
     gap: 0.5rem;
   }

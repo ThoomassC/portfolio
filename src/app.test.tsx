@@ -156,6 +156,30 @@ describe("parcours", () => {
     for (const techno of technos) expect(names).toContain(techno);
   });
 
+  it("devrait replier les technologies de la radiologie derrière un bouton « +12 »", () => {
+    render(<App />);
+    const missions = screen.getByRole("list", { name: /missions réalisées chez blue soft/i });
+    const mission = within(missions)
+      .getByRole("heading", { level: 4, name: /radiologie/i })
+      .closest("li") as HTMLElement;
+    const toggle = within(mission).getByRole("button", { name: /12 autres technologies/i });
+
+    expect(toggle).toHaveTextContent("+12");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(mission.querySelectorAll(".stack-chip-item--extra")).toHaveLength(12);
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(mission.querySelector(".experience-stack")).toHaveClass("is-expanded");
+  });
+
+  it("ne devrait replier aucune autre mission", () => {
+    render(<App />);
+
+    expect(screen.getAllByRole("button", { name: /autres technologies/i })).toHaveLength(1);
+  });
+
   it("ne devrait plus résumer les missions Blue Soft en un paragraphe", () => {
     render(<App />);
 
@@ -501,7 +525,7 @@ describe("contact", () => {
     render(<App />);
 
     const mapsLink = screen.getByRole("link", {
-      name: /Mont-Saint-Aignan, France/i,
+      name: /Mont-Saint-Aignan \(Rouen\)/i,
     });
 
     expect(mapsLink.getAttribute("href")).toMatch(/google\.[a-z.]+\/maps/i);
@@ -764,7 +788,35 @@ describe("formations", () => {
   });
 });
 
+/** Toutes les compétences techniques de l'expérience professionnelle, familles confondues. */
+function proTechniqueNames(): (string | null)[] {
+  return screen
+    .getAllByRole("list", { name: /^compétences expérience professionnelle — /i })
+    .filter((list) => !/gestion de projet/i.test(list.getAttribute("aria-label") ?? ""))
+    .flatMap((list) =>
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    );
+}
+
 describe("compétences", () => {
+  it("devrait ranger la technique professionnelle en quatre familles nommées", () => {
+    render(<App />);
+    const families = screen
+      .getAllByRole("list", { name: /^compétences expérience professionnelle — /i })
+      .map((list) => list.getAttribute("aria-label")?.split(" — ")[1]);
+
+    expect(families).toEqual([
+      "Gestion de projet",
+      "Langages et frameworks",
+      "Données",
+      "Infrastructure et outils",
+      "Qualité",
+    ]);
+    expect(proTechniqueNames()).toHaveLength(41);
+  });
+
   it("ne devrait citer Claude Code qu'une fois, dans l'IA générative", () => {
     render(<App />);
     const section = screen.getByRole("region", { name: /^compétences$/i });
@@ -775,12 +827,7 @@ describe("compétences", () => {
 
   it("devrait reprendre les technologies des missions Blue Soft", () => {
     render(<App />);
-    const technique = screen.getByRole("list", {
-      name: /^compétences expérience professionnelle — technique$/i,
-    });
-    const names = within(technique)
-      .getAllByRole("listitem")
-      .map((item) => item.textContent);
+    const names = proTechniqueNames();
 
     for (const techno of [
       "Quarkus",
@@ -802,12 +849,7 @@ describe("compétences", () => {
 
   it("devrait regrouper toute la technique dans l'expérience professionnelle", () => {
     render(<App />);
-    const technique = screen.getByRole("list", {
-      name: /^compétences expérience professionnelle — technique$/i,
-    });
-    const names = within(technique)
-      .getAllByRole("listitem")
-      .map((item) => item.textContent);
+    const names = proTechniqueNames();
 
     for (const techno of [
       "JavaScript",

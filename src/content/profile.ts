@@ -3,7 +3,7 @@ export const profile = {
   name: "Thomas Caron",
   email: "caronthomas27@gmail.com",
   phone: { label: "07 83 52 37 85", href: "tel:+33783523785" },
-  location: "Mont-Saint-Aignan, France",
+  location: "Mont-Saint-Aignan (Rouen)",
   mapsUrl: "https://www.google.com/maps?q=Mont-Saint-Aignan",
   linkedInUrl: "https://www.linkedin.com/in/thomas-caron27/",
   gitHubUrl: "https://github.com/ThoomassC",
@@ -16,7 +16,7 @@ export const profile = {
     /** Portrait détouré du hero : l'image y est seule et porte l'identité, d'où une
         alternative descriptive. Ailleurs, à côté du nom, elle devrait rester vide. */
     cutout: {
-      src: "/assets/portrait-thomas-caron-cutout-v2.webp",
+      src: "/assets/portrait-thomas-caron-cutout-v3.webp",
       width: 1086,
       height: 1448,
       alt: "Thomas Caron, souriant, en chemise bleu marine.",

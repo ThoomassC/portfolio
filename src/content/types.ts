@@ -62,13 +62,18 @@ export type Formation = {
   readonly statusType: StatusType;
 };
 
+/** Un ensemble de compétences sous un libellé (« Données », « Gestion de projet »…). */
+export type SkillFamily = { readonly label: string; readonly items: readonly string[] };
+
 export type SkillGroup = {
   readonly id: string;
   readonly title: string;
   readonly items: readonly string[];
+  /** Technique rangée par familles nommées, affichées après les compétences mises en avant. */
+  readonly families?: readonly SkillFamily[];
   /** Compétences mises en avant en tête du groupe, sous leur propre libellé ;
       `items` liste alors le reste, et le total du groupe additionne les deux. */
-  readonly featured?: { readonly label: string; readonly items: readonly string[] };
+  readonly featured?: SkillFamily;
 };
 
 export type ProjectLink = {

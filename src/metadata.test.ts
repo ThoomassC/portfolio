@@ -45,3 +45,21 @@ describe("métadonnées de la page", () => {
     expect(indexHtml).toMatch(/"jobTitle":\s*"Chef de projet/);
   });
 });
+
+const publicFonts = new Set(
+  Object.keys(import.meta.glob("../public/assets/fonts/*")).map((path) =>
+    path.replace("../public", "")
+  )
+);
+
+describe("poids des ressources du hero", () => {
+  it("devrait précharger la police d'affichage en WOFF2 versionné, présente dans public/", () => {
+    const preload = indexHtml.match(
+      /<link\s+rel="preload"\s+href="([^"]+)"\s+as="font"\s+type="([^"]+)"/
+    );
+
+    expect(preload?.[1]).toMatch(/^\/assets\/fonts\/anton-latin-v\d+\.woff2$/);
+    expect(preload?.[2]).toBe("font/woff2");
+    expect(publicFonts.has(preload?.[1] ?? "")).toBe(true);
+  });
+});

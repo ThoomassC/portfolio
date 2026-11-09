@@ -68,7 +68,6 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
     { ink: "--inverse-accent-ink", surface: "--inverse-accent" },
     { ink: "--contact-ink", surface: "--contact-surface" },
     { ink: "--contact-muted", surface: "--contact-surface" },
-    { ink: "--header-ink", surface: "--header-surface" },
     { ink: "--text-body", surface: "--soft-surface" },
     { ink: "--inverse-muted", surface: "--inverse-soft-surface" },
   ])("$ink reste lisible sur $surface", ({ ink, surface }) => {

@@ -231,6 +231,32 @@ describe("navigation pendant le défilement", () => {
   });
 });
 
+describe("fond de l'en-tête au défilement", () => {
+  function scrollTo(y: number) {
+    act(() => {
+      Object.defineProperty(window, "scrollY", { configurable: true, value: y });
+      window.dispatchEvent(new Event("scroll"));
+    });
+  }
+
+  afterEach(() => {
+    Object.defineProperty(window, "scrollY", { configurable: true, value: 0 });
+  });
+
+  it("devrait rester transparent en haut de page et prendre un fond une fois la page défilée", () => {
+    render(<App />);
+    const header = screen.getByRole("banner");
+
+    expect(header).not.toHaveClass("is-scrolled");
+
+    scrollTo(240);
+    expect(header).toHaveClass("is-scrolled");
+
+    scrollTo(0);
+    expect(header).not.toHaveClass("is-scrolled");
+  });
+});
+
 describe("encre des liens selon le fond", () => {
   afterEach(() => {
     vi.restoreAllMocks();

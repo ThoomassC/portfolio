@@ -11,6 +11,7 @@ import { navigationItems, navigationSectionIds } from "../content/navigation";
 import { profile } from "../content/profile";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { useBackdropTone } from "../hooks/useBackdropTone";
+import { useHasScrolled } from "../hooks/useHasScrolled";
 import { useIsScrolling } from "../hooks/useIsScrolling";
 import { useTheme } from "../hooks/useTheme";
 
@@ -27,6 +28,7 @@ const SiteHeader = () => {
   const { activeSection, selectSection } = useActiveSection(navigationSectionIds);
   const { isDarkTheme, toggleTheme } = useTheme();
   const isScrolling = useIsScrolling();
+  const hasScrolled = useHasScrolled();
   const headerRef = useRef<HTMLElement>(null);
   useBackdropTone(headerRef, BACKDROP_TARGETS);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -82,7 +84,10 @@ const SiteHeader = () => {
   }, [isMenuOpen]);
 
   return (
-    <header className={`site-header${isMenuOpen ? " is-menu-open" : ""}`} ref={headerRef}>
+    <header
+      className={`site-header${isMenuOpen ? " is-menu-open" : ""}${hasScrolled ? " is-scrolled" : ""}`}
+      ref={headerRef}
+    >
       <div className="header-actions">
         <ul className="header-links" aria-label="Liens directs">
           <li className="header-links__cv">

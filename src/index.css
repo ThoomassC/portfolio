@@ -1408,6 +1408,17 @@ ol {
   .menu-toggle {
     display: inline-flex;
   }
+  /* Hiérarchie sur mobile et tablette : le titre d'une section reste au moins 1,5 fois
+     plus grand que les titres qu'elle contient (entreprise, accroche, cartes). */
+  .section-heading h2 {
+    font-size: clamp(3.25rem, 2rem + 6vw, 5rem);
+  }
+  .timeline-item__aside .company {
+    font-size: clamp(2rem, 1.25rem + 3vw, 3.25rem);
+  }
+  .contact-statement {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3rem);
+  }
   /* Mobile : en haut de page, l'en-tête reste transparent sur le hero. Une fois la
      page défilée, un fond ton sur ton translucide et flouté apparaît en fondu.
      Le flou vit sur un pseudo-élément : posé sur l'en-tête, backdrop-filter en ferait

@@ -35,6 +35,8 @@
   --contact-ink: #fafafa;
   --contact-muted: #c3c8db;
   --contact-line: #3b4a73;
+  --header-surface: #232f52;
+  --header-ink: #f7f4ea;
   --focus: #232f52;
   --chip-surface: #e7e5e4;
   --grain-opacity: 0.05;
@@ -87,6 +89,8 @@
   --contact-ink: #fafafa;
   --contact-muted: #c3c8db;
   --contact-line: #45557f;
+  --header-surface: #f7f4ea;
+  --header-ink: #232f52;
   --focus: #fafafa;
   --chip-surface: #2c395b;
   --grain-opacity: 0.07;
@@ -1408,15 +1412,33 @@ ol {
     position: absolute;
     inset: 0;
     z-index: -1;
-    border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-    background: color-mix(in srgb, var(--site-background) 72%, transparent);
+    background: color-mix(in srgb, var(--header-surface) 88%, transparent);
     -webkit-backdrop-filter: blur(14px) saturate(1.4);
     backdrop-filter: blur(14px) saturate(1.4);
     pointer-events: none;
   }
-  .header-links a[data-backdrop],
-  .menu-toggle[data-backdrop] {
+  /* Bandeau inversé : marine en clair, beige en sombre. L'encre, le rond et le
+     contour du switch reprennent ces couleurs, pas celles de la page. */
+  /* Menu ouvert : le panneau plein écran recouvre le bandeau, l'encre de la page revient. */
+  .site-header:not(.is-menu-open) .header-actions,
+  .site-header:not(.is-menu-open) .menu-toggle {
+    --text-strong: var(--header-ink);
+    --control-border: color-mix(in srgb, var(--header-ink) 55%, transparent);
+  }
+  .site-header:not(.is-menu-open) .header-links a[data-backdrop],
+  .site-header:not(.is-menu-open) .menu-toggle[data-backdrop] {
+    color: var(--header-ink);
+  }
+  .site-header.is-menu-open .header-links a[data-backdrop],
+  .site-header.is-menu-open .menu-toggle[data-backdrop] {
     color: var(--text-strong);
+  }
+  /* Soleil et lune gardent leur contour foncé : ils restent nets sur le rond clair
+     (thème clair) comme sur la piste beige (thème sombre). */
+  .theme-toggle .theme-toggle__sun svg,
+  :root[data-theme="dark"] .theme-toggle .theme-toggle__sun svg {
+    color: #995411;
+    fill: #ffd45f;
   }
   /* Mobile : CV, GitHub et LinkedIn restent à portée ; l'e-mail est dans Contact. */
   .header-links {

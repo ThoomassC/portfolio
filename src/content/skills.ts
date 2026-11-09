@@ -4,13 +4,12 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     id: "experience-professionnelle",
     title: "Expérience professionnelle",
+    // Gestion de projet en tête, reprise du CV : c'est le cap visé par le Mastère.
+    featured: {
+      label: "Gestion de projet",
+      items: ["Scrum / Agile", "Jira", "Planification", "Animation d’équipe", "Recette / tests QA"],
+    },
     items: [
-      // Gestion de projet en tête, reprise du CV : c'est le cap visé par le Mastère.
-      "Scrum / Agile",
-      "Jira",
-      "Planification",
-      "Animation d’équipe",
-      "Recette / tests QA",
       "C#",
       "Angular",
       "Java",
@@ -26,7 +25,6 @@ export const skillGroups: readonly SkillGroup[] = [
       "Cucumber",
       "Tests automatisés",
       "Tests fonctionnels",
-      "Claude Code",
     ],
   },
   {

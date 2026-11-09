@@ -23,9 +23,10 @@ export const profile = {
     },
   },
   cv: {
-    href: "/assets/CV-Thomas-Caron-Developpeur-Full-Stack-QA.pdf",
-    fileName: "CV-Thomas-Caron-Developpeur-Full-Stack-QA.pdf",
-    /** 104 040 octets, soit 104 Ko au sens SI (1 Ko = 1000 octets). */
-    label: "Télécharger mon CV (PDF, 104 Ko)",
+    href: "/assets/CV-Thomas-Caron-Chef-de-projet-SI-v2.pdf",
+    fileName: "CV-Thomas-Caron-Chef-de-projet-SI.pdf",
+    /** 113 340 octets, soit 113 Ko au sens SI (1 Ko = 1000 octets). */
+    size: "113 Ko",
+    label: "Télécharger mon CV (PDF, 113 Ko)",
   },
 } as const;

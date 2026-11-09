@@ -1,14 +1,14 @@
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useState } from "react";
 import {
   IconArrowUpRight,
   IconBriefcase,
-  IconInfoCircle,
   IconMail,
   IconMapPin,
   IconPhone,
   IconUsersGroup,
 } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
+import InfoToggle from "../components/InfoToggle";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
 import { certifications, formations, languages } from "../content/formations";
@@ -99,29 +99,6 @@ const badgeVariantByStatus = {
 const ProjectCard = ({ project }: { readonly project: Project }) => {
   const siteLink = project.links.find((link) => link.label === "Voir le site");
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const infoRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
-  const descriptionId = `description-${project.id}`;
-
-  /** Bulle ouverte : Échap la referme et rend le focus au bouton, un clic ailleurs aussi. */
-  useEffect(() => {
-    if (!isInfoOpen) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setIsInfoOpen(false);
-      toggleRef.current?.focus();
-    };
-    const handlePointerDown = (event: PointerEvent) => {
-      if (!infoRef.current?.contains(event.target as Node)) setIsInfoOpen(false);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [isInfoOpen]);
-
   const cardClassName = [
     "project-card",
     project.preview && "project-card--featured",
@@ -167,22 +144,15 @@ const ProjectCard = ({ project }: { readonly project: Project }) => {
             {project.status}
           </Badge>
         </p>
-        <div className="project-card__heading" ref={infoRef}>
+        <div className="project-card__heading">
           <h3 className="project-card__title">{project.title}</h3>
-          <button
-            ref={toggleRef}
-            className="info-toggle"
-            type="button"
-            aria-expanded={isInfoOpen}
-            aria-controls={descriptionId}
-            onClick={() => setIsInfoOpen((open) => !open)}
+          <InfoToggle
+            id={`description-${project.id}`}
+            label={`Description du projet ${project.title}`}
+            onOpenChange={setIsInfoOpen}
           >
-            <IconInfoCircle size={18} stroke={1.75} aria-hidden="true" />
-            <span className="visually-hidden">Description du projet {project.title}</span>
-          </button>
-          <div className="project-card__info" id={descriptionId} hidden={!isInfoOpen}>
             <p>{project.description}</p>
-          </div>
+          </InfoToggle>
         </div>
         <StackChips label={`Technologies du projet ${project.title}`} items={project.stack} />
         {project.links.length > 0 && (
@@ -206,6 +176,15 @@ const ProjectCard = ({ project }: { readonly project: Project }) => {
     </article>
   );
 };
+
+/** Identifiant HTML stable tiré d'un intitulé : minuscules ASCII et tirets. */
+const slugify = (text: string) =>
+  text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 const featuredProjects = projects.filter((project) => project.preview);
 const otherProjects = projects.filter((project) => !project.preview);
@@ -243,10 +222,7 @@ const Home = () => {
                 </span>
                 <span className="text-mobile">Alternant full stack chez Blue Soft</span>
               </p>
-              <p>
-                <span className="text-desktop">Basé à Rouen, France · remote partiel</span>
-                <span className="text-mobile">Basé à Rouen</span>
-              </p>
+              <p>Basé à Rouen, France</p>
             </div>
           </div>
           <div className="hero-footer">
@@ -271,23 +247,51 @@ const Home = () => {
         <div className="container">
           <SectionHeading sectionId="competences" />
           <div className="skills-groups">
-            {skillGroups.map((group) => (
-              <div className="skill-group" data-reveal="up" key={group.id}>
-                <h3 className="skill-group__title" id={`skill-${group.id}`}>
-                  <TitleWithBadge title={group.title}>
-                    <span className="skill-group__count" aria-hidden="true">
-                      {group.items.length}
-                    </span>
-                    <span className="visually-hidden">{`, ${group.items.length} compétences`}</span>
-                  </TitleWithBadge>
-                </h3>
-                <ul className="skill-list" aria-label={`Compétences ${group.title}`}>
-                  {group.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {skillGroups.map((group) => {
+              const total = group.items.length + (group.featured?.items.length ?? 0);
+              return (
+                <div className="skill-group" data-reveal="up" key={group.id}>
+                  <h3 className="skill-group__title" id={`skill-${group.id}`}>
+                    <TitleWithBadge title={group.title}>
+                      <span className="skill-group__count" aria-hidden="true">
+                        {total}
+                      </span>
+                      <span className="visually-hidden">{`, ${total} compétences`}</span>
+                    </TitleWithBadge>
+                  </h3>
+                  <div className="skill-group__body">
+                    {group.featured && (
+                      <div className="skill-cluster">
+                        <p className="skill-cluster__label">{group.featured.label}</p>
+                        <ul
+                          className="skill-chips skill-chips--featured"
+                          aria-label={`Compétences ${group.title} — ${group.featured.label}`}
+                        >
+                          {group.featured.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    <div className="skill-cluster">
+                      {group.featured && <p className="skill-cluster__label">Technique</p>}
+                      <ul
+                        className="skill-chips"
+                        aria-label={
+                          group.featured
+                            ? `Compétences ${group.title} — Technique`
+                            : `Compétences ${group.title}`
+                        }
+                      >
+                        {group.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -343,7 +347,28 @@ const Home = () => {
                                 )}
                                 <DateRangeText range={mission.range} />
                               </p>
-                              <h4>{mission.title}</h4>
+                              {mission.details ? (
+                                <div className="mission-heading">
+                                  <h4>{mission.title}</h4>
+                                  <InfoToggle
+                                    id={`details-${slugify(mission.title)}`}
+                                    label={`Détails du poste ${mission.title}`}
+                                  >
+                                    <dl className="info-details">
+                                      <dt>Contexte</dt>
+                                      <dd>{mission.details.context}</dd>
+                                      <dt>Rôle</dt>
+                                      <dd>{mission.details.role}</dd>
+                                      <dt>Méthode</dt>
+                                      <dd>{mission.details.method}</dd>
+                                      <dt>Résultat</dt>
+                                      <dd>{mission.details.result}</dd>
+                                    </dl>
+                                  </InfoToggle>
+                                </div>
+                              ) : (
+                                <h4>{mission.title}</h4>
+                              )}
                               <p>{mission.description}</p>
                               <StackChips
                                 label={`Technologies de la mission ${mission.title}`}

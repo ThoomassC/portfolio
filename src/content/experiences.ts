@@ -3,8 +3,9 @@ import { IconBriefcase, IconCode } from "@tabler/icons-react";
 import type { Experience } from "./types";
 
 /**
- * Timeline inversée à tous les niveaux : le poste le plus récent ouvre le parcours,
- * et dans chaque poste la mission la plus récente ouvre la frise.
+ * Timeline inversée : le poste le plus récent ouvre le parcours, et dans chaque poste
+ * la frise part du plus récent. Chez Linkt, le développement, fil rouge des trois ans,
+ * ferme la frise sous les deux postes de chef de projet annexe (choix de Thomas).
  */
 export const experiences: readonly Experience[] = [
   {
@@ -79,16 +80,6 @@ export const experiences: readonly Experience[] = [
     stack: [],
     missions: [
       {
-        title: "Développeur informatique en alternance — outil de production",
-        range: {
-          start: { label: "Septembre 2022", dateTime: "2022-09" },
-          end: { label: "Septembre 2025", dateTime: "2025-09" },
-        },
-        description:
-          "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
-        stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
-      },
-      {
         title: "Chef de projet annexe — documentation d’un second outil interne",
         range: {
           start: { label: "2023", dateTime: "2023" },
@@ -97,6 +88,15 @@ export const experiences: readonly Experience[] = [
         description:
           "Même démarche sur un autre outil interne : pilotage d’un projet d’amélioration de sa documentation.",
         stack: [],
+        details: {
+          context:
+            "Améliorer la documentation d’un second outil interne pour faciliter l’arrivée des nouveaux collaborateurs.",
+          role: "Chef de projet annexe, en relation avec l’équipe et les référents du projet.",
+          method:
+            "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
+          result:
+            "Des infobulles dans l’application, signalées par une icône point d’interrogation, qui ouvrent une documentation écrite et des schémas. Le responsable fonctionnel la rédige et la met à jour dans l’outil de gestion de projet OpenProject.",
+        },
       },
       {
         title: "Chef de projet annexe — documentation de l’outil de production",
@@ -107,6 +107,25 @@ export const experiences: readonly Experience[] = [
         description:
           "En parallèle du développement, pilotage d’un projet interne d’amélioration de la documentation de l’outil de production sur lequel je développais.",
         stack: [],
+        details: {
+          context:
+            "Améliorer la documentation de l’outil de production pour faciliter l’arrivée des nouveaux collaborateurs.",
+          role: "Chef de projet annexe, en relation avec l’équipe et les référents du projet.",
+          method:
+            "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
+          result:
+            "Des infobulles dans l’application, signalées par une icône point d’interrogation, qui ouvrent une documentation écrite et des schémas. Le responsable fonctionnel la rédige et la met à jour dans l’outil de gestion de projet OpenProject.",
+        },
+      },
+      {
+        title: "Développeur informatique en alternance — outil de production",
+        range: {
+          start: { label: "Septembre 2022", dateTime: "2022-09" },
+          end: { label: "Septembre 2025", dateTime: "2025-09" },
+        },
+        description:
+          "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
+        stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
       },
     ],
   },

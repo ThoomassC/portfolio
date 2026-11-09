@@ -600,20 +600,51 @@ ol {
 }
 
 /* Compétences : listes à deux colonnes séparées par des filets. */
+/* Compétences : le titre du groupe à gauche, les compétences en pastilles à droite ;
+   la gestion de projet ressort en lavande, en tête de l'expérience professionnelle. */
 .skills-groups {
-  display: grid;
-  gap: clamp(3rem, 6vw, 4.5rem);
+  border-top: 1px solid var(--line);
 }
-.skill-list {
+.skill-group {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(2rem, 5vw, 4rem);
-  margin-top: 1.25rem;
-}
-.skill-list li {
-  padding-block: 1rem;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 1.25rem clamp(2rem, 5vw, 4rem);
+  padding-block: clamp(2rem, 4vw, 3rem);
   border-bottom: 1px solid var(--line);
-  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem);
+}
+.skill-group__body {
+  display: grid;
+  gap: 1.5rem;
+}
+.skill-cluster__label {
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.skill-chips li {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  color: var(--text-strong);
+  background: var(--surface);
+}
+.skill-chips--featured li {
+  border-color: transparent;
+  font-weight: 500;
+  color: #232f52;
+  background: var(--highlight);
 }
 
 /* Parcours : l'entreprise en grand dans une colonne qui accompagne la lecture,
@@ -1032,7 +1063,10 @@ ol {
   color: var(--text-strong);
   background: var(--chip-surface);
 }
-.project-card__info {
+.info-root {
+  display: contents;
+}
+.info-bubble {
   position: absolute;
   top: calc(100% + 0.6rem);
   right: 0;
@@ -1048,7 +1082,38 @@ ol {
   box-shadow: 0 22px 44px -22px rgb(25 33 57 / 0.5);
   animation: info-in 180ms ease-out;
 }
-.project-card__info[hidden] {
+/* Intitulé long sur plusieurs lignes : le « i » suit le dernier mot, en exposant. */
+.mission-heading {
+  position: relative;
+}
+.mission-heading h4 {
+  display: inline;
+}
+.mission-heading .info-toggle {
+  display: inline-grid;
+  vertical-align: top;
+  margin: -0.2rem 0 0 0.15rem;
+}
+/* La bulle d'un poste reste au-dessus des missions suivantes de la frise. */
+.mission:has(.info-toggle[aria-expanded="true"]) {
+  z-index: 3;
+}
+.info-details {
+  display: grid;
+  gap: 0.2rem;
+}
+.info-details dt {
+  margin-top: 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+.info-details dt:first-child {
+  margin-top: 0;
+}
+.info-bubble[hidden] {
   display: none;
 }
 @keyframes info-in {
@@ -1331,8 +1396,18 @@ ol {
   .menu-toggle {
     display: inline-flex;
   }
-  .header-links li:not(.header-links__cv) {
+  /* Mobile : CV, GitHub et LinkedIn restent à portée ; l'e-mail est dans Contact. */
+  .header-links {
+    gap: 0.9rem;
+  }
+  .header-links__email {
     display: none;
+  }
+  /* Le switch de thème passe en haut à gauche, la droite reste aux liens et au menu. */
+  .theme-toggle {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 0.9rem);
+    left: var(--gutter);
   }
   .section-nav {
     display: none;
@@ -1419,7 +1494,7 @@ ol {
   .hero-next-step {
     flex: none;
   }
-  .skill-list {
+  .skill-group {
     grid-template-columns: minmax(0, 1fr);
   }
   .timeline-item {

@@ -21,11 +21,20 @@ export type DateRange = {
   readonly end?: DateMark;
 };
 
+/** Fiche d'un poste piloté : affichée dans une bulle d'information à côté de l'intitulé. */
+export type MissionDetails = {
+  readonly context: string;
+  readonly role: string;
+  readonly method: string;
+  readonly result: string;
+};
+
 export type Mission = {
   readonly title: string;
   readonly range: DateRange;
   readonly description: string;
   readonly stack: readonly string[];
+  readonly details?: MissionDetails;
 };
 
 export type Experience = {
@@ -56,6 +65,9 @@ export type SkillGroup = {
   readonly id: string;
   readonly title: string;
   readonly items: readonly string[];
+  /** Compétences mises en avant en tête du groupe, sous leur propre libellé ;
+      `items` liste alors le reste, et le total du groupe additionne les deux. */
+  readonly featured?: { readonly label: string; readonly items: readonly string[] };
 };
 
 export type ProjectLink = {

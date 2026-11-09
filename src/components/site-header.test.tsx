@@ -7,6 +7,12 @@ import { setPrefersColorScheme, setPrefersReducedMotion } from "../test/setup";
 
 const NAVIGATION_PANEL_ID = "navigation-principale";
 
+const publicPdfs = new Set(
+  Object.keys(import.meta.glob("../../public/assets/*.pdf")).map((path) =>
+    path.replace("../../public", "")
+  )
+);
+
 function getMenuToggle(): HTMLElement {
   return screen.getByRole("button", { name: /menu/i });
 }
@@ -155,6 +161,17 @@ describe("liens directs de l'en-tête", () => {
       "href",
       profile.linkedInUrl
     );
+  });
+
+  it("devrait servir le CV de chef de projet SI, avec son poids réel", () => {
+    render(<App />);
+    const cv = within(screen.getByRole("list", { name: /liens directs/i })).getByRole("link", {
+      name: /^cv/i,
+    });
+
+    expect(cv).toHaveAttribute("href", "/assets/CV-Thomas-Caron-Chef-de-projet-SI-v2.pdf");
+    expect(cv).toHaveAccessibleName(/PDF, 113 Ko/);
+    expect(publicPdfs.has("/assets/CV-Thomas-Caron-Chef-de-projet-SI-v2.pdf")).toBe(true);
   });
 
   it("devrait placer le CV en premier, avec une flèche de téléchargement", () => {

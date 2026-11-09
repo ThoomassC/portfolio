@@ -95,9 +95,11 @@ describe("parcours", () => {
     expect(firstExperience).not.toHaveTextContent(/linkt/i);
   });
 
-  it("devrait lister les missions de chaque poste de la plus récente à la plus ancienne", () => {
+  it("devrait lister les missions Blue Soft de la plus récente à la plus ancienne", () => {
     render(<App />);
-    const missionLists = screen.getAllByRole("list", { name: /missions réalisées chez/i });
+    const missionLists = screen.getAllByRole("list", {
+      name: /missions réalisées chez blue soft/i,
+    });
 
     for (const list of missionLists) {
       // Clé de tri : fin de mission (une mission en cours passe devant), puis début.
@@ -142,16 +144,39 @@ describe("parcours", () => {
     expect(maalsi).toHaveTextContent(/projet de groupe de 4 personnes/i);
   });
 
-  it("devrait détailler chez Linkt le poste de développeur et deux postes de chef de projet annexe", () => {
+  it("devrait détailler chez Linkt deux postes de chef de projet annexe, puis le développement en bas", () => {
     render(<App />);
     const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
     const posts = within(missions).getAllByRole("heading", { level: 4 });
 
     expect(posts).toHaveLength(3);
-    expect(posts[0]).toHaveTextContent(/développeur/i);
-    expect(posts[1]).toHaveTextContent(/chef de projet annexe.*documentation/i);
-    expect(posts[2]).toHaveTextContent(/chef de projet annexe.*documentation/i);
+    expect(posts[0]).toHaveTextContent(/chef de projet annexe.*second outil interne/i);
+    expect(posts[1]).toHaveTextContent(/chef de projet annexe.*outil de production/i);
+    expect(posts[2]).toHaveTextContent(/développeur informatique en alternance/i);
   });
+
+  it.each([/second outil interne/i, /documentation de l’outil de production/i])(
+    "devrait expliquer le poste de chef de projet %s dans une bulle d'information",
+    (title) => {
+      render(<App />);
+      const missions = screen.getByRole("list", { name: /missions réalisées chez linkt/i });
+      const toggle = within(missions).getByRole("button", {
+        name: new RegExp(`détails.*${title.source}`, "i"),
+      });
+
+      expect(toggle).toHaveAttribute("aria-expanded", "false");
+      fireEvent.click(toggle);
+
+      const bubble = document.getElementById(toggle.getAttribute("aria-controls") ?? "");
+      expect(bubble).toBeVisible();
+      for (const term of ["Contexte", "Rôle", "Méthode", "Résultat"]) {
+        expect(within(bubble as HTMLElement).getByText(term)).toBeVisible();
+      }
+      expect(bubble).toHaveTextContent(/nouveaux collaborateurs/i);
+      expect(bubble).toHaveTextContent(/réunion de 2 h par semaine/i);
+      expect(bubble).toHaveTextContent(/OpenProject/);
+    }
+  );
 });
 
 describe("dates", () => {
@@ -254,12 +279,18 @@ describe("hero", () => {
 
     expect(short).toEqual([
       "Alternant full stack chez Blue Soft",
-      "Basé à Rouen",
       "Alternance dès octobre 2027",
       "Objectif : Mastère Spécialisé® au CESI",
     ]);
     // Chaque version courte double une version longue, gardée pour l'écran large.
     expect(hero.querySelectorAll(".text-desktop")).toHaveLength(short.length);
+  });
+
+  it("devrait situer à Rouen, sans mention du télétravail", () => {
+    render(<App />);
+
+    expect(getHero()).toHaveTextContent("Basé à Rouen, France");
+    expect(getHero()).not.toHaveTextContent(/remote/i);
   });
 
   it("devrait présenter le poste actuel comme une alternance", () => {
@@ -618,7 +649,7 @@ describe("sous-titres des compétences", () => {
     expect(
       screen.getByRole("heading", {
         level: 3,
-        name: /^Expérience professionnelle,\s*21\s*compétences$/,
+        name: /^Expérience professionnelle,\s*20\s*compétences$/,
       })
     ).toBeInTheDocument();
   });
@@ -679,6 +710,35 @@ describe("formations", () => {
     expect(section).toHaveTextContent(/espagnol\s*A2/i);
     expect(section).toHaveTextContent(/PSC1/);
     expect(section).toHaveTextContent(/permis B/i);
+  });
+});
+
+describe("compétences", () => {
+  it("ne devrait citer Claude Code qu'une fois, dans l'IA générative", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^compétences$/i });
+
+    expect(within(section).getAllByText(/claude code/i)).toHaveLength(1);
+    expect(within(section).getByText("IA générative (Claude Code, Codex, Gemini)")).toBeVisible();
+  });
+
+  it("devrait isoler la gestion de projet dans l'expérience professionnelle", () => {
+    render(<App />);
+    const list = screen.getByRole("list", {
+      name: /^compétences expérience professionnelle — gestion de projet$/i,
+    });
+
+    expect(
+      within(list)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent)
+    ).toEqual([
+      "Scrum / Agile",
+      "Jira",
+      "Planification",
+      "Animation d’équipe",
+      "Recette / tests QA",
+    ]);
   });
 });
 

@@ -87,11 +87,12 @@ const SiteHeader = () => {
         <ul className="header-links" aria-label="Liens directs">
           <li className="header-links__cv">
             <a href={profile.cv.href} download={profile.cv.fileName}>
-              CV<span className="visually-hidden"> — télécharger (PDF, 104 Ko)</span>
+              CV
+              <span className="visually-hidden">{` — télécharger (PDF, ${profile.cv.size})`}</span>
               <IconArrowDown size={14} stroke={2} aria-hidden="true" />
             </a>
           </li>
-          <li>
+          <li className="header-links__email">
             <a href={`mailto:${profile.email}`}>
               E-mail
               <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />

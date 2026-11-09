@@ -1,11 +1,17 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
 import { profile } from "../content/profile";
 import { setPrefersColorScheme, setPrefersReducedMotion } from "../test/setup";
 
 const NAVIGATION_PANEL_ID = "navigation-principale";
+
+const publicPdfs = new Set(
+  Object.keys(import.meta.glob("../../public/assets/*.pdf")).map((path) =>
+    path.replace("../../public", "")
+  )
+);
 
 function getMenuToggle(): HTMLElement {
   return screen.getByRole("button", { name: /menu/i });
@@ -28,35 +34,13 @@ beforeEach(() => {
   setPrefersReducedMotion(true);
 });
 
-function getBrandLink(): HTMLElement {
-  // Plusieurs liens de la page portent le nom : on reste dans le landmark d'en-tête.
-  return within(screen.getByRole("banner")).getByRole("link", { name: profile.name });
-}
-
-describe("portrait de l'en-tête", () => {
-  it("devrait afficher le portrait à côté du nom", () => {
+describe("en-tête épuré", () => {
+  it("devrait ne plus afficher le nom ni le portrait", () => {
     render(<App />);
+    const banner = screen.getByRole("banner");
 
-    const portrait = getBrandLink().querySelector(".site-header__avatar");
-
-    expect(portrait).toHaveAttribute("src", profile.portrait.src);
-  });
-
-  /**
-   * Le portrait du hero porte une alternative descriptive : il y est seul et porte
-   * l'identité. Dans l'en-tête il vit DANS le lien qui affiche déjà le nom, donc une
-   * alternative descriptive ferait annoncer « Thomas Caron Thomas Caron, souriant, en
-   * chemise bleu marine… ». Le nom accessible du lien doit rester son texte visible.
-   */
-  it("devrait laisser le nom accessible du lien égal à son texte visible", () => {
-    render(<App />);
-
-    const brand = getBrandLink();
-
-    expect(brand).toHaveAccessibleName(profile.name);
-    for (const decoration of within(brand).getAllByRole("presentation", { hidden: true })) {
-      expect(decoration).toHaveAttribute("alt", "");
-    }
+    expect(within(banner).queryByRole("link", { name: profile.name })).toBeNull();
+    expect(banner.querySelector("img")).toBeNull();
   });
 });
 
@@ -92,12 +76,29 @@ describe("menu mobile de l'en-tête", () => {
     const user = userEvent.setup();
     render(<App />);
     const toggle = await openMenu(user);
-    act(() => toggle.blur());
+    act(() => (document.activeElement as HTMLElement | null)?.blur());
     expect(document.body).toHaveFocus();
 
     await user.keyboard("{Escape}");
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  /**
+   * Le panneau ouvert couvre tout l'écran : sans cela, Tab partait dans le contenu
+   * principal masqué derrière lui, et le lecteur d'écran le parcourait encore.
+   */
+  it("devrait amener le focus dans le panneau et rendre la page inerte tant qu'il est ouvert", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const toggle = await openMenu(user);
+
+    expect(within(getMainNavigation()).getAllByRole("link")[0]).toHaveFocus();
+    expect(screen.getByRole("main", { hidden: true })).toHaveProperty("inert", true);
+
+    await user.click(toggle);
+
+    expect(screen.getByRole("main")).toHaveProperty("inert", false);
   });
 
   it("devrait redonner le focus au bouton après une fermeture par Escape", async () => {
@@ -139,5 +140,151 @@ describe("menu mobile de l'en-tête", () => {
     await user.click(within(getMainNavigation()).getByRole("link", { name: "Projets" }));
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+});
+
+describe("liens directs de l'en-tête", () => {
+  it("devrait proposer l'e-mail, le CV, GitHub et LinkedIn", () => {
+    render(<App />);
+    const links = within(screen.getByRole("list", { name: /liens directs/i }));
+
+    expect(links.getByRole("link", { name: /e-mail/i })).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`
+    );
+    expect(links.getByRole("link", { name: /^cv/i })).toHaveAttribute(
+      "download",
+      profile.cv.fileName
+    );
+    expect(links.getByRole("link", { name: /github/i })).toHaveAttribute("href", profile.gitHubUrl);
+    expect(links.getByRole("link", { name: /linkedin/i })).toHaveAttribute(
+      "href",
+      profile.linkedInUrl
+    );
+  });
+
+  it("devrait servir le CV de chef de projet SI, avec son poids réel", () => {
+    render(<App />);
+    const cv = within(screen.getByRole("list", { name: /liens directs/i })).getByRole("link", {
+      name: /^cv/i,
+    });
+
+    expect(cv).toHaveAttribute("href", "/assets/CV-Thomas-Caron-Chef-de-projet-SI-v2.pdf");
+    expect(cv).toHaveAccessibleName(/PDF, 113 Ko/);
+    expect(publicPdfs.has("/assets/CV-Thomas-Caron-Chef-de-projet-SI-v2.pdf")).toBe(true);
+  });
+
+  it("devrait placer le CV en premier, avec une flèche de téléchargement", () => {
+    render(<App />);
+    const names = within(screen.getByRole("list", { name: /liens directs/i }))
+      .getAllByRole("link")
+      .map((link) => link.textContent?.trim().split(/\s/)[0]);
+
+    expect(names).toEqual(["CV", "E-mail", "GitHub", "LinkedIn"]);
+  });
+
+  it("devrait signaler par une flèche décorative la redirection ou le téléchargement", () => {
+    render(<App />);
+    const links = within(screen.getByRole("list", { name: /liens directs/i }));
+    const arrowOf = (name: RegExp) =>
+      links.getByRole("link", { name }).querySelector("svg[aria-hidden='true']");
+
+    expect(arrowOf(/^cv/i)).toHaveClass("tabler-icon-arrow-down");
+    for (const name of [/e-mail/i, /github/i, /linkedin/i]) {
+      expect(arrowOf(name)).toHaveClass("tabler-icon-arrow-up-right");
+    }
+  });
+});
+
+/**
+ * La colonne de navigation s'efface pendant le défilement, pour laisser la lecture
+ * libre, et revient dès que la page s'immobilise.
+ */
+describe("navigation pendant le défilement", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("devrait masquer la navigation pendant le défilement et la réafficher à l'arrêt", () => {
+    vi.useFakeTimers();
+    render(<App />);
+    const panel = document.getElementById(NAVIGATION_PANEL_ID);
+
+    expect(panel).not.toHaveClass("is-scrolling");
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    expect(panel).toHaveClass("is-scrolling");
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+      window.dispatchEvent(new Event("scroll"));
+      vi.advanceTimersByTime(300);
+    });
+    expect(panel).toHaveClass("is-scrolling");
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(panel).not.toHaveClass("is-scrolling");
+  });
+});
+
+describe("fond de l'en-tête au défilement", () => {
+  function scrollTo(y: number) {
+    act(() => {
+      Object.defineProperty(window, "scrollY", { configurable: true, value: y });
+      window.dispatchEvent(new Event("scroll"));
+    });
+  }
+
+  afterEach(() => {
+    Object.defineProperty(window, "scrollY", { configurable: true, value: 0 });
+  });
+
+  it("devrait rester transparent en haut de page et prendre un fond une fois la page défilée", () => {
+    render(<App />);
+    const header = screen.getByRole("banner");
+
+    expect(header).not.toHaveClass("is-scrolled");
+
+    scrollTo(240);
+    expect(header).toHaveClass("is-scrolled");
+
+    scrollTo(0);
+    expect(header).not.toHaveClass("is-scrolled");
+  });
+});
+
+describe("encre des liens selon le fond", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(document, "elementsFromPoint");
+  });
+
+  function mockBackdrop(color: string) {
+    const backdrop = document.createElement("div");
+    backdrop.style.backgroundColor = color;
+    Object.defineProperty(document, "elementsFromPoint", {
+      configurable: true,
+      value: () => [backdrop],
+    });
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue(
+      DOMRect.fromRect({ x: 10, y: 10, width: 60, height: 24 })
+    );
+  }
+
+  it.each([
+    { color: "rgb(25, 33, 57)", tone: "dark" },
+    { color: "rgb(245, 245, 244)", tone: "light" },
+  ])("devrait marquer le fond $tone derrière les liens", async ({ color, tone }) => {
+    mockBackdrop(color);
+    render(<App />);
+    const email = within(screen.getByRole("list", { name: /liens directs/i })).getByRole("link", {
+      name: /e-mail/i,
+    });
+
+    await waitFor(() => expect(email).toHaveAttribute("data-backdrop", tone));
   });
 });

@@ -67,10 +67,33 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
     { ink: "--accent-ink", surface: "--accent" },
     { ink: "--inverse-accent-ink", surface: "--inverse-accent" },
     { ink: "--contact-ink", surface: "--contact-surface" },
+    { ink: "--contact-muted", surface: "--contact-surface" },
     { ink: "--text-body", surface: "--soft-surface" },
     { ink: "--inverse-muted", surface: "--inverse-soft-surface" },
   ])("$ink reste lisible sur $surface", ({ ink, surface }) => {
     expect(contrastRatio(value(tokens, ink), value(tokens, surface))).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+/**
+ * « Chef de projet » : lavande sur le fond sombre ; en clair, bleu azur, choisi par
+ * Thomas le 2026-11-09 parce que le mot passe à la fois sur le fond et sur la chemise
+ * marine du portrait (#232F52). Grand titre : seuil de 3:1 sur les deux.
+ */
+describe("couleur du rôle dans le hero", () => {
+  it.each([
+    ["clair", light],
+    ["sombre", dark],
+  ])("reste lisible comme grand titre sur le fond %s", (_, tokens) => {
+    expect(
+      contrastRatio(value(tokens, "--role-ink"), value(tokens, "--hero-surface"))
+    ).toBeGreaterThanOrEqual(3);
+  });
+  it("reste lisible en thème clair là où il passe sur la chemise marine", () => {
+    expect(contrastRatio(value(light, "--role-ink"), "#232f52")).toBeGreaterThanOrEqual(3);
+  });
+  it("garde le lavande de l'accent en thème sombre", () => {
+    expect(value(dark, "--role-ink")).toBe(value(dark, "--highlight"));
   });
 });
 

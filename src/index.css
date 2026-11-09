@@ -50,7 +50,7 @@
   --body-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
   --nav-space: 0px;
-  --section-space: clamp(6rem, 12vw, 10rem);
+  --section-space: clamp(3rem, 6vw, 5rem);
   --display-xl: clamp(3.4rem, 13.4vw, 12rem);
   --display-l: clamp(2.75rem, 8.9vw, 8rem);
   --radius-pill: 999px;
@@ -1213,6 +1213,10 @@ ol {
 }
 
 /* Contact : grand titre, puis un panneau marine qui réunit l'accroche et les moyens de contact. */
+/* Le pied de page suit directement la carte Contact. */
+.contact-section {
+  padding-bottom: 1.5rem;
+}
 .contact-section .section-heading h2 {
   font-size: var(--display-xl);
 }

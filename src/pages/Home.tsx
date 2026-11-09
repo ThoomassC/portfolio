@@ -249,6 +249,7 @@ const Home = () => {
           <div className="skills-groups">
             {skillGroups.map((group) => {
               const total = group.items.length + (group.featured?.items.length ?? 0);
+              if (total === 0) return null;
               return (
                 <div className="skill-group" data-reveal="up" key={group.id}>
                   <h3 className="skill-group__title" id={`skill-${group.id}`}>

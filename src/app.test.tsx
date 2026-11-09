@@ -692,7 +692,7 @@ describe("sous-titres des compétences", () => {
     expect(
       screen.getByRole("heading", {
         level: 3,
-        name: /^Expérience professionnelle,\s*34\s*compétences$/,
+        name: /^Expérience professionnelle,\s*46\s*compétences$/,
       })
     ).toBeInTheDocument();
   });
@@ -798,6 +798,36 @@ describe("compétences", () => {
     ]) {
       expect(names).toContain(techno);
     }
+  });
+
+  it("devrait regrouper toute la technique dans l'expérience professionnelle", () => {
+    render(<App />);
+    const technique = screen.getByRole("list", {
+      name: /^compétences expérience professionnelle — technique$/i,
+    });
+    const names = within(technique)
+      .getAllByRole("listitem")
+      .map((item) => item.textContent);
+
+    for (const techno of [
+      "JavaScript",
+      "Node.js",
+      "Express",
+      "HTML",
+      "CSS",
+      "REST API",
+      "Jest",
+      "MongoDB",
+      "Swagger",
+      "Figma",
+      "Next.js",
+      "NestJS",
+    ]) {
+      expect(names).toContain(techno);
+    }
+    expect(screen.getByRole("list", { name: /^compétences en apprentissage$/i }).textContent).toBe(
+      "IA générative (Claude Code, Codex, Gemini)"
+    );
   });
 
   it("ne devrait citer chaque compétence qu'une seule fois", () => {

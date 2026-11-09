@@ -173,6 +173,8 @@ describe("parcours", () => {
         expect(within(bubble as HTMLElement).getByText(term)).toBeVisible();
       }
       expect(bubble).toHaveTextContent(/nouveaux collaborateurs/i);
+      expect(bubble).toHaveTextContent(/équipe de 5 personnes/i);
+      expect(bubble).toHaveTextContent(/7 personnes au total/i);
       expect(bubble).toHaveTextContent(/réunion de 2 h par semaine/i);
       expect(bubble).toHaveTextContent(/OpenProject/);
     }

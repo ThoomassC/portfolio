@@ -91,7 +91,7 @@ export const experiences: readonly Experience[] = [
         details: {
           context:
             "Améliorer la documentation d’un second outil interne pour faciliter l’arrivée des nouveaux collaborateurs.",
-          role: "Chef de projet annexe, en relation avec l’équipe et les référents du projet.",
+          role: "Chef de projet annexe d’une équipe de 5 personnes, en relation avec les 2 référents techniques : 7 personnes au total.",
           method:
             "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
           result:
@@ -110,7 +110,7 @@ export const experiences: readonly Experience[] = [
         details: {
           context:
             "Améliorer la documentation de l’outil de production pour faciliter l’arrivée des nouveaux collaborateurs.",
-          role: "Chef de projet annexe, en relation avec l’équipe et les référents du projet.",
+          role: "Chef de projet annexe d’une équipe de 5 personnes, en relation avec les 2 référents techniques : 7 personnes au total.",
           method:
             "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
           result:

@@ -76,9 +76,9 @@ describe.each(themes)("contrastes du thème $name", ({ tokens }) => {
 });
 
 /**
- * « Chef de projet » : lavande sur le fond sombre, indigo plus soutenu sur le fond
- * clair, où le lavande descendait à 1,7:1 (essai validé par Thomas le 2026-11-08).
- * Grand titre : seuil de 3:1 sur le fond du hero, dans les deux thèmes.
+ * « Chef de projet » : lavande sur le fond sombre ; en clair, bleu azur, choisi par
+ * Thomas le 2026-11-09 parce que le mot passe à la fois sur le fond et sur la chemise
+ * marine du portrait (#232F52). Grand titre : seuil de 3:1 sur les deux.
  */
 describe("couleur du rôle dans le hero", () => {
   it.each([
@@ -88,6 +88,9 @@ describe("couleur du rôle dans le hero", () => {
     expect(
       contrastRatio(value(tokens, "--role-ink"), value(tokens, "--hero-surface"))
     ).toBeGreaterThanOrEqual(3);
+  });
+  it("reste lisible en thème clair là où il passe sur la chemise marine", () => {
+    expect(contrastRatio(value(light, "--role-ink"), "#232f52")).toBeGreaterThanOrEqual(3);
   });
   it("garde le lavande de l'accent en thème sombre", () => {
     expect(value(dark, "--role-ink")).toBe(value(dark, "--highlight"));

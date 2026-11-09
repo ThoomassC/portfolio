@@ -692,7 +692,7 @@ describe("sous-titres des compétences", () => {
     expect(
       screen.getByRole("heading", {
         level: 3,
-        name: /^Expérience professionnelle,\s*20\s*compétences$/,
+        name: /^Expérience professionnelle,\s*34\s*compétences$/,
       })
     ).toBeInTheDocument();
   });
@@ -745,6 +745,14 @@ describe("formations", () => {
     expect(years).toEqual([start, end]);
   });
 
+  it("devrait indiquer le CESI pour chaque formation", () => {
+    render(<App />);
+    const rows = getFormationSection().querySelectorAll(".education-list > li");
+
+    expect(rows.length).toBe(4);
+    for (const row of rows) expect(row).toHaveTextContent(/CESI/);
+  });
+
   it("devrait afficher les langues avec leur niveau, le PSC1 et le permis B", () => {
     render(<App />);
     const section = getFormationSection();
@@ -763,6 +771,44 @@ describe("compétences", () => {
 
     expect(within(section).getAllByText(/claude code/i)).toHaveLength(1);
     expect(within(section).getByText("IA générative (Claude Code, Codex, Gemini)")).toBeVisible();
+  });
+
+  it("devrait reprendre les technologies des missions Blue Soft", () => {
+    render(<App />);
+    const technique = screen.getByRole("list", {
+      name: /^compétences expérience professionnelle — technique$/i,
+    });
+    const names = within(technique)
+      .getAllByRole("listitem")
+      .map((item) => item.textContent);
+
+    for (const techno of [
+      "Quarkus",
+      "PHP",
+      "Symfony",
+      "Python",
+      "Vue.js",
+      "MariaDB",
+      "Redis",
+      "Kafka",
+      "Keycloak",
+      "Docker",
+      "Azure DevOps",
+      "SonarQube",
+    ]) {
+      expect(names).toContain(techno);
+    }
+  });
+
+  it("ne devrait citer chaque compétence qu'une seule fois", () => {
+    render(<App />);
+    const section = screen.getByRole("region", { name: /^compétences$/i });
+    const names = Array.from(
+      section.querySelectorAll(".skill-chips li"),
+      (item) => item.textContent
+    );
+
+    expect(new Set(names).size).toBe(names.length);
   });
 
   it("devrait isoler la gestion de projet dans l'expérience professionnelle", () => {

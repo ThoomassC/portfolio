@@ -53,6 +53,7 @@ export type StatusType = "completed" | "in-progress" | "upcoming";
 
 export type Formation = {
   readonly title: string;
+  readonly school: string;
   /** Rôle ou réalisation à mettre en avant sous l'intitulé, s'il y en a un. */
   readonly highlight?: string;
   readonly level: string;

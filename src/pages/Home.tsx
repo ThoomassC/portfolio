@@ -408,7 +408,7 @@ const Home = () => {
                 <div className="formation-title">
                   <strong>{formation.title}</strong>
                   <p className="formation-years">
-                    <DateRangeText range={formation.range} />
+                    {formation.school} · <DateRangeText range={formation.range} />
                   </p>
                   {formation.highlight && (
                     <p className="formation-highlight">

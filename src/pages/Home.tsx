@@ -1,33 +1,30 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import {
-  IconArrowDown,
-  IconArrowDownRight,
   IconArrowUpRight,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconDownload,
+  IconBriefcase,
   IconMail,
   IconMapPin,
   IconPhone,
-  IconPlus,
+  IconUsersGroup,
 } from "@tabler/icons-react";
 import { Badge } from "@thomascaron/opale";
-import ProjectVisual from "../components/ProjectVisual";
+import InfoToggle from "../components/InfoToggle";
 import StackChips from "../components/StackChips";
 import { experiences } from "../content/experiences";
-import { formations } from "../content/formations";
+import { certifications, formations, languages } from "../content/formations";
 import { passions } from "../content/passions";
 import { navigationItems } from "../content/navigation";
 import { profile } from "../content/profile";
 import { projects } from "../content/projects";
 import { skillGroups } from "../content/skills";
-import type { DateRange } from "../content/types";
+import type { DateRange, Project } from "../content/types";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const DateRangeText = ({ range }: { readonly range: DateRange }) => (
   <span className="date-range">
     <time dateTime={range.start.dateTime}>{range.start.label}</time>
     <span aria-hidden="true"> — </span>
+    <span className="visually-hidden"> à </span>
     {range.end ? (
       <time dateTime={range.end.dateTime}>{range.end.label}</time>
     ) : (
@@ -35,380 +32,489 @@ const DateRangeText = ({ range }: { readonly range: DateRange }) => (
     )}
   </span>
 );
+
+/**
+ * Grand titre condensé. Le titre de niveau 2 porte le libellé de la navigation, pour
+ * que chaque entrée du menu retrouve sa section par son nom.
+ */
 const SectionHeading = ({
   sectionId,
-  id,
   children,
 }: {
   readonly sectionId: string;
-  readonly id: string;
-  readonly children: ReactNode;
+  readonly children?: ReactNode;
 }) => {
-  const index = navigationItems.findIndex((item) => item.id === sectionId);
-  const navigationItem = navigationItems[index];
+  const navigationItem = navigationItems.find((item) => item.id === sectionId);
 
   return (
     <div className="section-heading" data-reveal="up">
-      <h2 id={id}>
-        <span className="section-index">
-          <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{" "}
-          {navigationItem.label}
-        </span>{" "}
-        <span className="section-heading__title">{children}</span>
-      </h2>
+      <h2 id={`titre-${sectionId}`}>{children ?? navigationItem?.label}</h2>
     </div>
   );
 };
+
+/** Garde la pastille collée au dernier mot : elle ne passe jamais seule à la ligne. */
+const TitleWithBadge = ({
+  title,
+  children,
+}: {
+  readonly title: string;
+  readonly children: ReactNode;
+}) => {
+  const words = title.split(" ");
+  const lastWord = words.pop();
+  return (
+    <>
+      {words.length > 0 && `${words.join(" ")} `}
+      <span className="nowrap">
+        {lastWord}
+        {children}
+      </span>
+    </>
+  );
+};
+
+/**
+ * Une période est en cours tant que sa borne de fin est absente ou à venir. Les
+ * dates machine sont au format « AAAA-MM », comparables comme des chaînes.
+ */
+function isOngoing(range: DateRange): boolean {
+  if (!range.end) return true;
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  return range.end.dateTime >= currentMonth;
+}
+
 const badgeVariantByStatus = {
   completed: "positive",
   "in-progress": "info",
   upcoming: "warning",
 } as const;
 
+/**
+ * Carte de projet. Avec un aperçu, la capture est cliquable à la souris, mais retirée
+ * du clavier et des lecteurs d'écran : le lien « Voir le site » porte déjà la même
+ * destination, un second arrêt de tabulation ferait doublon.
+ */
+const ProjectCard = ({ project }: { readonly project: Project }) => {
+  const siteLink = project.links.find((link) => link.label === "Voir le site");
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const cardClassName = [
+    "project-card",
+    project.preview && "project-card--featured",
+    isInfoOpen && "project-card--info-open",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <article className={cardClassName}>
+      {project.preview && (
+        <a
+          className="project-card__preview"
+          href={siteLink?.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
+          <span className="project-card__chrome">
+            <span />
+            <span />
+            <span />
+          </span>
+          <img
+            src={project.preview.src}
+            width={project.preview.width}
+            height={project.preview.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      )}
+      <div className="project-card__body">
+        <p className="project-card__meta">
+          <span className="project-card__date">{project.date}</span>
+          <Badge
+            rootClassName="status-badge-root"
+            className={`status-badge status-badge--${project.statusType}`}
+            variant={badgeVariantByStatus[project.statusType]}
+          >
+            {project.status}
+          </Badge>
+        </p>
+        <div className="project-card__heading">
+          <h3 className="project-card__title">{project.title}</h3>
+          <InfoToggle
+            id={`description-${project.id}`}
+            label={`Description du projet ${project.title}`}
+            onOpenChange={setIsInfoOpen}
+          >
+            <p>{project.description}</p>
+          </InfoToggle>
+        </div>
+        <StackChips label={`Technologies du projet ${project.title}`} items={project.stack} />
+        {project.links.length > 0 && (
+          <div className="project-links">
+            {project.links.map((link) => (
+              <a
+                className="text-link"
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+                <IconArrowUpRight size={16} aria-hidden="true" />
+                <span className="visually-hidden"> — {project.title} (nouvelle fenêtre)</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+};
+
+/** Identifiant HTML stable tiré d'un intitulé : minuscules ASCII et tirets. */
+const slugify = (text: string) =>
+  text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const featuredProjects = projects.filter((project) => project.preview);
+const otherProjects = projects.filter((project) => !project.preview);
+
 const Home = () => {
   useScrollReveal();
   return (
     <main className="portfolio-page" id="contenu-principal" tabIndex={-1}>
       <section className="hero" aria-labelledby="titre-principal">
-        <div className="hero-orbit hero-orbit--one" aria-hidden="true" />
-        <div className="hero-orbit hero-orbit--two" aria-hidden="true" />
-        <div className="hero-topline">
-          <div className="hero-intro" data-reveal="up">
-            <p className="eyebrow eyebrow-roles">
-              <span>Développeur logiciel</span> · <span>Full-stack</span> · <span>QA</span>
-            </p>
-            <p className="hero-next-roles">
-              <span className="hero-next-roles__label">Objectifs : </span>
-              <span className="hero-next-role">Responsable portefeuille projets</span> ·{" "}
-              <span className="hero-next-role">Management</span> ·{" "}
-              <span className="hero-next-role">Chefferie de projet</span>
-            </p>
-          </div>
-          <div className="hero-current-role" data-reveal="up">
-            <span className="hero-current-label">
-              <span className="status-dot" aria-hidden="true" />
-              Actuellement
-            </span>
-            <p>
-              <strong>Développeur Full Stack chez Blue Soft</strong>
-            </p>
-          </div>
+        <div className="hero-portrait">
+          <img
+            src={profile.portrait.cutout.src}
+            width={profile.portrait.cutout.width}
+            height={profile.portrait.cutout.height}
+            alt={profile.portrait.cutout.alt}
+            fetchPriority="high"
+            decoding="async"
+          />
         </div>
-        <div className="hero-identity">
+        <div className="hero-content">
           <h1 id="titre-principal" className="hero-name">
-            {profile.name}
+            <span>Thomas</span> <span>Caron</span>{" "}
+            <span className="hero-name__role">Chef de projet</span>
           </h1>
-          <div className="hero-portrait">
-            <img
-              src={profile.portrait.cutout.src}
-              width={profile.portrait.cutout.width}
-              height={profile.portrait.cutout.height}
-              alt={profile.portrait.cutout.alt}
-              fetchPriority="high"
-              decoding="async"
-            />
+          <div className="hero-details">
+            <div className="hero-intro">
+              <p className="eyebrow-roles">
+                <span>Responsable portefeuille projets</span> · <span>Management</span> ·{" "}
+                <span>Chefferie de projet</span>
+              </p>
+              <p className="hero-current">
+                <span className="status-dot" aria-hidden="true" />
+                <span className="text-desktop">
+                  Actuellement alternant développeur full stack chez Blue Soft
+                </span>
+                <span className="text-mobile">Alternant full stack chez Blue Soft</span>
+              </p>
+              <p>Basé à Rouen, France</p>
+            </div>
           </div>
-        </div>
-        <div className="hero-bottom">
-          <div className="hero-location">
-            <p>
-              Basé à Rouen, France.
-              <br /> Mobile Paris · remote partiel
+          <div className="hero-footer">
+            <p className="hero-seeking">
+              <IconBriefcase size={16} stroke={1.75} aria-hidden="true" />
+              <span className="text-desktop">{profile.seeking}</span>
+              <span className="text-mobile">Alternance dès octobre 2027</span>
             </p>
-          </div>
-          <a className="hero-scroll" href="#apropos">
-            <span>Faire connaissance</span>
-            <IconArrowDown aria-hidden="true" size={42} stroke={1.3} />
-          </a>
-        </div>
-        <div className="hero-footer">
-          <ul className="hero-socials" aria-label="Profils en ligne">
-            <li>
-              <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                GitHub <IconArrowUpRight size={14} aria-hidden="true" />
-                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-              </a>
-            </li>
-            <li>
-              <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                LinkedIn <IconArrowUpRight size={14} aria-hidden="true" />
-                <span className="visually-hidden"> de Thomas Caron (nouvelle fenêtre)</span>
-              </a>
-            </li>
-          </ul>
-          <p className="hero-availability">{profile.availability}</p>
-          <span className="hero-edition" aria-hidden="true">
-            PORTFOLIO — ÉDITION 2026
-          </span>
-        </div>
-      </section>
-
-      <section className="about-section section-dark" id="apropos" aria-labelledby="titre-apropos">
-        <div className="container">
-          <h2 className="display-title" id="titre-apropos" data-reveal="up">
-            À PROPOS
-          </h2>
-          <div className="about-layout">
-            <IconArrowDownRight
-              className="about-arrow"
-              size={180}
-              stroke={0.8}
-              aria-hidden="true"
-            />
-            <div className="about-copy" data-reveal="up">
-              <p className="about-lede">
-                Je construis des applications.
-                <br /> <span>Et la confiance qui va avec.</span>
-              </p>
-              <p>
-                Je développe et fiabilise des applications web et mobiles, du C# et Angular aux
-                tests automatisés Java avec Selenium et Cucumber. J’aime comprendre le besoin,
-                construire une solution utile et m’assurer qu’elle tient dans la durée.
-              </p>
-              <p>
-                En alternance chez Blue Soft et en formation au CESI, je relie développement
-                full-stack, architecture et assurance qualité.
-              </p>
-              <div className="about-actions">
-                <a
-                  className="button button-light"
-                  href={profile.cv.href}
-                  download={profile.cv.fileName}
-                >
-                  <IconDownload size={18} aria-hidden="true" />
-                  {profile.cv.label}
-                </a>
-                <a className="text-link" href="#contact">
-                  Me contacter <IconArrowUpRight size={19} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="about-facts" data-reveal="up">
-            <div>
-              <p>
-                Développement
-                <br /> <strong>Web & mobile</strong>
-              </p>
-            </div>
-            <div>
-              <p>
-                Assurance qualité
-                <br /> <strong>Tests & automatisation</strong>
-              </p>
-            </div>
-            <div>
-              <p>
-                Formation actuelle
-                <br /> <strong>Architecture logicielle · Bac +5</strong>
-              </p>
-            </div>
+            <p className="hero-next-step">
+              <span className="text-desktop">{profile.nextStep}</span>
+              <span className="text-mobile">Objectif : Mastère Spécialisé® au CESI</span>
+            </p>
           </div>
         </div>
       </section>
 
       <section
-        className="section-shell projects-section"
-        id="projets"
-        aria-labelledby="titre-projets"
-      >
-        <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="projets" id="titre-projets">
-              DU CODE
-              <br /> <span>DU CONCRET</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Des idées transformées en applications. Un terrain pour construire, expérimenter et
-              apprendre.
-            </p>
-          </div>
-          <div className="projects-grid">
-            {projects.map((project) => (
-              <article className="project-card" data-reveal="up" key={project.id}>
-                <ProjectVisual id={project.id} />
-                <div className="project-meta">
-                  <span className="project-number">{project.date}</span>
-                  <Badge
-                    rootClassName="status-badge-root"
-                    className={`project-status status-badge status-badge--${project.statusType}`}
-                    variant={badgeVariantByStatus[project.statusType]}
-                  >
-                    {project.status}
-                  </Badge>
-                </div>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <StackChips
-                  label={`Technologies du projet ${project.title}`}
-                  items={project.stack}
-                />
-                {project.links.length > 0 && (
-                  <div className="project-links">
-                    {project.links.map((link) => (
-                      <a
-                        className="text-link"
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link.label}
-                        <IconArrowUpRight size={18} aria-hidden="true" />
-                        <span className="visually-hidden">
-                          {" "}
-                          — {project.title} (nouvelle fenêtre)
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-          <p className="projects-note">Compositions visuelles illustrant les projets.</p>
-        </div>
-      </section>
-
-      <section
-        className="section-shell journey-section"
-        id="parcours"
-        aria-labelledby="titre-parcours"
-      >
-        <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="parcours" id="titre-parcours">
-              UN PARCOURS
-              <br /> <span>PLUSIEURS TERRAINS</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Du développement d’outils de production à l’automatisation de tests, j’interviens à
-              chaque étape qui rend une application utile et fiable.
-            </p>
-          </div>
-          <ol className="timeline" aria-label="Expériences professionnelles">
-            {experiences.map((experience) => (
-              <li className="timeline-item" data-reveal="up" key={experience.company}>
-                <div className="experience-company">
-                  <p className="company">{experience.company}</p>
-                  <DateRangeText range={experience.range} />
-                </div>
-                <div className="experience-content">
-                  <h3>{experience.title}</h3>
-                  <p>{experience.description}</p>
-                  <StackChips
-                    label={`Technologies utilisées chez ${experience.company}`}
-                    items={experience.stack}
-                  />
-                  {experience.missions.length > 0 && (
-                    <ul
-                      className="mission-list"
-                      aria-label={`Missions réalisées chez ${experience.company}`}
-                    >
-                      {experience.missions.map((mission) => (
-                        <li key={mission.title}>
-                          <DateRangeText range={mission.range} />
-                          <h4>{mission.title}</h4>
-                          <p>{mission.description}</p>
-                          <StackChips
-                            label={`Technologies de la mission ${mission.title}`}
-                            items={mission.stack}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
-          <aside className="education" aria-labelledby="titre-formations" data-reveal="up">
-            <div>
-              <p className="section-index">Formation / École CESI</p>
-              <h3 id="titre-formations">
-                Apprendre pour
-                <br /> mieux construire
-              </h3>
-            </div>
-            <ul>
-              {formations.map((formation) => (
-                <li key={formation.title}>
-                  <div>
-                    <span className="formation-level">{formation.level}</span>
-                    <strong>{formation.title}</strong>
-                  </div>
-                  <Badge
-                    rootClassName="status-badge-root"
-                    className={`status-badge status-badge--${formation.statusType}`}
-                    variant={badgeVariantByStatus[formation.statusType]}
-                  >
-                    {formation.status}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </div>
-      </section>
-
-      <section
-        className="section-shell skills-section section-dark"
+        className="page-section skills-section"
         id="competences"
         aria-labelledby="titre-competences"
       >
         <div className="container">
-          <SectionHeading sectionId="competences" id="titre-competences">
-            LES BONS OUTILS
-            <br /> <span>POUR BIEN CONSTRUIRE</span>
-          </SectionHeading>
-          <div className="skills-grid">
-            {skillGroups.map((group) => (
-              <section
-                className="skill-group"
-                aria-labelledby={`skill-${group.id}`}
-                data-reveal="up"
-                key={group.id}
-              >
-                <div>
-                  <h3 id={`skill-${group.id}`}>{group.title}</h3>
-                  <StackChips label={`Compétences ${group.title}`} items={group.items} />
+          <SectionHeading sectionId="competences" />
+          <div className="skills-groups">
+            {skillGroups.map((group) => {
+              const familiesCount =
+                group.families?.reduce((count, family) => count + family.items.length, 0) ?? 0;
+              const total =
+                group.items.length + (group.featured?.items.length ?? 0) + familiesCount;
+              if (total === 0) return null;
+              return (
+                <div className="skill-group" data-reveal="up" key={group.id}>
+                  <h3 className="skill-group__title" id={`skill-${group.id}`}>
+                    <TitleWithBadge title={group.title}>
+                      <span className="skill-group__count" aria-hidden="true">
+                        {total}
+                      </span>
+                      <span className="visually-hidden">{`, ${total} compétences`}</span>
+                    </TitleWithBadge>
+                  </h3>
+                  <div className="skill-group__body">
+                    {group.featured && (
+                      <div className="skill-cluster">
+                        <p className="skill-cluster__label">{group.featured.label}</p>
+                        <ul
+                          className="skill-chips skill-chips--featured"
+                          aria-label={`Compétences ${group.title} — ${group.featured.label}`}
+                        >
+                          {group.featured.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {group.families?.map((family) => (
+                      <div className="skill-cluster" key={family.label}>
+                        <p className="skill-cluster__label">{family.label}</p>
+                        <ul
+                          className="skill-chips"
+                          aria-label={`Compétences ${group.title} — ${family.label}`}
+                        >
+                          {family.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                    {group.items.length > 0 && (
+                      <div className="skill-cluster">
+                        {group.featured && <p className="skill-cluster__label">Technique</p>}
+                        <ul
+                          className="skill-chips"
+                          aria-label={
+                            group.featured
+                              ? `Compétences ${group.title} — Technique`
+                              : `Compétences ${group.title}`
+                          }
+                        >
+                          {group.items.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <IconPlus size={24} stroke={1.2} aria-hidden="true" />
-              </section>
-            ))}
+              );
+            })}
           </div>
-          <p className="skills-note" data-reveal="up">
-            Une stack évolue. La curiosité reste.
-          </p>
         </div>
       </section>
 
       <section
-        className="section-shell passions-section"
+        className="page-section journey-section"
+        id="parcours"
+        aria-labelledby="titre-parcours"
+      >
+        <div className="container">
+          <SectionHeading sectionId="parcours" />
+          <ol className="timeline" aria-label="Expériences professionnelles">
+            {experiences.map((experience) => {
+              const isCurrentExperience = isOngoing(experience.range);
+              return (
+                <li className="timeline-item" data-reveal="up" key={experience.company}>
+                  <div className="timeline-item__aside">
+                    <h3>{experience.title}</h3>
+                    <p className="company">{experience.company}</p>
+                    <p className="timeline-item__date">
+                      {isCurrentExperience && (
+                        <>
+                          <span className="status-dot" aria-hidden="true" />
+                          <span className="visually-hidden">En cours : </span>
+                        </>
+                      )}
+                      <DateRangeText range={experience.range} />
+                    </p>
+                  </div>
+                  <div className="timeline-item__body">
+                    {experience.description && (
+                      <p className="timeline-item__lede">{experience.description}</p>
+                    )}
+                    <StackChips
+                      label={`Technologies utilisées chez ${experience.company}`}
+                      items={experience.stack}
+                    />
+                    {experience.missions.length > 0 && (
+                      <ul
+                        className="mission-list"
+                        aria-label={`Missions réalisées chez ${experience.company}`}
+                      >
+                        {experience.missions.map((mission) => {
+                          const isCurrentMission = isOngoing(mission.range);
+                          return (
+                            <li
+                              className={`mission${isCurrentMission ? " mission--current" : ""}`}
+                              key={mission.title}
+                            >
+                              <p className="mission-date">
+                                {isCurrentMission && (
+                                  <span className="visually-hidden">En cours : </span>
+                                )}
+                                <DateRangeText range={mission.range} />
+                              </p>
+                              {mission.details ? (
+                                <div className="mission-heading">
+                                  <h4>{mission.title}</h4>
+                                  <InfoToggle
+                                    id={`details-${slugify(mission.title)}`}
+                                    label={`Détails du poste ${mission.title}`}
+                                  >
+                                    <dl className="info-details">
+                                      <dt>Contexte</dt>
+                                      <dd>{mission.details.context}</dd>
+                                      <dt>Rôle</dt>
+                                      <dd>{mission.details.role}</dd>
+                                      <dt>Méthode</dt>
+                                      <dd>{mission.details.method}</dd>
+                                      <dt>Résultat</dt>
+                                      <dd>{mission.details.result}</dd>
+                                    </dl>
+                                  </InfoToggle>
+                                </div>
+                              ) : (
+                                <h4>{mission.title}</h4>
+                              )}
+                              <p>{mission.description}</p>
+                              <StackChips
+                                label={`Technologies de la mission ${mission.title}`}
+                                items={mission.stack}
+                              />
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
+      <section
+        className="page-section formation-section"
+        id="formations"
+        aria-labelledby="titre-formations"
+      >
+        <div className="container">
+          <SectionHeading sectionId="formations" />
+          <ul className="education-list" data-reveal="up">
+            {formations.map((formation) => (
+              <li
+                className={
+                  formation.statusType === "in-progress"
+                    ? "formation formation--current"
+                    : "formation"
+                }
+                key={formation.title}
+              >
+                <span className="formation-level">{formation.level}</span>
+                <div className="formation-title">
+                  <strong>{formation.title}</strong>
+                  <p className="formation-years">
+                    {formation.school} · <DateRangeText range={formation.range} />
+                  </p>
+                  {formation.highlight && (
+                    <p className="formation-highlight">
+                      <IconUsersGroup size={16} stroke={1.75} aria-hidden="true" />
+                      {formation.highlight}
+                    </p>
+                  )}
+                </div>
+                <Badge
+                  rootClassName="status-badge-root"
+                  className={`status-badge status-badge--${formation.statusType}`}
+                  variant={badgeVariantByStatus[formation.statusType]}
+                >
+                  {formation.status}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+          <div className="qualifications" data-reveal="up">
+            <div className="qualification-group">
+              <h3 className="qualification-group__title">Langues</h3>
+              <ul className="qualification-list">
+                {languages.map((language) => (
+                  <li key={language.label}>
+                    {language.label} <strong>{language.level}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="qualification-group">
+              <h3 className="qualification-group__title">Certifications</h3>
+              <ul className="qualification-list">
+                {certifications.map((certification) => (
+                  <li key={certification}>{certification}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="page-section projects-section"
+        id="projets"
+        aria-labelledby="titre-projets"
+      >
+        <div className="container">
+          <SectionHeading sectionId="projets" />
+          <div className="project-showcase" data-reveal="up">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+          {otherProjects.length > 0 && (
+            <>
+              <p className="projects-subtitle" data-reveal="up">
+                Autres projets
+              </p>
+              <div className="project-grid" data-reveal="up">
+                {otherProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section
+        className="page-section passions-section"
         id="passions"
         aria-labelledby="titre-passions"
       >
         <div className="container">
-          <div className="section-topline">
-            <SectionHeading sectionId="passions" id="titre-passions">
-              AU-DELÀ
-              <br /> <span>DU CODE</span>
-            </SectionHeading>
-            <p className="section-lede" data-reveal="up">
-              Ce que je fais du reste de mon temps. Des pratiques tenues dans la durée, chacune avec
-              son objectif.
-            </p>
-          </div>
-          <ul className="passions-grid" aria-label="Pratiques personnelles">
+          <SectionHeading sectionId="passions" />
+          <ul className="passion-grid" data-reveal="up" aria-label="Pratiques personnelles">
             {passions.map((passion) => {
-              const PassionIcon = passion.icon;
+              const Icon = passion.icon;
               return (
-                <li className="passion-card" data-reveal="up" key={passion.id}>
-                  <PassionIcon size={36} stroke={1.2} aria-hidden="true" />
-                  <h3>{passion.title}</h3>
-                  <p>{passion.description}</p>
+                <li className="passion-card" key={passion.id}>
+                  <span className="passion-card__icon" aria-hidden="true">
+                    <Icon size={26} stroke={1.75} />
+                  </span>
+                  <h3 className="passion-card__title">{passion.title}</h3>
+                  <p className="passion-card__text">{passion.description}</p>
                   {passion.links.length > 0 && (
-                    <div className="passion-links">
+                    <div className="project-links">
                       {passion.links.map((link) => (
                         <a
                           className="text-link"
@@ -418,12 +524,18 @@ const Home = () => {
                           rel="noopener noreferrer"
                         >
                           {link.label}
-                          <IconArrowUpRight size={17} aria-hidden="true" />
+                          <IconArrowUpRight size={16} aria-hidden="true" />
                           <span className="visually-hidden"> (nouvelle fenêtre)</span>
                         </a>
                       ))}
                     </div>
                   )}
+                  <Icon
+                    className="passion-card__watermark"
+                    size={168}
+                    stroke={1}
+                    aria-hidden="true"
+                  />
                 </li>
               );
             })}
@@ -432,108 +544,43 @@ const Home = () => {
       </section>
 
       <section
-        className="section-shell accessibility-section"
-        id="accessibilite"
-        aria-labelledby="titre-accessibilite"
-      >
-        <div className="container accessibility-layout">
-          <div>
-            <SectionHeading sectionId="accessibilite" id="titre-accessibilite">
-              LE WEB,
-              <br /> POUR TOUS
-            </SectionHeading>
-            <p>
-              Ce site vise un niveau de conformité aussi élevé que possible au RGAA 4.1.2 et fait
-              l’objet d’améliorations continues.
-            </p>
-            <span className="accessibility-status">
-              <span className="status-dot" aria-hidden="true" />
-              Améliorations continues
-            </span>
-          </div>
-          <div data-reveal="up">
-            <ul className="accessibility-list">
-              <li>
-                <strong>Navigation</strong>
-                <span>Lien d’évitement, titres structurés et utilisation au clavier.</span>
-              </li>
-              <li>
-                <strong>Lecture</strong>
-                <span>
-                  Contrastes renforcés, textes redimensionnables et thème sombre optionnel.
-                </span>
-              </li>
-              <li>
-                <strong>Confort</strong>
-                <span>
-                  Mise en page responsive et préférence de réduction des mouvements respectée.
-                </span>
-              </li>
-            </ul>
-            <p className="accessibility-limit">
-              <strong>Limite connue :</strong> le CV PDF téléchargeable est en cours de remise en
-              accessibilité.
-            </p>
-            <a
-              className="text-link"
-              href={`mailto:${profile.email}?subject=Signalement%20accessibilit%C3%A9%20du%20portfolio`}
-            >
-              Signaler un problème d’accessibilité
-              <IconArrowUpRight size={17} aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="contact-section section-dark"
+        className="page-section contact-section"
         id="contact"
         aria-labelledby="titre-contact"
       >
         <div className="container">
-          <SectionHeading sectionId="contact" id="titre-contact">
-            <span className="contact-title-text">PARLONS-EN</span>
-            <IconArrowUpRight stroke={1} aria-hidden="true" />
-          </SectionHeading>
-          <p className="contact-intro" data-reveal="up">
-            Une opportunité, une idée ou simplement l’envie de faire connaissance.
-          </p>
-          <address className="contact-links" data-reveal="up">
-            <a className="contact-email" href={`mailto:${profile.email}`}>
-              <IconMail size={23} aria-hidden="true" />
-              <span>{profile.email}</span>
-              <IconArrowUpRight size={24} aria-hidden="true" />
-            </a>
-            <a href={profile.phone.href}>
-              <IconPhone size={19} aria-hidden="true" />
-              {profile.phone.label}
-            </a>
-            <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer">
-              <IconMapPin size={19} aria-hidden="true" />
-              {profile.location}
-              <span className="visually-hidden"> (nouvelle fenêtre)</span>
-            </a>
-          </address>
-          <div className="contact-bottom">
-            <p>{profile.availability}</p>
-            <ul className="contact-socials" aria-label="Réseaux professionnels">
-              <li>
-                <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
-                  <IconBrandGithub size={19} aria-hidden="true" />
-                  GitHub
-                  <IconArrowUpRight size={15} aria-hidden="true" />
-                  <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                </a>
-              </li>
-              <li>
-                <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
-                  <IconBrandLinkedin size={19} aria-hidden="true" />
-                  LinkedIn
-                  <IconArrowUpRight size={15} aria-hidden="true" />
-                  <span className="visually-hidden"> (nouvelle fenêtre)</span>
-                </a>
-              </li>
-            </ul>
+          <SectionHeading sectionId="contact" />
+          <div className="contact-panel" data-reveal="up">
+            <div className="contact-panel__intro">
+              <p className="contact-statement">Parlons-en.</p>
+              <p className="contact-invite">
+                Une opportunité, une idée ou l’envie de faire connaissance ?
+              </p>
+            </div>
+            <address className="contact-rows">
+              <a href={`mailto:${profile.email}`}>
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconMail size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.email}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+              </a>
+              <a href={profile.phone.href}>
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconPhone size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.phone.label}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+              </a>
+              <a href={profile.mapsUrl} target="_blank" rel="noopener noreferrer">
+                <span className="contact-rows__icon" aria-hidden="true">
+                  <IconMapPin size={20} stroke={1.75} />
+                </span>
+                <span className="contact-rows__value">{profile.location}</span>
+                <IconArrowUpRight className="contact-rows__arrow" size={18} aria-hidden="true" />
+                <span className="visually-hidden"> (nouvelle fenêtre)</span>
+              </a>
+            </address>
           </div>
         </div>
       </section>

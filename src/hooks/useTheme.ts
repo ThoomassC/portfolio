@@ -14,7 +14,7 @@ const DARK_SCHEME_QUERY = "(prefers-color-scheme: dark)";
  * la barre d'adresse mobile sur le fond de page.
  */
 const THEME_COLORS: Record<Theme, string> = {
-  light: "#f7f4ea",
+  light: "#f5f5f4",
   dark: "#192139",
 };
 

@@ -2,82 +2,151 @@ import { IconBriefcase, IconCode } from "@tabler/icons-react";
 
 import type { Experience } from "./types";
 
-/** Timeline inversée : la mission en cours ouvre le parcours. */
+/**
+ * Timeline inversée : le poste le plus récent ouvre le parcours, et dans chaque poste
+ * la frise part du plus récent. Chez Linkt, le développement, fil rouge des trois ans,
+ * ferme la frise sous les deux postes de chef de projet annexe (choix de Thomas).
+ */
 export const experiences: readonly Experience[] = [
   {
     company: "Blue Soft",
-    title: "Développeur Full Stack",
+    title: "Développeur Full Stack & QA en alternance",
     range: {
       start: { label: "Octobre 2025", dateTime: "2025-10" },
       end: { label: "Septembre 2027", dateTime: "2027-09" },
     },
-    description:
-      "Cinq missions successives couvrant la maintenance applicative, le développement mobile, l’automatisation des tests, l’infrastructure et le développement d’une plateforme de transport de colis, puis le développement d’une plateforme de radiologie médicale.",
     icon: IconBriefcase,
     stack: [],
     missions: [
       {
-        title: "TMA full-stack — C# et Angular",
-        range: {
-          start: { label: "Octobre 2025", dateTime: "2025-10" },
-          end: { label: "Décembre 2025", dateTime: "2025-12" },
-        },
-        description:
-          "Résolution de bugs sur une application en microservices, côté back-end et front-end.",
-        stack: ["C#", ".NET", "Angular", "Microservices"],
-      },
-      {
-        title: "Développement iOS — Swift",
-        range: {
-          start: { label: "Décembre 2025", dateTime: "2025-12" },
-          end: { label: "Février 2026", dateTime: "2026-02" },
-        },
-        description: "Développement au sein d’une cellule de sprint pour une application iOS.",
-        stack: ["Swift", "Xcode"],
-      },
-      {
-        title: "QA et tests automatisés — Java",
-        range: {
-          start: { label: "Février 2026", dateTime: "2026-02" },
-          end: { label: "Août 2026", dateTime: "2026-08" },
-        },
-        description:
-          "Conception et maintenance de tests avec Selenium et Cucumber sur deux projets.",
-        stack: ["Java", "Selenium", "Cucumber", "CI"],
-      },
-      {
-        title: "Infrastructure et développement — plateforme de transport de colis",
-        range: {
-          start: { label: "Août 2026", dateTime: "2026-08" },
-          end: { label: "Septembre 2026", dateTime: "2026-09" },
-        },
-        description:
-          "Conception de l’infrastructure d’une application de transport de colis et développement de la plateforme, du provisionnement jusqu’aux écrans.",
-        stack: ["Terraform", "Ansible", "Spring Boot", "React", "PostgreSQL", "Claude Code"],
-      },
-      {
-        title: "Développement et TMA — plateforme de radiologie médicale",
+        title: "Équipe Scrum — radiologie médicale, client santé",
         range: {
           start: { label: "Septembre 2026", dateTime: "2026-09" },
           // Mission en cours : pas de borne de fin.
         },
         description:
-          "Participation au développement d’une plateforme de radiologie médicale et maintenance applicative (TMA).",
-        stack: [],
+          "Développement et maintenance applicative (TMA) au sein d’une équipe Scrum, pour un client du secteur de la santé : plusieurs projets autour d’une plateforme de radiologie médicale.",
+        stack: [
+          "Java",
+          "Spring Boot",
+          "Quarkus",
+          "PHP",
+          "Symfony",
+          "Angular",
+          "Python",
+          "TypeScript",
+          "Vue.js",
+          "PostgreSQL",
+          "MySQL",
+          "MariaDB",
+          "Redis",
+          "Kafka",
+          "Keycloak",
+          "Docker",
+          "Azure DevOps",
+          "SonarQube",
+        ],
+      },
+      {
+        title: "Application pour un transporteur de colis",
+        range: {
+          start: { label: "Août 2026", dateTime: "2026-08" },
+          end: { label: "Septembre 2026", dateTime: "2026-09" },
+        },
+        description:
+          "Conception de l’infrastructure et développement de l’application d’un transporteur de colis, du provisionnement jusqu’aux écrans, avec Claude Code.",
+        stack: ["React", "C#", "Terraform", "Ansible", "Claude Code"],
+      },
+      {
+        title: "Tests automatisés QA — ERP",
+        range: {
+          start: { label: "Février 2026", dateTime: "2026-02" },
+          end: { label: "Août 2026", dateTime: "2026-08" },
+        },
+        description:
+          "Développement des tests automatisés QA d’un ERP, en Java avec Selenium et Cucumber.",
+        stack: ["Java", "Selenium", "Cucumber", "CI"],
+      },
+      {
+        title: "Application mobile iOS — Téléthon",
+        range: {
+          start: { label: "Décembre 2025", dateTime: "2025-12" },
+          end: { label: "Février 2026", dateTime: "2026-02" },
+        },
+        description:
+          "Développement de l’application iOS du Téléthon en Swift, au sein d’une cellule de sprint.",
+        stack: ["Swift", "Xcode"],
+      },
+      {
+        title: "TMA full-stack — plannings BTP",
+        range: {
+          start: { label: "Octobre 2025", dateTime: "2025-10" },
+          end: { label: "Décembre 2025", dateTime: "2025-12" },
+        },
+        description:
+          "Maintenance corrective d’une application de plannings BTP en microservices, côté back-end et front-end.",
+        stack: ["C#", "Angular"],
       },
     ],
   },
   {
     company: "Linkt",
-    title: "Développeur informatique en alternance",
+    title: "Développeur et chef de projet en alternance",
     range: {
       start: { label: "Septembre 2022", dateTime: "2022-09" },
       end: { label: "Septembre 2025", dateTime: "2025-09" },
     },
-    description:
-      "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
     icon: IconCode,
-    stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
-    missions: [],
+    stack: [],
+    missions: [
+      {
+        title: "Chef de projet annexe — documentation d’un second outil interne",
+        range: {
+          start: { label: "2023", dateTime: "2023" },
+          end: { label: "2024", dateTime: "2024" },
+        },
+        description:
+          "Même démarche sur un autre outil interne : pilotage d’un projet d’amélioration de sa documentation.",
+        stack: [],
+        details: {
+          context:
+            "Améliorer la documentation d’un second outil interne pour faciliter l’arrivée des nouveaux collaborateurs.",
+          role: "Chef de projet annexe d’une équipe de 5 personnes, en relation avec les 2 référents techniques : 7 personnes au total.",
+          method:
+            "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
+          result:
+            "Des infobulles dans l’application, signalées par une icône point d’interrogation, qui ouvrent une documentation écrite et des schémas. Le responsable fonctionnel la rédige et la met à jour dans l’outil de gestion de projet OpenProject.",
+        },
+      },
+      {
+        title: "Chef de projet annexe — documentation de l’outil de production",
+        range: {
+          start: { label: "2022", dateTime: "2022" },
+          end: { label: "2023", dateTime: "2023" },
+        },
+        description:
+          "En parallèle du développement, pilotage d’un projet interne d’amélioration de la documentation de l’outil de production sur lequel je développais.",
+        stack: [],
+        details: {
+          context:
+            "Améliorer la documentation de l’outil de production pour faciliter l’arrivée des nouveaux collaborateurs.",
+          role: "Chef de projet annexe d’une équipe de 5 personnes, en relation avec les 2 référents techniques : 7 personnes au total.",
+          method:
+            "Une réunion de 2 h par semaine pour vérifier l’avancement, faciliter la communication et tenir les délais prévus.",
+          result:
+            "Des infobulles dans l’application, signalées par une icône point d’interrogation, qui ouvrent une documentation écrite et des schémas. Le responsable fonctionnel la rédige et la met à jour dans l’outil de gestion de projet OpenProject.",
+        },
+      },
+      {
+        title: "Développeur informatique en alternance — outil de production",
+        range: {
+          start: { label: "Septembre 2022", dateTime: "2022-09" },
+          end: { label: "Septembre 2025", dateTime: "2025-09" },
+        },
+        description:
+          "Participation au développement et à l’évolution d’un outil de production : amélioration de la maintenabilité, mises en production, correction d’anomalies et développement de fonctionnalités.",
+        stack: ["React", "JavaScript", "SQL", "Git", "Architecture hexagonale"],
+      },
+    ],
   },
 ];

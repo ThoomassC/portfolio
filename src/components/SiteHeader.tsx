@@ -1,16 +1,67 @@
 import { useEffect, useRef, useState } from "react";
-import { IconArrowUpRight, IconMenu2, IconMoon, IconSun, IconX } from "@tabler/icons-react";
+import {
+  IconArrowDown,
+  IconArrowUpRight,
+  IconMenu2,
+  IconMoon,
+  IconSun,
+  IconX,
+} from "@tabler/icons-react";
 import { navigationItems, navigationSectionIds } from "../content/navigation";
 import { profile } from "../content/profile";
 import { useActiveSection } from "../hooks/useActiveSection";
-import { THEME_ICONS, useTheme } from "../hooks/useTheme";
+import { useBackdropTone } from "../hooks/useBackdropTone";
+import { useHasScrolled } from "../hooks/useHasScrolled";
+import { useIsScrolling } from "../hooks/useIsScrolling";
+import { useTheme } from "../hooks/useTheme";
+
+/**
+ * En-tête discret, posé sur la page : liens directs et thème à droite.
+ * Sur grand écran, la navigation devient une colonne fixe en bas à droite qui suit
+ * la section lue ; en dessous, elle s'ouvre en plein écran depuis l'icône de menu.
+ */
+/** Éléments de l'en-tête dont l'encre suit le fond qui passe derrière eux. */
+const BACKDROP_TARGETS = ".header-links a, .menu-toggle";
 
 const SiteHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { activeSection, selectSection } = useActiveSection(navigationSectionIds);
-  const { theme, isDarkTheme, toggleTheme } = useTheme();
+  const { isDarkTheme, toggleTheme } = useTheme();
+  const isScrolling = useIsScrolling();
+  const hasScrolled = useHasScrolled();
   const headerRef = useRef<HTMLElement>(null);
+  useBackdropTone(headerRef, BACKDROP_TARGETS);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const navigationPanelRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Le panneau ouvert couvre tout l'écran : le focus y entre, et la page derrière
+   * devient inerte et immobile, pour que ni Tab ni le lecteur d'écran ni le défilement
+   * ne s'égarent dans un contenu masqué.
+   */
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const hidden = [
+      document.getElementById("contenu-principal"),
+      document.querySelector(".site-footer"),
+      document.querySelector(".skip-link"),
+    ].filter((element): element is HTMLElement => element instanceof HTMLElement);
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+
+    hidden.forEach((element) => {
+      element.inert = true;
+    });
+    root.style.overflow = "hidden";
+    navigationPanelRef.current?.querySelector("a")?.focus();
+
+    return () => {
+      hidden.forEach((element) => {
+        element.inert = false;
+      });
+      root.style.overflow = previousOverflow;
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -33,28 +84,80 @@ const SiteHeader = () => {
   }, [isMenuOpen]);
 
   return (
-    <header className="site-header" ref={headerRef}>
-      <a className="site-header__brand" href="#contenu-principal">
-        <img
-          className="brand-monogram"
-          src={THEME_ICONS[theme].svg}
-          width={36}
-          height={38}
-          alt=""
-          aria-hidden="true"
-        />
-        <span>{profile.name}</span>
-        <img
-          className="site-header__avatar"
-          src={profile.portrait.src}
-          width={28}
-          height={28}
-          alt=""
-          decoding="async"
-        />
-      </a>
+    <header
+      className={`site-header${isMenuOpen ? " is-menu-open" : ""}${hasScrolled ? " is-scrolled" : ""}`}
+      ref={headerRef}
+    >
+      <div className="header-actions">
+        <ul className="header-links" aria-label="Liens directs">
+          <li className="header-links__cv">
+            <a href={profile.cv.href} download={profile.cv.fileName}>
+              CV
+              <span className="visually-hidden">{` — télécharger (PDF, ${profile.cv.size})`}</span>
+              <IconArrowDown size={14} stroke={2} aria-hidden="true" />
+            </a>
+          </li>
+          <li className="header-links__email">
+            <a href={`mailto:${profile.email}`}>
+              E-mail
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
+            </a>
+          </li>
+          <li>
+            <a href={profile.gitHubUrl} target="_blank" rel="noopener noreferrer">
+              GitHub<span className="visually-hidden"> (nouvelle fenêtre)</span>
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
+            </a>
+          </li>
+          <li>
+            <a href={profile.linkedInUrl} target="_blank" rel="noopener noreferrer">
+              LinkedIn<span className="visually-hidden"> (nouvelle fenêtre)</span>
+              <IconArrowUpRight size={14} stroke={2} aria-hidden="true" />
+            </a>
+          </li>
+        </ul>
+        <button
+          className="theme-toggle"
+          type="button"
+          role="switch"
+          aria-checked={isDarkTheme}
+          onClick={toggleTheme}
+        >
+          <span className="theme-toggle__track" aria-hidden="true">
+            <span className="theme-toggle__thumb" />
+            <span className="theme-toggle__sun">
+              <IconSun size={16} stroke={1.8} />
+            </span>
+            <span className="theme-toggle__moon">
+              <IconMoon size={16} stroke={1.8} />
+            </span>
+          </span>
+          <span className="visually-hidden">Thème sombre</span>
+        </button>
+      </div>
       <nav className="main-navigation" aria-label="Navigation principale">
-        <div id="navigation-principale" className={`section-nav${isMenuOpen ? " is-open" : ""}`}>
+        <button
+          ref={menuButtonRef}
+          className="menu-toggle"
+          type="button"
+          aria-expanded={isMenuOpen}
+          aria-controls="navigation-principale"
+          onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+        >
+          <span className="visually-hidden">Menu</span>
+          {isMenuOpen ? (
+            <IconX aria-hidden="true" size={22} />
+          ) : (
+            <IconMenu2 aria-hidden="true" size={22} />
+          )}
+        </button>
+        <div
+          id="navigation-principale"
+          ref={navigationPanelRef}
+          className={`section-nav${isMenuOpen ? " is-open" : ""}${
+            isScrolling && !isMenuOpen ? " is-scrolling" : ""
+          }`}
+        >
           {navigationItems.map(({ id, label }) => (
             <a
               href={`#${id}`}
@@ -70,44 +173,6 @@ const SiteHeader = () => {
           ))}
         </div>
       </nav>
-      <div className="header-actions">
-        <button
-          className="theme-toggle"
-          type="button"
-          role="switch"
-          aria-checked={isDarkTheme}
-          onClick={toggleTheme}
-        >
-          <span className="theme-toggle__track" aria-hidden="true">
-            <span className="theme-toggle__thumb" />
-            <span className="theme-toggle__sun">
-              <IconSun size={19} stroke={1.8} />
-            </span>
-            <span className="theme-toggle__moon">
-              <IconMoon size={19} stroke={1.8} />
-            </span>
-          </span>
-          <span className="visually-hidden">Thème sombre</span>
-        </button>
-        <a className="header-contact" href="#contact">
-          Parlons-en <IconArrowUpRight size={16} aria-hidden="true" />
-        </a>
-        <button
-          ref={menuButtonRef}
-          className="menu-toggle"
-          type="button"
-          aria-expanded={isMenuOpen}
-          aria-controls="navigation-principale"
-          onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-        >
-          <span className="visually-hidden">Menu</span>
-          {isMenuOpen ? (
-            <IconX aria-hidden="true" size={21} />
-          ) : (
-            <IconMenu2 aria-hidden="true" size={21} />
-          )}
-        </button>
-      </div>
     </header>
   );
 };
